@@ -43,7 +43,7 @@ spec:
         {{- end }}
       initContainers:
         - name: load-acme
-          image: "{{ .Values.proxy.secretSync.image.name }}:{{ .Values.proxy.secretSync.image.tag }}"
+          image: "{{ .Values.proxy.secretSync.image.name }}"
           {{- with .Values.proxy.secretSync.image.pullPolicy }}
           imagePullPolicy: {{ . }}
           {{- end }}
@@ -94,7 +94,7 @@ spec:
             {{- . | toYaml | trimSuffix "\n" | nindent 12 }}
           {{- end }}
         - name: secret-sync
-          image: "{{ .Values.proxy.secretSync.image.name }}:{{ .Values.proxy.secretSync.image.tag }}"
+          image: "{{ .Values.proxy.secretSync.image.name }}"
           {{- with .Values.proxy.secretSync.image.pullPolicy }}
           imagePullPolicy: {{ . }}
           {{- end }}

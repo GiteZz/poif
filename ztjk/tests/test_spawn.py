@@ -128,6 +128,7 @@ def test_hub_api_request_user_spawn(api_request, jupyter_user, request_data, peb
 
     print("asking kubespawner to spawn a server for a test user")
     r = api_request.post("/users/" + jupyter_user + "/server")
+    print(r)
     assert r.status_code in (201, 202)
     try:
         # check successfull spawn
@@ -243,3 +244,6 @@ def _delete_server(api_request, jupyter_user, timeout):
             return True
         time.sleep(1)
     return False
+
+if __name__ == "__main__":
+    test_hub_api_request_user_spawn()
