@@ -25,3 +25,13 @@ remove-acme:
 
 easy-commands:
     source $(alias kall="kubectl get all -n jub")
+
+setup-docker-registry:
+    docker run -d -p 5000:5000 --restart=always --name registry registry:2
+
+setup-minio:
+    helm upgrade --install --create-namespace minio minio_charts/minio --cleanup-on-fail  -n minio
+
+setup-alluxio:
+    helm upgrade --install --create-namespace alluxio alluxio-charts/alluxio --cleanup-on-fail --values ./config/alluxio_helm_config.yml -n alluxio
+    kubectl apply -f ./config/kubernetes/alluxio_ui_forward.yml

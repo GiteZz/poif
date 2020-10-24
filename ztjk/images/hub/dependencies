@@ -46,7 +46,7 @@ def build_args(image_name='hub'):
     """
     with open(chartpress_yaml) as f:
         chartpress_config = yaml.load(f)
-    chart = chartpress_config['charts'][0]
+    chart = chartpress_config['minio_charts'][0]
     image_config = chart['images'][image_name]
     return image_config.get('buildArgs', {})
 
