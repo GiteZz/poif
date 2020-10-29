@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlflow-server-database-deployment
+  namespace: mlflow
+  labels:
+    app: mlflow-server-database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mlflow-server-database
+  template:
+    metadata:
+      labels:
+        app: mlflow-server-database
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:10.4
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: mlflow-server-database-config
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgredb
+      volumes:
+        - name: postgredb
+          persistentVolumeClaim:
+            claimName: mlflow-server-database-pvc
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mlflow-server-database
+  namespace: mlflow
+  labels:
+    app: mlflow-server-database
+spec:
+  type: NodePort
+  ports:
+   - port: 5432
+  selector:
+   app: mlflow-server-database
+
+---
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: mlflow-server-database-pvc
+  namespace: mlflow
+  labels:
+    app: mlflow-server-database
+spec:
+  storageClassName: "local-path"
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi

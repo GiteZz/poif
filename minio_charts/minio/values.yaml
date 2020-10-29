@@ -63,7 +63,7 @@ priorityClassName: ""
 ##
 existingSecret: ""
 accessKey: "admin"
-secretKey: "admin"
+secretKey: "password"
 certsPath: "/etc/minio/certs/"
 configPathmc: "/etc/minio/mc/"
 mountPath: "/export"
@@ -199,7 +199,7 @@ podLabels: {}
 ##
 resources:
   requests:
-    memory: 4Gi
+    memory: 1Gi
 
 ## Create a bucket after minio install
 ##

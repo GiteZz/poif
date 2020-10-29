@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mlflow-server-object-store-config
+  namespace: mlflow
+  labels:
+    app: mlflow-server-database
+data:
+  MINIO_ACCESS_KEY: minio
+  MINIO_SECRET_KEY: minio123
