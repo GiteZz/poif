@@ -2,14 +2,15 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: ugent-ingress
+  namespace: minio
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
  rules:
- - host: jhub.be
+ - host: minio.jhub.be
    http:
      paths:
-     - path: /minio
+     - path: /
        backend:
          serviceName: minio
-         servicePort: 32000
+         servicePort: 9000

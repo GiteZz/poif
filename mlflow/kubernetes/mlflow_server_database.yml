@@ -42,7 +42,6 @@ metadata:
   labels:
     app: mlflow-server-database
 spec:
-  type: NodePort
   ports:
    - port: 5432
   selector:

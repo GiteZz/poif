@@ -1,13 +1,20 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dvc
+
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   # This name uniquely identifies the Deployment
-  name: mlflow-server-object-store
-  namespace: mlflow
+  name: dvc-minio-backend
+  namespace: dvc
 spec:
   selector:
     matchLabels:
-      app: mlflow-server-object-store # has to match .spec.template.metadata.labels
+      app: dvc-minio-backend # has to match .spec.template.metadata.labels
   strategy:
     # Specifies the strategy used to replace old Pods by new ones
     # Refer: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
@@ -16,7 +23,7 @@ spec:
     metadata:
       labels:
         # This label is used as a selector in Service definition
-        app: mlflow-server-object-store
+        app: dvc-minio-backend
     spec:
       # Volumes used by this deployment
       volumes:
@@ -24,7 +31,7 @@ spec:
         # This volume is based on PVC
         persistentVolumeClaim:
           # Name of the PVC created earlier
-          claimName: mlflow-server-object-store-pvc
+          claimName: dvc-minio-backend-pvc
       containers:
       - name: minio
         # Volume mounts for this container
@@ -35,10 +42,10 @@ spec:
         # Pulls the lastest Minio image from Docker Hub
         image: minio/minio:latest
         command: ["/bin/sh"]
-        args: ["-c",  "mkdir /storage && mkdir /storage/mlflow && /usr/bin/minio server /storage"]
+        args: ["-c",  "mkdir -p /data && mkdir -p /data/mlflow && /usr/bin/minio server /data"]
         envFrom:
           - configMapRef:
-              name: mlflow-server-object-store-config
+              name: dvc-minio-backend-config
         ports:
         - containerPort: 9000
         # Readiness probe detects situations when MinIO server instance
@@ -65,33 +72,18 @@ apiVersion: v1
 kind: Service
 metadata:
   # This name uniquely identifies the service
-  name: mlflow-server-object-store-int
-  namespace: mlflow
-spec:
-  ports:
-   - port: 9000
-  selector:
-    # Looks for labels `app:minio` in the namespace and applies the spec
-    app: mlflow-server-object-store
-
----
-
-apiVersion: v1
-kind: Service
-metadata:
-  # This name uniquely identifies the service
-  name: mlflow-server-object-store-ext
-  namespace: mlflow
+  name: dvc-minio-backend
+  namespace: dvc
 spec:
   type: NodePort
   selector:
     # Looks for labels `app:minio` in the namespace and applies the spec
-    app: mlflow-server-object-store
+    app: dvc-minio-backend
   ports:
     - protocol: TCP
       port: 9000
       targetPort: 9000
-      nodePort: 30110
+      nodePort: 30210
 
 ---
 
@@ -99,8 +91,8 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   # This name uniquely identifies the PVC. This is used in deployment.
-  name: mlflow-server-object-store-pvc
-  namespace: mlflow
+  name: dvc-minio-backend-pvc
+  namespace: dvc
 spec:
   storageClassName: "local-path"
   # Read more about access modes here: http://kubernetes.io/docs/user-guide/persistent-volumes/#access-modes
@@ -110,4 +102,4 @@ spec:
   resources:
     # This is the request for storage. Should be available in the cluster.
     requests:
-      storage: 10Gi
+      storage: 20Gi

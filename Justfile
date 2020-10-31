@@ -30,7 +30,9 @@ setup-docker-registry:
     docker run -d -p 5000:5000 --restart=always --name registry registry:2
 
 setup-minio:
+    kubectl delete namespace minio
     helm upgrade --install --create-namespace minio minio_charts/minio --cleanup-on-fail  -n minio
+    kubectl apply -f ./config/kubernetes/ugent_ingress.yml
 
 setup-alluxio:
     helm repo add alluxio-charts https://alluxio-charts.storage.googleapis.com/openSource/2.4.0
@@ -47,3 +49,25 @@ hard-setup-mlflow: build-mlflow-images
 
 setup-local-path-provision:
     kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml
+
+setup-traefik:
+    helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+    helm upgrade --install traefik stable/traefik --cleanup-on-fail  --values ./traefik/values.yml
+    # kubectl apply -f ./traefik/traefik_ingress.yml
+
+setup-dvc-backend:
+    kubectl apply -f ./dvc/
+
+setup-datasets-git:
+    helm  upgrade --install --create-namespace --cleanup-on-fail gitlab gitlab/gitlab --set global.hosts.domain=datasets.jhub.be --set certmanager-issuer.email=gilles.ballegeer@gmail.com -n gitlab
+
+uninstall-k3s:
+    /usr/local/bin/k3s-uninstall.sh
+
+install-k3s:
+    curl -sfL https://get.k3s.io | sh -s - --write-kubeconfig-mode=644 --disable metrics-server --disable traefik --disable local-storage --disable-network-policy --docker
+
+install-aws-cli:
+    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+    unzip awscliv2.zip
+    sudo ./aws/install

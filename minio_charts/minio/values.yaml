@@ -130,7 +130,7 @@ persistence:
 ##
 
 service:
-  type: NodePort
+  type: ClusterIP
   clusterIP: ~
   port: 9000
   nodePort: 32000
@@ -167,7 +167,7 @@ ingress:
     # nginx.ingress.kubernetes.io/whitelist-source-range: 0.0.0.0/0
   path: /
   hosts:
-    - chart-example.local
+    - minio.jhub.be
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:

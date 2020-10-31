@@ -14,3 +14,22 @@ spec:
       # Optional field
       # By default and for convenience, the Kubernetes control plane will allocate a port from a range (default: 30000-32767)
       nodePort: 31999
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: alluxio-ingress
+  namespace: alluxio
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+ rules:
+ - host: alluxio.jhub.be
+   http:
+     paths:
+     - path: /
+       backend:
+         serviceName: alluxio-master-0
+         servicePort: 19999

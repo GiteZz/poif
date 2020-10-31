@@ -1,0 +1,14 @@
+serviceType: NodePort
+
+dashboard:
+  enabled: true
+  domain: traefik.jhub.be
+kubernetes:
+  namespaces:
+    - default
+    - kube-system
+debug:
+  enabled: true
+
+rbac:
+  enabled: true
