@@ -62,6 +62,8 @@ setup-dvc-backend:
     kubectl apply -f ./dvc/
 
 setup-datasets-git:
+    helm repo add gitlab https://charts.gitlab.io/
+    helm repo update
     helm  upgrade --install --create-namespace --cleanup-on-fail gitlab gitlab/gitlab --set global.hosts.domain=datasets.jhub.be --set certmanager-issuer.email=gilles.ballegeer@gmail.com -n gitlab
 
 uninstall-k3s:
@@ -74,3 +76,7 @@ install-aws-cli:
     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
     unzip awscliv2.zip
     sudo ./aws/install
+
+setup-datasets-gitlab:
+    kubectl delete namespace dvc
+    kubectl apply -f ./dvc/dvc_namespace.yml -f ./dvc/dvc_gitlab_config.yml -f ./dvc/dvc_gitlab.yml
