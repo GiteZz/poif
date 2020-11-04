@@ -51,9 +51,12 @@ setup-local-path-provision:
     kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml
 
 setup-traefik:
-    helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+    # helm repo add stable https://kubernetes-charts.storage.googleapis.com/
     helm upgrade --install traefik stable/traefik --cleanup-on-fail  --values ./traefik/values.yml
     # kubectl apply -f ./traefik/traefik_ingress.yml
+
+setup-nginx:
+    kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.41.0/deploy/static/provider/baremetal/deploy.yaml
 
 setup-dvc-backend:
     kubectl apply -f ./dvc/
@@ -65,7 +68,7 @@ uninstall-k3s:
     /usr/local/bin/k3s-uninstall.sh
 
 install-k3s:
-    curl -sfL https://get.k3s.io | sh -s - --write-kubeconfig-mode=644 --disable metrics-server --disable traefik --disable local-storage --disable-network-policy --docker
+    curl -sfL https://get.k3s.io | sh -s - --write-kubeconfig-mode=644  --disable-network-policy --docker
 
 install-aws-cli:
     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"

@@ -6,9 +6,4 @@ dashboard:
 kubernetes:
   namespaces:
     - default
-    - kube-system
-debug:
-  enabled: true
-
-rbac:
-  enabled: true
+    - traefik
