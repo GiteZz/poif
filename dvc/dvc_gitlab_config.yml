@@ -6,4 +6,4 @@ metadata:
   labels:
     app: dvc-minio-backend
 data:
-  GITLAB_OMNIBUS_CONFIG: "gitlab_rails['initial_root_password'] = 'password'"
+  GITLAB_OMNIBUS_CONFIG: gitlab_rails['initial_root_password'] = 'password'
