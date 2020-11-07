@@ -1,21 +1,41 @@
-build-images:
-    cd ./jupyterhub/images/luxury && docker build . -t localhost:5000/luxury_nb
+# Setup DVC and components
+
+setup-datasets-namespace:
+    kubectl apply -f ./dvc/namespace.yml
+
+clear-datasets-namespace:
+    kubectl delete namespace dvc || true # This line is allowed to fail because the namespace could've already been deleted
+
+setup-datasets-gitlab:
+    kubectl apply -f ./dvc/gitlab/
+
+setup-datasets-minio:
+    kubectl apply -f ./dvc/minio/
+
+setup-dvc: setup-datasets-namespace setup-datasets-gitlab setup-datasets-minio
+
+hard-setup-dvc: clear-datasets-namespace setup-dvc
+    kubectl rollout status deployment dvc-gitlab-deployment -n dvc
+    kubectl exec -it dvc-gitlab-deployment-85d85877cc-f558v -n dvc -- gitlab-rails runner "token = User.find_by_username('root').personal_access_tokens.create(scopes: [:api], name: 'Automation token');token.set_token('root-api-key');token.save!"
+
+build-hub-images:
+    cd ./jupyter/images/luxury && docker build . -t localhost:5000/luxury_nb
     docker push localhost:5000/luxury_nb
     cd ./ztjk/images/secret-sync && docker build . -t localhost:5000/secret-sync
     docker push localhost:5000/secret-sync
     cd ./ztjk/images/hub && docker build . -t localhost:5000/hub
     docker push localhost:5000/hub
 
-upgrade: build-images
-    helm upgrade --install --create-namespace jupyterhub ./ztjk/jupyterhub --cleanup-on-fail --values ./ztjk/dev-config.yaml -n jhub
-
-clear:
-    kubectl delete namespace jhub
-
-acme:
+setup-acme:
     helm repo add jupyterhub https://jupyterhub.github.io/helm-chart/
     helm repo update
     helm upgrade --install --create-namespace pebble jupyterhub/pebble --cleanup-on-fail --values ./ztjk/dev-config-pebble.yaml -n jhub
+
+setup-hub: build-hub-images setup-acme
+    helm upgrade --install --create-namespace jupyterhub ./ztjk/jupyterhub --cleanup-on-fail --values ./ztjk/dev-config.yaml -n jhub
+
+clear-hub:
+    kubectl delete namespace jhub
 
 remove-acme:
     kubectl delete deployment.apps pebble-coredns -n default
@@ -43,28 +63,23 @@ build-mlflow-images:
     cd ./mlflow/docker_images/mlflow_server && docker build . -t localhost:5000/mlflow_server
     docker push localhost:5000/mlflow_server
 
-hard-setup-mlflow: build-mlflow-images
+clear-mlflow:
     kubectl delete namespace mlflow || true
+
+setup-mlflow: build-mlflow-images clear-mlflow
     kubectl apply -f ./mlflow/kubernetes/
 
-setup-local-path-provision:
-    kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml
 
-setup-traefik:
-    # helm repo add stable https://kubernetes-charts.storage.googleapis.com/
-    helm upgrade --install traefik stable/traefik --cleanup-on-fail  --values ./traefik/values.yml
-    # kubectl apply -f ./traefik/traefik_ingress.yml
+build-jupyter-test:
+    cd ./jupyter/images/extension_test && docker build . -t localhost:5000/extension_test
+    docker push localhost:5000/extension_test
 
-setup-nginx:
-    kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.41.0/deploy/static/provider/baremetal/deploy.yaml
+run-jupyter-docker: build-jupyter-test
+    docker stop test_jupyter || true
+    docker rm test_jupyter
+    docker run -d -p 8888:8888 -e JUPYTER_TOKEN=token --name test_jupyter localhost:5000/extension_test
 
-setup-dvc-backend:
-    kubectl apply -f ./dvc/
-
-setup-datasets-git:
-    helm repo add gitlab https://charts.gitlab.io/
-    helm repo update
-    helm  upgrade --install --create-namespace --cleanup-on-fail gitlab gitlab/gitlab --set global.hosts.domain=datasets.jhub.be --set certmanager-issuer.email=gilles.ballegeer@gmail.com -n gitlab
+# K3S commands
 
 uninstall-k3s:
     /usr/local/bin/k3s-uninstall.sh
@@ -76,7 +91,3 @@ install-aws-cli:
     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
     unzip awscliv2.zip
     sudo ./aws/install
-
-setup-datasets-gitlab:
-    kubectl delete namespace dvc
-    kubectl apply -f ./dvc/dvc_namespace.yml -f ./dvc/dvc_gitlab_config.yml -f ./dvc/dvc_gitlab.yml
