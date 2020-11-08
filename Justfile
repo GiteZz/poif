@@ -16,7 +16,13 @@ setup-dvc: setup-datasets-namespace setup-datasets-gitlab setup-datasets-minio
 
 hard-setup-dvc: clear-datasets-namespace setup-dvc
     kubectl rollout status deployment dvc-gitlab-deployment -n dvc
-    kubectl exec -it dvc-gitlab-deployment-85d85877cc-f558v -n dvc -- gitlab-rails runner "token = User.find_by_username('root').personal_access_tokens.create(scopes: [:api], name: 'Automation token');token.set_token('root-api-key');token.save!"
+    kubectl exec -it $(kubectl get pods -n dvc -l=app=dvc-gitlab -o name) -n dvc -- gitlab-rails runner "token = User.find_by_username('root').personal_access_tokens.create(scopes: [:api], name: 'Automation token');token.set_token('root-api-key');token.save!"
+    mkdir -p ~/.datasets
+    ssh-keygen -t ed25519 -C "datasets gitlab" -f ~/.datasets/gitlab_key -q -N "" -y
+    group_id=$(curl -s -d "name=Datasets&path=datasets" -H "PRIVATE-TOKEN: root-api-key" -X POST http://datasets.jhub.be/api/v4/groups | jq .id)
+    user_id=$(curl -s -d "email=dev@jhub.com&name=datasets_handler&username=datasets_handler&skip_confirmation=true&force_random_password=true&reset_password=false" -H "PRIVATE-TOKEN: root-api-key" -X POST http://datasets.jhub.be/api/v4/users | jq .id)
+    curl -d "user_id=$user_id&access_level=30" -H "PRIVATE-TOKEN: root-api-key" -X POST http://datasets.jhub.be/api/v4/groups/$group_id/members
+    curl -s -d "title=dataset-key&key=$(cat ~/.datasets/gitlab_key.pub)" -H "PRIVATE-TOKEN: root-api-key" -X POST http://datasets.jhub.be/api/v4/users/$user_id/keys
 
 build-hub-images:
     cd ./jupyter/images/luxury && docker build . -t localhost:5000/luxury_nb
