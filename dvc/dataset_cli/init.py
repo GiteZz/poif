@@ -11,14 +11,20 @@ headers = {
 
 current_folder = os.getcwd()
 
-def get_groups():
+def get_groups(configuration):
     group_url = "http://datasets.jhub.be/api/v4/groups"
     r = requests.get(group_url, headers=headers,)
 
     return r.json()
 
-def init_git():
+def init_git(configuration):
     os.popen("git init")
 
-a = get_groups()
+def init_dvc(configuration):
+    os.popen("dvc init")
+
+def dvc_add_remote(configuration):
+
+
+# a = get_groups()
 b= 5

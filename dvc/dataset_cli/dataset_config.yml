@@ -2,3 +2,4 @@ gitlab_token: root-api-key
 dataset_name: pneumonia
 remote_path: s3://datasets/pneumonia
 remote_endpoint: http://datasets.backend.jhub.be
+data_folder: data
