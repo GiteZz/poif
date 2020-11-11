@@ -4,6 +4,7 @@ import datasets.config_file as config_file
 import datasets.git_tools as git_tools
 from datasets.tools import yes
 import os
+import subprocess
 
 
 def init_git(config, name):
@@ -11,22 +12,24 @@ def init_git(config, name):
     # init local git
     repo_url = git_tools.create_repo(config, 'datasets', name)
     cwd = pathlib.Path.cwd()
-    os.popen(f'git init')
-    os.popen(f'git remote add origin {repo_url}')
+    subprocess.call(['git', 'init'])
+    subprocess.call(['git', 'remote', 'add', 'origin', repo_url])
 
 
 def init_dvc(config, data_folder, dataset_name):
-    os.popen('dvc init')
+    subprocess.call(['dvc', 'init'])
     data_folder = pathlib.Path.cwd() / data_folder
-    os.popen(f'dvc add -R {data_folder}')
-    os.popen(f'git add *.dvc')
-    os.popen(f'git add *.gitignore')
-    os.popen(f'git commit -am "Initial dvc commit"')
-    os.popen(f'git push -u origin master')
-    os.popen(f'dvc remote add -d s3_storage s3://{config["default_s3_bucket"]}/{dataset_name}')
-    os.popen(f'dvc remote modify s3_storage endpointurl {config["default_s3_endpoint"]}')
-    os.popen(f'dvc remote modify s3_storage profile {config["s3_profile"]}')
-    os.popen(f'dvc push')
+    subprocess.call(['dvc', 'add', data_folder])
+    subprocess.call(['dvc', 'commit'])
+    subprocess.call(['git', 'add', '*.dvc'])
+    subprocess.call(['git', 'add', '*.gitignore'])
+    subprocess.call(['git', 'add', '.dvc/config'])
+    subprocess.call(['dvc', 'remote', 'add', '-d', 's3_storage', f's3://{config["default_s3_bucket"]}/{dataset_name}'])
+    subprocess.call(['dvc', 'remote', 'modify', 's3_storage', 'endpointurl', f'{config["default_s3_endpoint"]}'])
+    subprocess.call(['dvc', 'remote', 'modify', 's3_storage', 'profile', f'{config["s3_profile"]}'])
+    subprocess.call(['git', 'commit', '-am', 'Initial dvc commit'])
+    subprocess.call(['git', 'push', '-u', 'origin', 'master'])
+    subprocess.call(['dvc', 'push'])
 
 
 def init_collect_options(config: Dict) -> Dict:
