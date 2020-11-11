@@ -2,6 +2,8 @@ import argparse
 import sys
 
 from datasets.config import config
+from datasets.init import init
+
 
 def main():
     args = sys.argv
@@ -18,9 +20,3 @@ def main():
         valid_commands[command](args[2:])
     else:
         print(f'Please provide a valid command. Valid commands are: {valid_commands.keys()}')
-
-
-def init(args):
-    pass
-
-
