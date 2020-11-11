@@ -4,6 +4,7 @@ import datasets.config_file as config_file
 import datasets.git_tools as git_tools
 from datasets.tools import yes
 import os
+import yaml
 import subprocess
 
 
@@ -28,7 +29,6 @@ def init_dvc(config, data_folder, dataset_name):
     subprocess.call(['dvc', 'remote', 'modify', 's3_storage', 'endpointurl', f'{config["default_s3_endpoint"]}'])
     subprocess.call(['dvc', 'remote', 'modify', 's3_storage', 'profile', f'{config["s3_profile"]}'])
     subprocess.call(['git', 'commit', '-am', 'Initial dvc commit'])
-    subprocess.call(['git', 'push', '-u', 'origin', 'master'])
     subprocess.call(['dvc', 'push'])
 
 
@@ -67,6 +67,11 @@ def init(args: List[str]) -> None:
 
     init_git(current_config, options['dataset_name'])
     init_dvc(current_config, options['data_folder'], options['dataset_name'])
+    with open('dataset_config.yml', 'w') as f:
+        yaml.safe_dump({'dataset_name': options['dataset_name']}, f)
+    subprocess.call(['git', 'add', 'dataset_config.yml'])
+    subprocess.call(['git', 'commit', '-m', 'Added dataset configuration file'])
+    subprocess.call(['git', 'push', '-u', 'origin', 'master'])
 
 
 if __name__ == "__main__":
