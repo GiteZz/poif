@@ -3,6 +3,7 @@ import sys
 
 from datasets.config import config
 from datasets.init import init
+from datasets.get import get
 
 
 def main():
@@ -14,7 +15,8 @@ def main():
     command = args[1]
     valid_commands = {
         'init': init,
-        'config': config
+        'config': config,
+        'get': get
     }
     if command in valid_commands.keys():
         valid_commands[command](args[2:])
