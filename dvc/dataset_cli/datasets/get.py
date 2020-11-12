@@ -2,6 +2,7 @@ import subprocess
 import yaml
 import pathlib
 
+
 def get(args):
     git_url = args[0]
     subprocess.call(['git', 'clone', git_url, 'new_data_folder'])

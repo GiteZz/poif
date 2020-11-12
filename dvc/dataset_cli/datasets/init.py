@@ -2,10 +2,11 @@ from typing import Dict, List
 import pathlib
 import datasets.config_file as config_file
 import datasets.git_tools as git_tools
-from datasets.tools import yes
+import datasets.tools as tools
 import os
 import yaml
 import subprocess
+import jinja2
 
 
 def init_git(config, name):
@@ -17,10 +18,11 @@ def init_git(config, name):
     subprocess.call(['git', 'remote', 'add', 'origin', repo_url])
 
 
-def init_dvc(config, data_folder, dataset_name):
+def init_dvc(config, data_folders, dataset_name):
     subprocess.call(['dvc', 'init'])
-    data_folder = pathlib.Path.cwd() / data_folder
-    subprocess.call(['dvc', 'add', data_folder])
+    for data_folder in data_folders:
+        data_folder = pathlib.Path.cwd() / data_folder
+        subprocess.call(['dvc', 'add', data_folder])
     subprocess.call(['dvc', 'commit'])
     subprocess.call(['git', 'add', '*.dvc'])
     subprocess.call(['git', 'add', '*.gitignore'])
@@ -35,8 +37,8 @@ def init_dvc(config, data_folder, dataset_name):
 def init_collect_options(config: Dict) -> Dict:
     options = {}
 
-    print(f'Use default S3 information from origin: {config["name"]}?')
-    use_s3_default= yes()
+    print(f'Use default S3 information from origin? [{config["name"]}]?')
+    use_s3_default = tools.yes(empy_is_true=True)
 
     if use_s3_default:
         options['s3_bucket'] = config['default_s3_bucket']
@@ -50,10 +52,37 @@ def init_collect_options(config: Dict) -> Dict:
     print(f'Dataset name:')
     options['dataset_name'] = input()
 
-    print(f'Data folder')
-    options['data_folder'] = input()
+    print(f'Data folder(s): [default: data][Multiple folders are separated by spaces]')
+    data_folders = input()
+    if data_folders == "":
+        options['data_folders'] = ['data']
+    else:
+        options['data_folders'] = tools.remove_empty_strings(data_folders)
 
     return options
+
+def create_datasets_config(options):
+    datasets_folder = pathlib.Path.cwd() / '.datasets'
+    datasets_folder.mkdir(exist_ok=True)
+
+    dataset_config_data = {
+        'dataset_name': options['dataset_name'],
+        'data_folders': options['data_folders']
+    }
+
+    dataset_config = datasets_folder / 'config.yml'
+    with open(dataset_config, 'w') as f:
+        yaml.safe_dump(dataset_config_data, f)
+
+
+def create_information_files(options):
+    template_directory =
+    information_files = []
+    with open(testing_config_input_file) as f:
+        template = Template(f.read())
+
+    with open(testing_config_output_file, 'w') as f:
+        f.write(template.render(data=spec_dict))
 
 
 def init(args: List[str]) -> None:
@@ -66,9 +95,9 @@ def init(args: List[str]) -> None:
         return
 
     init_git(current_config, options['dataset_name'])
-    init_dvc(current_config, options['data_folder'], options['dataset_name'])
-    with open('dataset_config.yml', 'w') as f:
-        yaml.safe_dump({'dataset_name': options['dataset_name']}, f)
+    init_dvc(current_config, options['data_folders'], options['dataset_name'])
+
+
     subprocess.call(['git', 'add', 'dataset_config.yml'])
     subprocess.call(['git', 'commit', '-m', 'Added dataset configuration file'])
     subprocess.call(['git', 'push', '-u', 'origin', 'master'])

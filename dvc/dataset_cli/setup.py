@@ -12,7 +12,13 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/pypa/sampleproject",
-    packages=setuptools.find_packages(),
+    packages=[
+        'datasets'
+    ],
+    package_dir={
+        'datasets':
+            #https://docs.python.org/3/distutils/setupscript.html#installing-package-data
+    },
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
