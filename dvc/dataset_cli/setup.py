@@ -15,9 +15,10 @@ setuptools.setup(
     packages=[
         'datasets'
     ],
+    #https://docs.python.org/3/distutils/setupscript.html#installing-package-data
     package_dir={
-        'datasets':
-            #https://docs.python.org/3/distutils/setupscript.html#installing-package-data
+        'datasets': 'datasets'
+
     },
     classifiers=[
         "Programming Language :: Python :: 3",
@@ -29,6 +30,8 @@ setuptools.setup(
         'console_scripts': ['datasets=datasets.cli:main']
     },
     install_requires=[
-        'PyYAML==3.12'
+        'PyYAML==3.12',
+        'jinja2',
+        'dvc[s3]'
     ]
 )

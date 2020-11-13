@@ -1,5 +1,5 @@
 mkdir -p ~/.datasets
-ssh-keygen -t ed25519 -C "datasets gitlab" -f ~/.datasets/gitlab_key -q -N "" -y
+yes | ssh-keygen -t ed25519 -C "datasets gitlab" -f ~/.datasets/gitlab_key -q -N ""
 group_id=$(curl -s -d "name=Datasets&path=datasets" -H "PRIVATE-TOKEN: root-api-key" -X POST http://datasets.jhub.be/api/v4/groups | jq .id)
 user_id=$(curl -s -d "email=dev@jhub.com&name=datasets_handler&username=datasets_handler&skip_confirmation=true&force_random_password=true&reset_password=false" -H "PRIVATE-TOKEN: root-api-key" -X POST http://datasets.jhub.be/api/v4/users | jq .id)
 echo $group_id

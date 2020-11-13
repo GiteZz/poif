@@ -18,6 +18,8 @@ hard-setup-dvc: clear-datasets-namespace setup-dvc
     kubectl rollout status deployment dvc-gitlab-deployment -n dvc
     kubectl exec -it $(kubectl get pods -n dvc -l=app=dvc-gitlab -o name) -n dvc -- gitlab-rails runner "token = User.find_by_username('root').personal_access_tokens.create(scopes: [:api], name: 'Automation token');token.set_token('root-api-key');token.save!"
     ./dvc/gitlab/set_dataset_configuration.sh
+    kubectl rollout status deployment dvc-minio-backend -n dvc
+    ./dvc/minio/apply_bucket_policy.sh
 
 build-hub-images:
     cd ./jupyter/images/luxury && docker build . -t localhost:5000/luxury_nb

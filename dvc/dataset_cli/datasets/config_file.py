@@ -17,11 +17,12 @@ def save_new_config(new_config):
 
 
 def get_config_content():
-    with open(config_file, 'r') as f:
-        current_config = yaml.safe_load(f)
+    if config_file.exists():
+        with open(config_file, 'r') as f:
+            current_config = yaml.safe_load(f)
 
-    if type(current_config) == dict and set(current_config.keys()) == {'origins', 'current_origin'}:
-        return current_config
+        if type(current_config) == dict and set(current_config.keys()) == {'origins', 'current_origin'}:
+            return current_config
 
     # Config file does not comply with the expected format. Therefore a new one is
     new_config_file = get_new_config_file()

@@ -35,7 +35,7 @@ spec:
         # Pulls the lastest Minio image from Docker Hub
         image: minio/minio:latest
         command: ["/bin/sh"]
-        args: ["-c",  "mkdir -p /data && mkdir -p /data/datasets && /usr/bin/minio server /data"]
+        args: ["-c",  "mkdir -p /data && mkdir -p /data/datasets && mkdir -p /data/datasets-images && /usr/bin/minio server /data"]
         envFrom:
           - configMapRef:
               name: dvc-minio-backend-config

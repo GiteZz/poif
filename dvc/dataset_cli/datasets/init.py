@@ -20,6 +20,7 @@ def init_git(config, name):
 
 def init_dvc(config, data_folders, dataset_name):
     subprocess.call(['dvc', 'init'])
+    print(data_folders)
     for data_folder in data_folders:
         data_folder = pathlib.Path.cwd() / data_folder
         subprocess.call(['dvc', 'add', data_folder])
@@ -57,7 +58,7 @@ def init_collect_options(config: Dict) -> Dict:
     if data_folders == "":
         options['data_folders'] = ['data']
     else:
-        options['data_folders'] = tools.remove_empty_strings(data_folders)
+        options['data_folders'] = tools.remove_empty_strings(data_folders.split(' '))
 
     return options
 
@@ -70,19 +71,24 @@ def create_datasets_config(options):
         'data_folders': options['data_folders']
     }
 
-    dataset_config = datasets_folder / 'config.yml'
-    with open(dataset_config, 'w') as f:
+    dataset_config_file = datasets_folder / 'config.yml'
+    with open(dataset_config_file, 'w') as f:
         yaml.safe_dump(dataset_config_data, f)
 
+    subprocess.call(['git', 'add', str(dataset_config_file)])
 
-def create_information_files(options):
-    template_directory =
-    information_files = []
-    with open(testing_config_input_file) as f:
-        template = Template(f.read())
 
-    with open(testing_config_output_file, 'w') as f:
-        f.write(template.render(data=spec_dict))
+# def create_information_files(options):
+#     template_directory =
+#     information_files = []
+#     with open(testing_config_input_file) as f:
+#         template = Template(f.read())
+#
+#     with open(testing_config_output_file, 'w') as f:
+#         f.write(template.render(data=spec_dict))
+
+def create_readme(options):
+    pass
 
 
 def init(args: List[str]) -> None:
@@ -96,9 +102,7 @@ def init(args: List[str]) -> None:
 
     init_git(current_config, options['dataset_name'])
     init_dvc(current_config, options['data_folders'], options['dataset_name'])
-
-
-    subprocess.call(['git', 'add', 'dataset_config.yml'])
+    create_datasets_config(options)
     subprocess.call(['git', 'commit', '-m', 'Added dataset configuration file'])
     subprocess.call(['git', 'push', '-u', 'origin', 'master'])
 

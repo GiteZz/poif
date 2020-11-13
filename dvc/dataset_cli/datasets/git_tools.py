@@ -54,6 +54,8 @@ def create_repo(config, share_group, name) -> str:
     }
 
     create_repo_response = requests.post(create_repo_git_api, params=create_repo_param, headers=git_api_headers)
+    if not create_repo_response.ok:
+        print(create_repo_response)
     project_id = create_repo_response.json()['id']
     repo_url = create_repo_response.json()['http_url_to_repo']
 
