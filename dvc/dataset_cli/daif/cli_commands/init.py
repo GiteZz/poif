@@ -1,9 +1,9 @@
 from typing import Dict, List
 import pathlib
-import datasets.tools.config_file as config_file
-import datasets.tools.git as git_tools
-import datasets.tools as tools
-import datasets.tools.readme as readme_tools
+import daif.tools.config as config_tools
+import daif.tools.git as git_tools
+from daif.tools import yes_with_question, simple_input, remove_empty_strings
+import daif.tools.readme as readme_tools
 import yaml
 import subprocess
 from pathlib import Path
@@ -12,7 +12,6 @@ from pathlib import Path
 def init_git(config, name):
     # Create remote repo
     # init local git
-    repo_url = git_tools.create_repo(config, 'datasets', name)
     cwd = pathlib.Path.cwd()
     subprocess.call(['git', 'init'])
     subprocess.call(['git', 'remote', 'add', 'origin', repo_url])
@@ -31,39 +30,36 @@ def init_dvc(config, data_folders, dataset_name):
     subprocess.call(['dvc', 'remote', 'modify', 's3_storage', 'endpointurl', f'{config["default_s3_endpoint"]}'])
     subprocess.call(['dvc', 'remote', 'modify', 's3_storage', 'profile', f'{config["s3_profile"]}'])
     subprocess.call(['git', 'commit', '-am', 'Initial dvc commit'])
-    subprocess.call(['dvc', 'push'])
 
 
-def init_collect_options(config: Dict) -> Dict:
-    options = {}
+def init_collect_options(config: config_tools.DaifConfig) -> config_tools.DatasetConfig:
+    new_dataset_dict = {}
 
-    print(f'Use default S3 information from origin? [{config["name"]}]?')
-    use_s3_default = tools.yes(empy_is_true=True)
+    new_dataset_dict['dataset_name'] = simple_input('Dataset name', use_empy_value=False)
 
-    if use_s3_default:
-        options['s3_bucket'] = config['default_s3_bucket']
-        options['s3_endpoint'] = config['default_s3_endpoint']
-    else:
-        print("S3 bucket name:")
-        options['s3_bucket'] = input()
-        print("S3 endpoint url:")
-        options['s3_endpoint'] = input()
-
-    print(f'Dataset name:')
-    options['dataset_name'] = input()
+    new_dataset_dict['s3_bucket'] = simple_input(
+        'Default S3 bucket',
+        value_when_empty=config.current_origin.s3_default_bucket
+    )
+    new_dataset_dict['s3_endpoint'] = simple_input(
+        'Default S3 endpoint',
+        value_when_empty=config.current_origin.s3_default_endpoint
+    )
 
     print(f'Data folder(s): [default: data][Multiple folders are separated by spaces]')
-    data_folders = input()
-    if data_folders == "":
-        options['data_folders'] = [Path.cwd() / 'data']
-    else:
-        options['data_folders'] = [Path.cwd() / folder for folder in tools.remove_empty_strings(data_folders.split(' '))]
+    data_folders = simple_input('Data folder, if multiple folder are tracked separate by space', value_when_empty='data')
+    new_dataset_dict['data_folders'] = remove_empty_strings(data_folders.split(' '))
 
-    return options
+    if config.current_origin.git_url is not None and yes_with_question('Create git remote?'):
+        new_dataset_dict['git_remote_url'] = git_tools.create_repo(config, 'datasets', new_dataset_dict['dataset_name'])
+    else:
+        new_dataset_dict['git_remote_url]'] = simple_input('Remote git repo')
+
+    return config_tools.DatasetConfig(**new_dataset_dict)
 
 
 def create_datasets_config(options):
-    datasets_folder = pathlib.Path.cwd() / '.datasets'
+    datasets_folder = pathlib.Path.cwd() / '.daif'
     datasets_folder.mkdir(exist_ok=True)
 
     dataset_config_data = {
@@ -90,7 +86,7 @@ def create_datasets_config(options):
 
 def init(args: List[str]) -> None:
     cwd = pathlib.Path.cwd()
-    current_config = config_file.get_current_origin()
+    current_config = config_tools.get_config_content()
     options = init_collect_options(current_config)
 
     if current_config is None:
@@ -98,12 +94,11 @@ def init(args: List[str]) -> None:
         return
 
     init_git(current_config, options['dataset_name'])
-    init_dvc(current_config, options['data_folders'], options['dataset_name'])
+    init_dvc(current_config, tools.folder_list_to_pathlib(options['data_folders']), options['dataset_name'])
     readme_tools.create_readme(options)
     create_datasets_config(options)
     subprocess.call(['git', 'add', 'README.md'])
     subprocess.call(['git', 'commit', '-m', 'Added dataset specific files'])
-    subprocess.call(['git', 'push', '-u', 'origin', 'master'])
 
 
 if __name__ == "__main__":

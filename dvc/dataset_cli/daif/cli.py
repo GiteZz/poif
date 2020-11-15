@@ -1,9 +1,11 @@
-import argparse
 import sys
 
-from datasets.config import config
-from datasets.init import init
-from datasets.get import get
+from daif.cli_commands.config import config
+from daif.cli_commands.init import init
+from daif.cli_commands.get import get
+from daif.cli_commands.update import update
+from daif.cli_commands.push import push
+from daif.cli_commands.create import create
 
 
 def main():
@@ -16,7 +18,10 @@ def main():
     valid_commands = {
         'init': init,
         'config': config,
-        'get': get
+        'get': get,
+        'update': update,
+        'push': push,
+        'create': create
     }
     if command in valid_commands.keys():
         valid_commands[command](args[2:])

@@ -2,7 +2,7 @@ from typing import List, Dict
 from pathlib import Path
 from collections import defaultdict
 import uuid
-from datasets.tools.minio import upload_datasets_images
+from daif.tools.minio import upload_datasets_images
 img_extensions = ['.png', '.jpg', '.jpeg']
 
 
@@ -44,5 +44,5 @@ def create_readme(options):
 
 
 if __name__ == "__main__":
-    imgs = create_readme({'s3_endpoint': 'http://datasets.backend.jhub.be', 's3_bucket': 'datasets', 'data_folders': [Path('/home/gilles/test_datasets/dogs_vs_cats/data')]})
+    imgs = create_readme({'s3_endpoint': 'http://datasets.backend.jhub.be', 's3_bucket': 'daif', 'data_folders': [Path('/home/gilles/test_datasets/dogs_vs_cats/data')]})
 

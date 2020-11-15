@@ -9,7 +9,7 @@ new_height = 256
 
 
 def upload_datasets_images(config, files: List[Tuple[Path, Path]]):
-    dataset_sess = boto3.session.Session(profile_name='datasets')
+    dataset_sess = boto3.session.Session(profile_name='daif')
     s3 = dataset_sess.resource('s3',
                                endpoint_url=config['s3_endpoint'],
                                config=Config(signature_version='s3v4')
