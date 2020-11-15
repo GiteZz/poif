@@ -1,5 +1,6 @@
 import pathlib
 import requests
+import datasets.tools.requests as requests_tools
 
 git_credential_file = pathlib.Path.home() / '.git-credentials'
 
@@ -54,8 +55,7 @@ def create_repo(config, share_group, name) -> str:
     }
 
     create_repo_response = requests.post(create_repo_git_api, params=create_repo_param, headers=git_api_headers)
-    if not create_repo_response.ok:
-        print(create_repo_response)
+    requests_tools.check_if_ok(create_repo_response)
     project_id = create_repo_response.json()['id']
     repo_url = create_repo_response.json()['http_url_to_repo']
 
@@ -66,7 +66,7 @@ def create_repo(config, share_group, name) -> str:
         'group_id': group_id
     }
     share_repo_git_api = git_api_url_from_config(config) + f'projects/{project_id}/share'
-    requests.post(share_repo_git_api, params=share_project_param, headers=git_api_headers)
-
+    share_repo_response = requests.post(share_repo_git_api, params=share_project_param, headers=git_api_headers)
+    requests_tools.check_if_ok(share_repo_response)
     return repo_url
 

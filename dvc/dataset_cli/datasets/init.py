@@ -1,12 +1,12 @@
 from typing import Dict, List
 import pathlib
-import datasets.config_file as config_file
-import datasets.git_tools as git_tools
+import datasets.tools.config_file as config_file
+import datasets.tools.git as git_tools
 import datasets.tools as tools
-import os
+import datasets.tools.readme as readme_tools
 import yaml
 import subprocess
-import jinja2
+from pathlib import Path
 
 
 def init_git(config, name):
@@ -22,7 +22,6 @@ def init_dvc(config, data_folders, dataset_name):
     subprocess.call(['dvc', 'init'])
     print(data_folders)
     for data_folder in data_folders:
-        data_folder = pathlib.Path.cwd() / data_folder
         subprocess.call(['dvc', 'add', data_folder])
     subprocess.call(['dvc', 'commit'])
     subprocess.call(['git', 'add', '*.dvc'])
@@ -56,11 +55,12 @@ def init_collect_options(config: Dict) -> Dict:
     print(f'Data folder(s): [default: data][Multiple folders are separated by spaces]')
     data_folders = input()
     if data_folders == "":
-        options['data_folders'] = ['data']
+        options['data_folders'] = [Path.cwd() / 'data']
     else:
-        options['data_folders'] = tools.remove_empty_strings(data_folders.split(' '))
+        options['data_folders'] = [Path.cwd() / folder for folder in tools.remove_empty_strings(data_folders.split(' '))]
 
     return options
+
 
 def create_datasets_config(options):
     datasets_folder = pathlib.Path.cwd() / '.datasets'
@@ -68,7 +68,7 @@ def create_datasets_config(options):
 
     dataset_config_data = {
         'dataset_name': options['dataset_name'],
-        'data_folders': options['data_folders']
+        'data_folders': [str(folder)[len(str(Path.cwd())):] for folder in options['data_folders']]
     }
 
     dataset_config_file = datasets_folder / 'config.yml'
@@ -87,9 +87,6 @@ def create_datasets_config(options):
 #     with open(testing_config_output_file, 'w') as f:
 #         f.write(template.render(data=spec_dict))
 
-def create_readme(options):
-    pass
-
 
 def init(args: List[str]) -> None:
     cwd = pathlib.Path.cwd()
@@ -102,8 +99,10 @@ def init(args: List[str]) -> None:
 
     init_git(current_config, options['dataset_name'])
     init_dvc(current_config, options['data_folders'], options['dataset_name'])
+    readme_tools.create_readme(options)
     create_datasets_config(options)
-    subprocess.call(['git', 'commit', '-m', 'Added dataset configuration file'])
+    subprocess.call(['git', 'add', 'README.md'])
+    subprocess.call(['git', 'commit', '-m', 'Added dataset specific files'])
     subprocess.call(['git', 'push', '-u', 'origin', 'master'])
 
 

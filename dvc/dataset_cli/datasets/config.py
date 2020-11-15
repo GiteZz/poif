@@ -1,9 +1,7 @@
-from datasets.git_tools import get_existing_credentials, add_git_credential
+from datasets.tools.git import get_existing_credentials, add_git_credential
 from datasets.tools import yes
 import getpass
-import pathlib
-import yaml
-import datasets.config_file as config_file
+import datasets.tools.config_file as config_file
 
 
 def config(args):
