@@ -19,7 +19,17 @@ def collect_images(data_folders: List[Path]) -> Dict[str, List[Path]]:
     return image_files
 
 
-def create_readme(dataset_config: DatasetConfig):
+def create_readme(dataset_config: DatasetConfig, git_add=True, git_commit=False):
+    if dataset_config.readme_s3 is None:
+        print(
+            'Configure S3 for image storage, this host the images placed in the readme and should therefore be publicly accessible.')
+        dataset_config.readme_s3 = s3_input(
+            default_bucket='datasets-images',
+            default_profile=dataset_config.dvc_s3.profile,
+            default_endpoint=dataset_config.dvc_s3.endpoint
+        )
+        dataset_config.save()
+
     data_folders = dataset_config.data_folders
     images_by_dir = collect_images(folder_list_to_pathlib(data_folders))
     s3_images_path = Path(uuid.uuid4().hex)
@@ -43,6 +53,11 @@ def create_readme(dataset_config: DatasetConfig):
         for markdown_pair in markdown_pairs:
             f.write(f'## {markdown_pair[0]} \n')
             f.write(f'![text]({markdown_pair[1]})')
+
+    if git_add:
+        subprocess.call(['git', 'add', '--all', 'interface/'])
+    if git_add and git_commit:
+        subprocess.call(['git', 'commit', '-m', '"Added interface"'])
 
 
 if __name__ == "__main__":

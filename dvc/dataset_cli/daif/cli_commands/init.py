@@ -6,9 +6,12 @@ from daif.tools import remove_empty_strings, folder_list_to_pathlib
 from daif.tools.cli import yes_with_question, simple_input, s3_input
 import daif.tools.readme as readme_tools
 import yaml
+import daif.cli_commands.create as create_cli
 import subprocess
 from pathlib import Path
-
+import jinja2
+import daif.tools.readme as readme_tools
+import daif.tools.interface as interface_tools
 
 def init_git(dataset_config: config_tools.DatasetConfig):
     # init local git
@@ -34,18 +37,13 @@ def init_dvc(dataset_config: config_tools.DatasetConfig):
 def ask_for_readme_creation(dataset_config: config_tools.DatasetConfig):
     if not yes_with_question('Create readme?'):
         return
+    readme_tools.create_readme(dataset_config, git_add=True, git_commit=False)
 
-    if dataset_config.readme_s3 is None:
-        print('Configure S3 for image storage, this host the images placed in the readme and should therefore be publicly accessible.')
-        dataset_config.readme_s3 = s3_input(
-            default_bucket='datasets-images',
-            default_profile=dataset_config.dvc_s3.profile,
-            default_endpoint=dataset_config.dvc_s3.endpoint
-        )
-        dataset_config.save()
 
-    readme_tools.create_readme(dataset_config)
-    subprocess.call(['git', 'add', 'README.md'])
+def ask_for_interface_creation(dataset_config: config_tools.DatasetConfig):
+    if not yes_with_question('Do you want to create an interface package for the dataset?'):
+        return
+    interface_tools.create_interface(dataset_config, git_add=True, git_commit=False)
 
 
 def init_collect_options(config: config_tools.DaifConfig) -> config_tools.DatasetConfig:
@@ -87,4 +85,8 @@ def init(args: List[str]) -> None:
 
 
 if __name__ == "__main__":
-    init([])
+    template_path = Path(__file__).parents[1] / 'templates' / 'interface'
+    p1 = list(template_path.glob('**/*.jinja2'))[1]
+
+
+    print(str(p1)[len(str(template_path)) + 1:])

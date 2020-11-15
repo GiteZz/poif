@@ -30,8 +30,11 @@ setuptools.setup(
         'console_scripts': ['daif=daif.cli:main']
     },
     install_requires=[
-        'PyYAML==3.12',
+        'PyYAML',
         'jinja2',
-        'dvc[s3]'
+        'dvc[s3]',
+        'dataclasses_json',
+        'opencv-python',
+        'awscli'
     ]
 )

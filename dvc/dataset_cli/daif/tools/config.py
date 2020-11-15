@@ -38,7 +38,7 @@ class DatasetConfig:
         return dataset_config_file
 
     @staticmethod
-    def load() -> Optional['DaifConfig']:
+    def load() -> Optional['DatasetConfig']:
         dataset_config_file = DatasetConfig.get_config_file()
         with open(dataset_config_file, 'r') as f:
             return DatasetConfig.from_dict(json.load(f))
