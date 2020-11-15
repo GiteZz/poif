@@ -2,16 +2,17 @@ import boto3
 from botocore.client import Config
 from typing import List, Tuple
 from pathlib import Path
+from daif.tools.config import DatasetConfig
 import tempfile
 import cv2
 
 new_height = 256
 
 
-def upload_datasets_images(config, files: List[Tuple[Path, Path]]):
-    dataset_sess = boto3.session.Session(profile_name='daif')
+def upload_datasets_images(dataset_config: DatasetConfig, files: List[Tuple[Path, Path]]):
+    dataset_sess = boto3.session.Session(profile_name=dataset_config.s3_profile)
     s3 = dataset_sess.resource('s3',
-                               endpoint_url=config['s3_endpoint'],
+                               endpoint_url=dataset_config.s3_endpoint,
                                config=Config(signature_version='s3v4')
                                )
     # Rescale the images
@@ -33,5 +34,5 @@ def upload_datasets_images(config, files: List[Tuple[Path, Path]]):
             new_name = temp_dir_path / or_img_name
             cv2.imwrite(str(new_name), resized_img)
 
-            s3.Bucket(f'{config["s3_bucket"]}-images').upload_file(str(new_name), str(dest_file))
+            s3.Bucket(f'{dataset_config.readme_s3_bucket}').upload_file(str(new_name), str(dest_file))
 

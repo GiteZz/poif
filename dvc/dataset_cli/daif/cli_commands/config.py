@@ -1,7 +1,8 @@
 from daif.tools.git import get_existing_credentials, add_git_credential
-from daif.tools import yes, yes_with_question, simple_input
+from daif.tools.cli import yes, yes_with_question, simple_input, s3_input
 import getpass
 import daif.tools.config as config_tools
+from daif.tools.config import DaifConfig
 from typing import Tuple
 
 
@@ -42,14 +43,8 @@ def config_new_origin_collect_options() -> Tuple[config_tools.OriginConfig, bool
         print("Git API key:")
         new_origin_dict['git_api_key'] = input()
 
-    if yes_with_question('Do you want to set a default S3 profile?'):
-        print('Profile name:')
-        new_origin_dict['s3_profile'] = input()
-
-    if yes_with_question('Do you want to set a default bucket and endpoint?'):
-        print('Profile name:')
-        new_origin_dict['s3_default_bucket'] = simple_input('Default S3 bucket', value_when_empty='datasets')
-        new_origin_dict['s3_default_endpoint'] = simple_input('Default S3 endpoint', use_empy_value=False)
+    if yes_with_question('Do you want to set default S3 properties?'):
+        new_origin_dict['default_s3'] = s3_input(default_bucket='datasets')
 
     set_current = yes_with_question('Set as current origin?')
 
@@ -57,13 +52,13 @@ def config_new_origin_collect_options() -> Tuple[config_tools.OriginConfig, bool
 
 
 def config_new_origin(args):
-    current_config = config_tools.get_config_content()
+    current_config = DaifConfig.load()
     origin_config, set_as_current = config_new_origin_collect_options()
     current_config.origins.append(origin_config)
     if set_as_current:
         current_config.current_origin = origin_config
 
-    config_tools.save_config(current_config)
+    current_config.save()
 
 
 def config_set(args):
