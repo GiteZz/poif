@@ -25,7 +25,7 @@ class DatasetConfig:
     @staticmethod
     def get_config_file():
         config_path = Path.cwd() / '.dataset'
-        config_path.mkdir()
+        config_path.mkdir(exist_ok=True)
         return config_path / 'config.json'
 
     def save(self):

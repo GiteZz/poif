@@ -32,12 +32,12 @@ def create_readme(dataset_config: DatasetConfig):
             s3_name = s3_images_path / selected_image.parts[-1]
 
             image_pairs.append((selected_image, s3_name))
-            s3_endpoint = get_url(dataset_config.s3_endpoint)
-            http_path = f'{s3_endpoint}{dataset_config.readme_s3_bucket}/{dataset_config.dataset_name}-images/{s3_images_path}/{selected_image.parts[-1]}'
+            s3_endpoint = get_url(dataset_config.readme_s3.endpoint)
+            http_path = f'{s3_endpoint}{dataset_config.readme_s3.bucket}/{dataset_config.dataset_name}/{s3_images_path}/{selected_image.parts[-1]}'
 
             markdown_pairs.append((str(selected_image)[len(str(Path.cwd())):], http_path))
 
-    upload_datasets_images(dataset_config, image_pairs)
+    upload_datasets_images(dataset_config.readme_s3, image_pairs)
 
     with open('README.md', 'w') as f:
         for markdown_pair in markdown_pairs:

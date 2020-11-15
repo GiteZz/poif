@@ -25,9 +25,9 @@ def init_dvc(dataset_config: config_tools.DatasetConfig):
     subprocess.call(['git', 'add', '*.dvc'])
     subprocess.call(['git', 'add', '*.gitignore'])
     subprocess.call(['git', 'add', '.dvc/config'])
-    subprocess.call(['dvc', 'remote', 'add', '-d', 's3_storage', f's3://{dataset_config.s3_bucket}/{dataset_config.dataset_name}'])
-    subprocess.call(['dvc', 'remote', 'modify', 's3_storage', 'endpointurl', f'{dataset_config.s3_endpoint}'])
-    subprocess.call(['dvc', 'remote', 'modify', 's3_storage', 'profile', f'{dataset_config.s3_profile}'])
+    subprocess.call(['dvc', 'remote', 'add', '-d', 's3_storage', f's3://{dataset_config.dvc_s3.bucket}/{dataset_config.dataset_name}'])
+    subprocess.call(['dvc', 'remote', 'modify', 's3_storage', 'endpointurl', f'{dataset_config.dvc_s3.endpoint}'])
+    subprocess.call(['dvc', 'remote', 'modify', 's3_storage', 'profile', f'{dataset_config.dvc_s3.profile}'])
     subprocess.call(['git', 'commit', '-am', 'Initial dvc commit'])
 
 
@@ -35,14 +35,17 @@ def ask_for_readme_creation(dataset_config: config_tools.DatasetConfig):
     if not yes_with_question('Create readme?'):
         return
 
-    bucket_suggestion = "datasets-images" if dataset_config.readme_s3_bucket is None else dataset_config.readme_s3_bucket
-    readme_bucket = simple_input(
-        'S3 bucket for images, this bucket should be publicly available',
-        value_when_empty=bucket_suggestion
-    )
-    dataset_config.readme_s3_bucket = readme_bucket
-    dataset_config.save()
+    if dataset_config.readme_s3 is None:
+        print('Configure S3 for image storage, this host the images placed in the readme and should therefore be publicly accessible.')
+        dataset_config.readme_s3 = s3_input(
+            default_bucket='datasets-images',
+            default_profile=dataset_config.dvc_s3.profile,
+            default_endpoint=dataset_config.dvc_s3.endpoint
+        )
+        dataset_config.save()
+
     readme_tools.create_readme(dataset_config)
+    subprocess.call(['git', 'add', 'README.md'])
 
 
 def init_collect_options(config: config_tools.DaifConfig) -> config_tools.DatasetConfig:
@@ -50,20 +53,11 @@ def init_collect_options(config: config_tools.DaifConfig) -> config_tools.Datase
 
     new_dataset_dict['dataset_name'] = simple_input('Dataset name', use_empy_value=False)
 
-    s3_config = {}
-    s3_config['s3_bucket'] = simple_input(
-        'S3 bucket',
-        value_when_empty=config.current_origin.s3_default_bucket
+    new_dataset_dict['dvc_s3'] = s3_input(
+        default_bucket=config.current_origin.default_s3.bucket,
+        default_endpoint=config.current_origin.default_s3.endpoint,
+        default_profile=config.current_origin.default_s3.profile
     )
-    s3_config['s3_endpoint'] = simple_input(
-        'S3 endpoint',
-        value_when_empty=config.current_origin.s3_default_endpoint
-    )
-    s3_config['s3_profile'] = simple_input(
-        'S3 profile',
-        value_when_empty=config.current_origin.s3_profile
-    )
-    new_dataset_dict['dvc_s3'] = config_tools.S3Config(**s3_config)
 
     data_folders = simple_input('Data folder, if multiple folder are tracked separate by space', value_when_empty='data')
     new_dataset_dict['data_folders'] = remove_empty_strings(data_folders.split(' '))
@@ -77,8 +71,7 @@ def init_collect_options(config: config_tools.DaifConfig) -> config_tools.Datase
 
 
 def init(args: List[str]) -> None:
-    cwd = pathlib.Path.cwd()
-    current_config = config_tools.get_config_content()
+    current_config = config_tools.DaifConfig.load()
     if current_config is None:
         print("Please create or set origin.")
         return
