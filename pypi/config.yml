@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pypi-config
+  namespace: pypi
+  labels:
+    app: pypi
+data:
+

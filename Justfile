@@ -77,10 +77,14 @@ build-jupyter-test:
     cd ./jupyter/images/extension_test && docker build . -t localhost:5000/extension_test
     docker push localhost:5000/extension_test
 
-run-jupyter-docker: build-jupyter-test
-    docker stop test_jupyter || true
-    docker rm test_jupyter
+setup-jupyter-docker: build-jupyter-test
+    -docker stop test_jupyter
+    -docker rm test_jupyter
     docker run -d -p 8888:8888 -e JUPYTER_TOKEN=token --name test_jupyter localhost:5000/extension_test
+
+setup-pypi:
+    kubectl apply -f ./pypi/namespace.yml
+    kubectl apply -f ./pypi/
 
 # K3S commands
 

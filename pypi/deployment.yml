@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pypi-deployment
+  namespace: pypi
+  labels:
+    app: pypi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pypi
+  template:
+    metadata:
+      labels:
+        app: pypi
+    spec:
+      containers:
+      - name: pypi
+        image: pypiserver/pypiserver
+        envFrom:
+          - configMapRef:
+              name: pypi-config
+        ports:
+        - containerPort: 8080

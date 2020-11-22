@@ -315,11 +315,7 @@ singleuser:
     - display_name: "Datascience environment"
       description: "If you want the additional bells and whistles: Python, R, and Julia."
       kubespawner_override:
-        image: jupyter/datascience-notebook:2343e33dec46
-    - display_name: "Spark environment"
-      description: "The Jupyter Stacks spark image!"
-      kubespawner_override:
-        image: jupyter/all-spark-notebook:2343e33dec46
+        image: localhost:5000/luxury_nb
   imagePullSecret:
     enabled: false
     registry:

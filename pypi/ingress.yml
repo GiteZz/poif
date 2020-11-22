@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: pypi-ing
+  namespace: pypi
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  rules:
+  - host: pypi.jhub.be
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: pypi
+          servicePort: 80

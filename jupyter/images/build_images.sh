@@ -1,4 +1,5 @@
 cd "$(dirname "$0")"
 
-cd luxery
-docker build . -t luxury_nb
+cd luxury
+docker build . -t localhost:5000/luxury_nb
+docker push localhost:5000/luxury_nb

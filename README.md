@@ -6,3 +6,5 @@
 - DVC (302xx)
     - Minio 30210
     - Gitlab 30220 (http), 30221 (https), 30222 (ssh)
+- PyPi (303xx)
+    - Server 30310

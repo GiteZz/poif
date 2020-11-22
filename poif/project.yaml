@@ -1,0 +1,61 @@
+docker_env:
+  docker_image: localhost:5000/project_python # This can't be versioned, maybe leave out?
+  docker_file: docker_images/project_runnable
+  from_requirements: dev/requirements.txt
+  from_conda: dev/conda.yaml
+
+kubernetes_conf: # Should this be added because this should not influence the project outcome, add via different yaml maybe
+  information: aaa
+
+default_parameters:
+  from_json: config/parameters.json
+  from_yaml: config.paramaters.yaml
+  values:
+    num_epochs: 60
+    lr: 0.0001
+    weight_decay: 0.001
+
+default_data_query:
+  from_yaml: config/datasets.yaml
+  datasets:
+    - name: cats_vs_dogs
+      git_url: https://github.com/name/dataet # DVC repo, contains type (Classification, Coco, Detection, ...)
+      filter_metadata:
+        by_function: filters/filters.py!cats_vs_dogs
+        fruit_count:
+          min: 2
+          max: 5
+        category:
+          include:
+            - jonagold_apple as apple
+            - gala_apple as apple
+            - [jonagold, gala] as apple
+          exclude:
+            - pear
+            - raisin
+          limit:
+            train_limit: 10
+            val_limit: 50
+            test_limit: 500
+            bins:
+              - camera
+              - distance
+      new_metadata:
+
+test_run:
+  - parameters:
+      num_epochs: 2
+    filter_metadata:
+      category:
+        limit:
+          train_limit: 2
+          val_limit: 2
+          test_limit: 2
+
+experiments:
+  - name: Test with 10 samples per batch
+    parameters: # These will overwrite
+      num_epochs: 100
+
+
+

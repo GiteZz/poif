@@ -1,44 +1,7 @@
-# Copyright (c) Jupyter Development Team.
-# Distributed under the terms of the Modified BSD License.
-ARG BASE_CONTAINER=jupyter/base-notebook
-FROM $BASE_CONTAINER
+FROM jupyter/datascience-notebook
 
-LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
+COPY ./requirements.txt /tmp/requirements.txt
 
-USER root
+RUN pip install -r /tmp/requirements.txt
 
-# Install all OS dependencies for fully functional notebook server
-RUN apt-get update && apt-get install -yq --no-install-recommends \
-    build-essential \
-    emacs-nox \
-    vim-tiny \
-    git \
-    inkscape \
-    jed \
-    libsm6 \
-    libxext-dev \
-    libxrender1 \
-    lmodern \
-    netcat \
-    python-dev \
-    # ---- nbconvert dependencies ----
-    texlive-xetex \
-    texlive-fonts-recommended \
-    texlive-plain-generic \
-    # ----
-    tzdata \
-    unzip \
-    nano-tiny \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Create alternative for nano -> nano-tiny
-RUN update-alternatives --install /usr/bin/nano nano /usr/bin/nano-tiny 10
-#RUN conda install python=3.6
-#RUN conda config --append channels conda-forge
-RUN conda install nb_conda_kernels
-
-RUN apt-get update && apt-get -y install curl
-RUN curl https://rclone.org/install.sh | bash
-
-# Switch back to jovyan to avoid accidental container runs as root
-#USER $NB_UID
+ENV MLFLOW_TRACKING_URI="http://mlflow.jhub.be/"
