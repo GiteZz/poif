@@ -14,7 +14,8 @@ class DataQueryType:
 """
 Use cases:
 
-from datasets import dogs_vs_cats
+from poif import datasets
+
 
 dogs_vs_cats.get_meta_files()
 dogs_vs_cats.train.get_meta_files()

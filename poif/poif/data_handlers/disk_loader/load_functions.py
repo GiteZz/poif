@@ -1,10 +1,10 @@
-from poif.base_classes import DataFilePath, Image
+from poif.base_classes.resource import DataFilePath, Image
 import cv2
 
 
 def load(path: DataFilePath):
     extension = path.parts[-1].split('.')[-1]
-    if extension in ['jpg', 'png']:
+    if extension in ['jpg', 'png', 'jpeg']:
         return img_loader(path)
     else:
         raise NotImplementedError()

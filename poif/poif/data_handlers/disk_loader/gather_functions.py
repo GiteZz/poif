@@ -1,17 +1,19 @@
-from poif.base_classes import MetaInput, DataInput, MetaFilePath, DataFilePath
+from poif.base_classes.input import MetaInput, DataInput
+from poif.base_classes.resource import MetaFilePath, DataFilePath
 from pathlib import Path
 from typing import List, Tuple, Dict
 import yaml
+import hashlib
 
 
-def poif_format_file_gatherer(path: Path) -> List[Tuple[MetaFilePath, DataFilePath]]:
-    meta_files = path.glob('*.meta')
+def poif_format_file_gatherer(path: Path) -> List[Tuple[MetaInput, DataFilePath]]:
+    meta_files = path.rglob('*.meta')
 
     tuple_list = []
 
     for meta_file in meta_files:
         file_name = meta_file.parts[-1].replace('.meta', '')
-        data_file_glob = list((meta_file.parent / file_name).glob('.*'))
+        data_file_glob = list(meta_file.parent.glob(f'{file_name}.*'))
 
         if len(data_file_glob) > 2:
             print(f'{meta_file} is associated with multiple data files.')
@@ -19,23 +21,54 @@ def poif_format_file_gatherer(path: Path) -> List[Tuple[MetaFilePath, DataFilePa
             print(f'{meta_file} has no associated data file.')
         else:
             if '.meta' in data_file_glob[0].parts[-1]:
-                tuple_list.append((meta_file, data_file_glob[0]))
+                data_path = data_file_glob[1]
             else:
-                tuple_list.append((meta_file, data_file_glob[1]))
+                data_path = data_file_glob[0]
+
+            file_hash = hashlib.md5(open(data_path, 'rb').read()).hexdigest()
+
+            with open(meta_file, 'r') as f:
+                meta_data = yaml.safe_load(f)
+                if meta_data is None:
+                    print(f'Error with {meta_file}')
+                    continue
+                meta_data['file_name'] = file_name
+                meta_data['rel_file_path'] = str(meta_file.parent)[len(str(path)) + 1:]
+                meta_input = MetaInput(meta_data=meta_data, tag=file_hash)
+
+                tuple_list.append((meta_input, data_path))
 
     return tuple_list
 
 
-def poif_format_fill_metadata(
-        path_tuples: List[Tuple[MetaFilePath, DataFilePath]]
-) -> List[Tuple[MetaInput, DataFilePath]]:
+def file_gatherer(path: Path, extensions: List[str]) -> List[Tuple[MetaInput, DataFilePath]]:
+    tuple_list = []
+    file_list = []
+    # Remove the leading point from all extensions.
+    parsed_extensions = [ext[1:] if ext[0] == '.' else ext for ext in extensions]
 
-    metadata_tuple_list = []
-    for meta_path, data_path in path_tuples:
-        file_name = meta_path.parts[-1]
-        with open(meta_path, 'r') as f:
-            meta_data = yaml.safe_load(f)
-            meta_input = MetaInput(name=file_name, meta_data=meta_data)
-            metadata_tuple_list.append((meta_input, data_path))
+    for extension in parsed_extensions:
 
-    return metadata_tuple_list
+        file_list.extend(list(path.rglob(f'*.{extension}')))
+
+    for file in file_list:
+        file_hash = hashlib.md5(open(file, 'rb').read()).hexdigest()
+        meta_data = {}
+        file_name = file.parts[-1].split('.')[0]
+
+        meta_data['file_name'] = file_name
+        meta_data['rel_file_path'] = str(file.parent)[len(str(path)) + 1:]
+        meta_input = MetaInput(meta_data=meta_data, tag=file_hash)
+
+        tuple_list.append((meta_input, file))
+
+    return tuple_list
+
+
+if __name__ == "__main__":
+    ds_path = Path('/home/gilles/test_daif/dogs_vs_cats/data')
+    collected_tuples = poif_format_file_gatherer(ds_path)
+
+    ds_path = Path('/home/datasets/pneunomia')
+    file_tuples = file_gatherer(ds_path, ['.jpeg'])
+    a = 5
