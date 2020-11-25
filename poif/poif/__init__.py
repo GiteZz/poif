@@ -1,13 +1,15 @@
 from typing import Optional, Callable, List
-from poif.base_classes import Parameters, DataQuery, Experiment, Output, RunEnvironment
 
+from poif.base_classes.experiment import Experiment
+from poif.base_classes.parameters import Parameters
+from poif.base_classes.output import Output
+from poif.base_classes.resource import Resource
+from poif.base_classes.data_query import DataQuery
+from poif.base_classes.run_environment import RunEnvironment
 
-def run(
-        experiment_name: str,
-        entry_point: Callable[[Experiment], Output],
-        default_parameters: Parameters,
-        default_data_query: DataQuery,
-        test_run: Experiment,
+def run(run_name: str,
+        test_experiment: Experiment,
+        default_experiment: Experiment,
         experiments: List[Experiment],
         run_environment: RunEnvironment):
     pass

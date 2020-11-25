@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from typing import List
-from poif.base_classes import DockerEnvironment
+from poif.base_classes.docker_environment import DockerEnvironment
 
 RUN_ENV_DOCKER = 0
 RUN_ENV_KUBERNETES = 1
