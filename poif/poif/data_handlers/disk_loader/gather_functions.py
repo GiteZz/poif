@@ -6,10 +6,10 @@ import yaml
 import hashlib
 
 
-def poif_format_file_gatherer(path: Path) -> List[Tuple[MetaInput, DataFilePath]]:
+def poif_format_file_gatherer(path: Path) -> List[MetaInput]:
     meta_files = path.rglob('*.meta')
 
-    tuple_list = []
+    meta_input_list = []
 
     for meta_file in meta_files:
         file_name = meta_file.parts[-1].replace('.meta', '')
@@ -34,21 +34,20 @@ def poif_format_file_gatherer(path: Path) -> List[Tuple[MetaInput, DataFilePath]
                     continue
                 meta_data['file_name'] = file_name
                 meta_data['rel_file_path'] = str(meta_file.parent)[len(str(path)) + 1:]
-                meta_input = MetaInput(meta_data=meta_data, tag=file_hash)
+                meta_input = MetaInput(meta_data=meta_data, tag=file_hash, data_loc=data_path)
 
-                tuple_list.append((meta_input, data_path))
+                meta_input_list.append(meta_input)
 
-    return tuple_list
+    return meta_input_list
 
 
-def file_gatherer(path: Path, extensions: List[str]) -> List[Tuple[MetaInput, DataFilePath]]:
-    tuple_list = []
+def file_gatherer(path: Path, extensions: List[str]) -> List[MetaInput]:
+    meta_input_list = []
     file_list = []
     # Remove the leading point from all extensions.
     parsed_extensions = [ext[1:] if ext[0] == '.' else ext for ext in extensions]
 
     for extension in parsed_extensions:
-
         file_list.extend(list(path.rglob(f'*.{extension}')))
 
     for file in file_list:
@@ -58,11 +57,11 @@ def file_gatherer(path: Path, extensions: List[str]) -> List[Tuple[MetaInput, Da
 
         meta_data['file_name'] = file_name
         meta_data['rel_file_path'] = str(file.parent)[len(str(path)) + 1:]
-        meta_input = MetaInput(meta_data=meta_data, tag=file_hash)
+        meta_input = MetaInput(meta_data=meta_data, tag=file_hash, data_loc=file)
 
-        tuple_list.append((meta_input, file))
+        meta_input_list.append(meta_input)
 
-    return tuple_list
+    return meta_input_list
 
 
 if __name__ == "__main__":

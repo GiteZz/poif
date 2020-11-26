@@ -1,16 +1,18 @@
 from poif.base_classes.resource import DataFilePath
 from poif.base_classes.input import MetaInput, DataInput
 from poif.data_handlers.disk_loader.load_functions import load
+from poif.base_classes.parameters import Parameters
 from typing import List, Tuple, Union, Callable, Dict, Any
 from collections import defaultdict
 import logging
 
-DatasetFilter = Callable[[List[MetaInput]], Dict[str, List[MetaInput]]]
-DataPointFilter = Callable[[MetaInput], str]
-MetadataProcessor = Callable[[MetaInput], MetaInput]
+
 OutputFilter = Callable[[DataInput], Any]
 
 logger = logging.getLogger(__name__)
+
+# Resizing: Easy
+# class <-> index: Need access to entire ds after
 
 
 class BaseDataset:
@@ -41,10 +43,9 @@ class BaseDataset:
 class Dataset(BaseDataset):
     def __init__(self,
                  meta_list: List[Tuple[MetaInput, DataFilePath]],
+                 parameters: Parameters = None,
                  output_filter: OutputFilter = None,
-                 dataset_filer: DatasetFilter = None,
-                 datapoint_filter: DataPointFilter = None,
-                 metadata_processors: Union[List[MetadataProcessor], MetadataProcessor] = None):
+                 ):
 
         # Make sure self.metadata_processors is always a list.
         super().__init__(meta_list, output_filter)

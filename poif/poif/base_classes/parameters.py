@@ -2,4 +2,5 @@ from dataclasses import dataclass
 
 @dataclass
 class Parameters:
-    pass
+    img_size: int = None
+    batch_size: int = None

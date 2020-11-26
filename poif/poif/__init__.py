@@ -8,8 +8,6 @@ from poif.base_classes.data_query import DataQuery
 from poif.base_classes.run_environment import RunEnvironment
 
 
-
-
 def run(run_name: str,
         test_experiment: Experiment,
         default_experiment: Experiment,
