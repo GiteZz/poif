@@ -63,7 +63,7 @@ def init_collect_options(config: config_tools.DaifConfig) -> config_tools.Datase
     if config.current_origin.git_url is not None and yes_with_question('Create git remote?'):
         new_dataset_dict['git_remote_url'] = git_tools.create_repo(config, 'datasets', new_dataset_dict['dataset_name'])
     else:
-        new_dataset_dict['git_remote_url]'] = simple_input('Remote git repo')
+        new_dataset_dict['git_remote_url'] = simple_input('Remote git repo')
 
     return config_tools.DatasetConfig(**new_dataset_dict)
 

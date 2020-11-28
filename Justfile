@@ -6,13 +6,13 @@ setup-datasets-namespace:
 clear-datasets-namespace:
     -kubectl delete namespace dvc # This line is allowed to fail because the namespace could've already been deleted
 
-setup-datasets-gitlab:
+setup-datasets-gitlab: setup-datasets-namespace
     kubectl apply -f ./dvc/gitlab/
 
-setup-datasets-minio:
+setup-datasets-minio: setup-datasets-namespace
     kubectl apply -f ./dvc/minio/
 
-setup-dvc: setup-datasets-namespace setup-datasets-gitlab setup-datasets-minio
+setup-dvc:  setup-datasets-gitlab setup-datasets-minio
 
 hard-setup-dvc: clear-datasets-namespace setup-dvc
     kubectl rollout status deployment dvc-gitlab-deployment -n dvc

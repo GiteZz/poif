@@ -11,8 +11,9 @@ DataPointTransformation = Callable[[MetaInput], List[MetaInput]]
 MetadataProcessor = Callable[[MetaInput], MetaInput]
 
 # Used for splitting the dataset, used for train/val/test split
-DatasetFilter = Callable[[List[MetaInput]], Dict[str, List[MetaInput]]]
+DatasetSplitter = Callable[[List[MetaInput]], Dict[str, List[MetaInput]]]
 DataPointFilter = Callable[[MetaInput], str]
+
 
 @dataclass
 class DataQuery:
@@ -20,8 +21,9 @@ class DataQuery:
     dataset_type: str # by_regexes, poif, coco, ?
     regexes: List[str] = None
     path: Path = None
-    dataset_filer: DatasetFilter = None,
+    dataset_filer: DatasetSplitter = None,
     datapoint_filter: DataPointFilter = None,
+    datapoint_transformations: Union[List[DataPointTransformation], DataPointTransformation] = None
     metadata_processors: Union[List[MetadataProcessor], MetadataProcessor] = None
 
     meta_inputs: List[MetaInput] = field(init=False)

@@ -2,6 +2,7 @@ from typing import List, Dict
 from pathlib import Path
 from collections import defaultdict
 import uuid
+from daif.tools.cli import s3_input
 from daif.tools.minio import upload_datasets_images
 from daif.tools.config import DatasetConfig
 from daif.tools import folder_list_to_pathlib, get_url
@@ -21,8 +22,7 @@ def collect_images(data_folders: List[Path]) -> Dict[str, List[Path]]:
 
 def create_readme(dataset_config: DatasetConfig, git_add=True, git_commit=False):
     if dataset_config.readme_s3 is None:
-        print(
-            'Configure S3 for image storage, this host the images placed in the readme and should therefore be publicly accessible.')
+        print('Configure S3 for image storage, this host the images placed in the readme and should therefore be publicly accessible.')
         dataset_config.readme_s3 = s3_input(
             default_bucket='datasets-images',
             default_profile=dataset_config.dvc_s3.profile,
