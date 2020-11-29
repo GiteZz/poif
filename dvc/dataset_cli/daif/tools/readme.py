@@ -6,6 +6,7 @@ from daif.tools.cli import s3_input
 from daif.tools.minio import upload_datasets_images
 from daif.tools.config import DatasetConfig
 from daif.tools import folder_list_to_pathlib, get_url
+import subprocess
 img_extensions = ['.png', '.jpg', '.jpeg']
 
 
