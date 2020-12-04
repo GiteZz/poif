@@ -8,11 +8,13 @@ spec:
   selector:
     # Looks for labels `app:minio` in the namespace and applies the spec
     app: dvc-minio-backend
+  type: NodePort
   ports:
     - name: map-9000
       protocol: TCP
       port: 9000
       targetPort: 9000
+      nodePort: 30210
     - name: map-80
       protocol: TCP
       port: 80

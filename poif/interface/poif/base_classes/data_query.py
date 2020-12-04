@@ -17,8 +17,10 @@ DataPointFilter = Callable[[MetaInput], str]
 
 @dataclass
 class DataQuery:
-    query_type: int
-    dataset_type: str # by_regexes, poif, coco, ?
+    data_cache_url: str = None
+    git_url: str = None
+    query_type: int = None
+    dataset_type: str = None # by_regexes, poif, coco, ?
     regexes: List[str] = None
     path: Path = None
     dataset_filer: DatasetSplitter = None,
@@ -41,6 +43,8 @@ class DataQuery:
 
     def parse_meta_inputs(self):
         pass
+
+def get_files(data_cache_url)
 
 
 class DataQueryType:
