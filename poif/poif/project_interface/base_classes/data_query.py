@@ -3,18 +3,16 @@ from pathlib import Path
 import requests
 
 from typing import List, Tuple, Union, Callable, Dict, Any
-from poif.project_interface.base_classes.input import MetaInput, DataInput
+from poif.project_interface.base_classes.input import Input
 from poif.project_interface.data_handlers.disk_loader.gather_functions import file_gatherer
 from poif.typing import FileHash, RelFilePath
 from poif.project_interface.base_classes.location import HttpLocation
-
-
-DataPointTransformation = Callable[[MetaInput], Union[MetaInput, List[MetaInput]]]
-
-
-# Used for splitting the dataset, used for train/val/test split
-DatasetSplitter = Callable[[List[MetaInput]], Dict[str, List[MetaInput]]]
-DataPointFilter = Callable[[MetaInput], str]
+from poif.project_interface.base_classes.transform import (
+    DataPointTransformation,
+    DataSetTransformation,
+    DataPointSplitter,
+    DataSetSplitter
+)
 
 
 @dataclass
@@ -26,37 +24,63 @@ class DataQuery:
     dataset_type: str = None # by_regexes, poif, coco, ?
     regexes: List[str] = None
 
-    dataset_filter: DatasetSplitter = None,
-    datapoint_filter: DataPointFilter = None,
-
-    datapoint_transformations: Union[List[DataPointTransformation], DataPointTransformation] = None
-
-    def validate(self):
-        if self.dataset_filter is not None and self.datapoint_filter is not None:
-            return ValueError('dataset_filter and datapoint_filter can not be both defined.')
+    filter_list: List[Union[DataPointSplitter, DataSetSplitter]] = field(default_factory=[])
+    transformation_list: List[Union[DataPointTransformation, DataSetTransformation]] = field(default_factory=[])
 
     def __post_init__(self):
         if self.data_cache_url[-1] == '/':
             self.data_cache_url = self.data_cache_url[:-1]
 
 
+def process_meta_input(meta_input: List[Input], input_query: DataQuery) -> List[Input]:
+    current_list = meta_input
+    for transformation in input_query.transformation_list:
+        if isinstance(transformation, DataPointTransformation):
+            new_list = []
+            for item in current_list:
+                # The transformation can give back None, one or more meta inputs, therefore we have to
+                # take different actions based on the format returned.
+                new_item = transformation(item)
+                if new_item is None:
+                    continue
+                if isinstance(new_item, list):
+                    new_list.extend(new_item)
+                else:
+                    new_list.append(new_item)
+            current_list = new_list
+
+        elif isinstance(transformation, DataSetTransformation):
+            current_list = transformation(current_list)
+    return current_list
+
+
 def get_dataset(input_query: DataQuery):
-    pass
+    meta_files = get_meta_files(input_query)
+    meta_files = process_meta_input(meta_files, input_query)
 
-def get_meta_files(input_query: DataQuery) -> List[MetaInput]:
+
+def get_meta_files(input_query: DataQuery) -> List[Input]:
     files = get_files(input_query)
+    meta_input_list = []
+    for file_hash, rel_file_path in files:
 
-    for file_hash, reLfile_path in files:
-        meta_input_list = []
 
-        file_name = Path(reLfile_path).parts[-1]
-        rel_file_path = '/'.join(Path(reLfile_path).parts[:-1])
-
-        http_params = {
-
+        meta_data = {
+            'file_name': Path(rel_file_path).parts[-1],
+            'rel_file_path': '/'.join(Path(rel_file_path).parts[:-1])
         }
-        remote_loc = HttpLocation(input_query.data_cache_url, )
-        meta_input = MetaInput()
+
+        remote_loc = HttpLocation(
+            input_query.data_cache_url,
+            commit=input_query.git_commit,
+            data_tag=file_hash,
+            git_url=input_query.git_url
+        )
+
+        meta_input_list.append(Input(data_loc=remote_loc, meta_data=meta_data, tag=file_hash))
+
+    return meta_input_list
+
 
 def get_files(input_query: DataQuery) -> Dict[FileHash, RelFilePath]:
     params = {

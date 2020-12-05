@@ -1,5 +1,5 @@
 from poif.project_interface.base_classes.resource import DataFilePath
-from poif.project_interface.base_classes.input import MetaInput, DataInput
+from poif.project_interface.base_classes.input import Input
 from poif.project_interface.data_handlers.disk_loader.load_functions import load
 from poif.project_interface.base_classes.parameters import Parameters
 from typing import List, Tuple, Union, Callable, Dict, Any
@@ -7,7 +7,7 @@ from collections import defaultdict
 import logging
 
 
-OutputFilter = Callable[[DataInput], Any]
+OutputFilter = Callable[[Input], Any]
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 class BaseDataset:
     def __init__(self,
-                 meta_list: List[Tuple[MetaInput, DataFilePath]],
+                 meta_list: List[Tuple[Input, DataFilePath]],
                  output_filter: OutputFilter = None):
 
         self.meta_list = meta_list
@@ -26,7 +26,7 @@ class BaseDataset:
     def __len__(self):
         return len(self.meta_list)
 
-    def __getitem__(self, item) -> DataInput:
+    def __getitem__(self, item) -> Input:
         data = load(self.meta_list[item][1])
         meta_input = self.meta_list[item][0]
 
@@ -36,13 +36,13 @@ class BaseDataset:
         else:
             return data_input
 
-    def get_meta_files(self) -> List[MetaInput]:
+    def get_meta_files(self) -> List[Input]:
         return [meta_data_tuple[0] for meta_data_tuple in self.meta_list]
 
 
 class Dataset(BaseDataset):
     def __init__(self,
-                 meta_list: List[Tuple[MetaInput, DataFilePath]],
+                 meta_list: List[Tuple[Input, DataFilePath]],
                  parameters: Parameters = None,
                  output_filter: OutputFilter = None,
                  ):

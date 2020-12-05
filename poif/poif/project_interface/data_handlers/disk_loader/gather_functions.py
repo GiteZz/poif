@@ -1,4 +1,4 @@
-from poif.project_interface.base_classes.input import MetaInput, DataInput
+from poif.project_interface.base_classes.input import Input
 from poif.project_interface.base_classes.resource import MetaFilePath, DataFilePath
 from pathlib import Path
 from typing import List, Tuple, Dict
@@ -6,7 +6,7 @@ import yaml
 import hashlib
 
 
-def poif_format_file_gatherer(path: Path) -> List[MetaInput]:
+def poif_format_file_gatherer(path: Path) -> List[Input]:
     meta_files = path.rglob('*.meta')
 
     meta_input_list = []
@@ -34,14 +34,14 @@ def poif_format_file_gatherer(path: Path) -> List[MetaInput]:
                     continue
                 meta_data['file_name'] = file_name
                 meta_data['rel_file_path'] = str(meta_file.parent)[len(str(path)) + 1:]
-                meta_input = MetaInput(meta_data=meta_data, tag=file_hash, data_loc=data_path)
+                meta_input = Input(meta_data=meta_data, tag=file_hash, data_loc=data_path)
 
                 meta_input_list.append(meta_input)
 
     return meta_input_list
 
 
-def file_gatherer(path: Path, extensions: List[str]) -> List[MetaInput]:
+def file_gatherer(path: Path, extensions: List[str]) -> List[Input]:
     meta_input_list = []
     file_list = []
     # Remove the leading point from all extensions.
@@ -57,7 +57,7 @@ def file_gatherer(path: Path, extensions: List[str]) -> List[MetaInput]:
 
         meta_data['file_name'] = file_name
         meta_data['rel_file_path'] = str(file.parent)[len(str(path)) + 1:]
-        meta_input = MetaInput(meta_data=meta_data, tag=file_hash, data_loc=file)
+        meta_input = Input(meta_data=meta_data, tag=file_hash, data_loc=file)
 
         meta_input_list.append(meta_input)
 

@@ -5,9 +5,21 @@ import requests
 import numpy as np
 import cv2
 
+
 @dataclass
 class DataLocation:
-    pass
+    data_tag: str
+
+    def get(self):
+        Exception('Base class should not be used')
+
+
+@dataclass
+class StringLocation(DataLocation):
+    data_str: str
+
+    def get(self):
+        return self.data_str
 
 
 @dataclass
@@ -15,7 +27,6 @@ class HttpLocation(DataLocation):
     url: URL
     commit: str
     git_url: str
-    data_tag: str
 
     def get_parames(self) -> UrlParams:
         return {
