@@ -20,7 +20,7 @@ class Input:
         print(f'get short {item}')
         if item == 'data':
             if isinstance(self.data_locations, DataLocation):
-                return self.data_locations.get()
+                return self.data_locations
             else:
                 return DictToClass(self)
         else:

@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from pathlib import Path
 import requests
+from collections import defaultdict
 
 from typing import List, Tuple, Union, Callable, Dict, Any
 from poif.project_interface.base_classes.input import Input
@@ -24,16 +25,21 @@ class DataQuery:
     dataset_type: str = None # by_regexes, poif, coco, ?
     regexes: List[str] = None
 
-    filter_list: List[Union[DataPointSplitter, DataSetSplitter]] = field(default_factory=[])
-    transformation_list: List[Union[DataPointTransformation, DataSetTransformation]] = field(default_factory=[])
+    splitter_list: List[Union[DataPointSplitter, DataSetSplitter]] = None
+    transformation_list: List[Union[DataPointTransformation, DataSetTransformation]] = None
 
     def __post_init__(self):
-        if self.data_cache_url[-1] == '/':
+        if self.data_cache_url is not None and self.data_cache_url[-1] == '/':
             self.data_cache_url = self.data_cache_url[:-1]
 
+        if self.splitter_list is None:
+            self.splitter_list = []
+        if self.transformation_list is None:
+            self.transformation_list = []
 
-def process_meta_input(meta_input: List[Input], input_query: DataQuery) -> List[Input]:
-    current_list = meta_input
+
+def transform_inputs(input_list: List[Input], input_query: DataQuery) -> List[Input]:
+    current_list = input_list
     for transformation in input_query.transformation_list:
         if isinstance(transformation, DataPointTransformation):
             new_list = []
@@ -54,32 +60,49 @@ def process_meta_input(meta_input: List[Input], input_query: DataQuery) -> List[
     return current_list
 
 
+def split_inputs(input_list: List[Input], input_query: DataQuery) -> Dict[str, List[Input]]:
+    list_split_dicts = []
+    for splitter in input_query.splitter_list:
+        if isinstance(splitter, DataPointSplitter):
+            splitter_dict = defaultdict(list)
+            for input_item in input_list:
+                splitter_dict[splitter(input_item)].append(input_item)
+            list_split_dicts.append(splitter_dict)
+        elif isinstance(splitter, DataSetSplitter):
+            list_split_dicts.append(splitter(input_list))
+
+
+    collect_dicts = defaultdict(set)
+    for split_dict in list_split_dicts:
+        for key, input_list in split_dict.items():
+            collect_dicts[key].update(input_list)
+
+    return {key: list(value) for key, value in collect_dicts.items()}
+
+
 def get_dataset(input_query: DataQuery):
-    meta_files = get_meta_files(input_query)
-    meta_files = process_meta_input(meta_files, input_query)
+    meta_files = get_inputs(input_query)
+    meta_files = transform_inputs(meta_files, input_query)
 
 
-def get_meta_files(input_query: DataQuery) -> List[Input]:
+def get_inputs(input_query: DataQuery) -> List[Input]:
     files = get_files(input_query)
-    meta_input_list = []
+    input_list = []
     for file_hash, rel_file_path in files:
-
-
         meta_data = {
             'file_name': Path(rel_file_path).parts[-1],
             'rel_file_path': '/'.join(Path(rel_file_path).parts[:-1])
         }
 
         remote_loc = HttpLocation(
-            input_query.data_cache_url,
+            url=input_query.data_cache_url,
             commit=input_query.git_commit,
-            data_tag=file_hash,
             git_url=input_query.git_url
         )
 
-        meta_input_list.append(Input(data_loc=remote_loc, meta_data=meta_data, tag=file_hash))
+        input_list.append(Input(data_locations=remote_loc, meta_data=meta_data))
 
-    return meta_input_list
+    return input_list
 
 
 def get_files(input_query: DataQuery) -> Dict[FileHash, RelFilePath]:
