@@ -37,21 +37,14 @@ class S3Config:
         self.bucket, self.folder = url_no_URI.split('/')
 
 
-
-
-
 @dataclass_json
 @dataclass
 class DatasetInfo:
     files: Dict[FileHash, RelFilePath]
     s3_config: S3Config
 
-    def __post_init__(self):
-        self.save()
-
-    def save(self):
-        save_file = poif_ds_info_folder / f'{self.id}.json'
-        with open(save_file, 'w') as f:
+    def save(self, file: Path):
+        with open(file, 'w') as f:
             json.dump(self.to_dict(), f)
 
     @staticmethod
@@ -64,4 +57,5 @@ class DatasetInfo:
 poif_ds_info_dict = {}
 for file in poif_ds_info_folder.glob('*.json'):
     ds_info = DatasetInfo.load(file)
-    poif_ds_info_dict[ds_info.id] = ds_info
+    ds_id = file.parts[-1].replace('.json', '')
+    poif_ds_info_dict[ds_id] = ds_info

@@ -8,14 +8,15 @@ from dataclasses import dataclass, field
 from botocore.client import Config
 import boto3
 import json
-from poif_data_cache.data_handling.config import (
+from poif.data_cache.data_handling.config import (
     poif_ds_info_dict,
     S3Config,
     DatasetInfo,
     RelFilePath,
     poif_git_folder,
     poif_data_folder,
-    FileHash
+    FileHash,
+    poif_ds_info_folder
 )
 
 DatasetID = str
@@ -24,6 +25,7 @@ DatasetID = str
 def init_git(init_folder: Path, git_url: str, commit: str) -> None:
     subprocess.call(['git', 'clone', git_url, str(init_folder)])
     subprocess.call(['git', 'checkout', commit], cwd=str(init_folder))
+
 
 def git_to_tag(git_url: str, git_commit: str) -> str:
     ds_url = f'{git_url}?c={git_commit}'
@@ -37,6 +39,12 @@ def get_dataset_info(git_url: str, git_commit: str) -> DatasetInfo:
     # Check if info is not already loaded
     if ds_key in poif_ds_info_dict:
         return poif_ds_info_dict[ds_key]
+
+    ds_info_json = poif_ds_info_folder / f'{ds_key}.json'
+    if ds_info_json.exists():
+        ds_info = DatasetInfo.load(ds_info_json)
+        poif_ds_info_dict[ds_key] = ds_info
+        return ds_info
 
     # Check if the git repo is already initialized
     repo_path = poif_git_folder / ds_key
@@ -56,7 +64,8 @@ def get_dataset_info(git_url: str, git_commit: str) -> DatasetInfo:
         data_files = {**data_files, **read_dvc_file(dvc_file, remote_config, repo_data_folder)}
 
     new_ds_info = DatasetInfo(files=data_files, s3_config=remote_config)
-    poif_ds_info_dict[new_ds_info.id] = new_ds_info
+    new_ds_info.save(poif_ds_info_folder / f'{ds_key}.json')
+    poif_ds_info_dict[ds_key] = new_ds_info
     return new_ds_info
 
 

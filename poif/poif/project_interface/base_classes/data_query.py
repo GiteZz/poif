@@ -6,11 +6,11 @@ from typing import List, Tuple, Union, Callable, Dict, Any
 from poif.project_interface.base_classes.input import MetaInput, DataInput
 from poif.project_interface.data_handlers.disk_loader.gather_functions import file_gatherer
 from poif.typing import FileHash, RelFilePath
+from poif.project_interface.base_classes.location import HttpLocation
 
 
-DataPointTransformation = Callable[[MetaInput], List[MetaInput]]
+DataPointTransformation = Callable[[MetaInput], Union[MetaInput, List[MetaInput]]]
 
-MetadataProcessor = Callable[[MetaInput], MetaInput]
 
 # Used for splitting the dataset, used for train/val/test split
 DatasetSplitter = Callable[[List[MetaInput]], Dict[str, List[MetaInput]]]
@@ -25,35 +25,38 @@ class DataQuery:
     query_type: int = None
     dataset_type: str = None # by_regexes, poif, coco, ?
     regexes: List[str] = None
-    path: Path = None
-    dataset_filer: DatasetSplitter = None,
-    datapoint_filter: DataPointFilter = None,
-    datapoint_transformations: Union[List[DataPointTransformation], DataPointTransformation] = None
-    metadata_processors: Union[List[MetadataProcessor], MetadataProcessor] = None
 
-    meta_inputs: List[MetaInput] = field(init=False)
-    meta_inputs_split: Dict[str, List[MetaInput]] = field(init=False)
+    dataset_filter: DatasetSplitter = None,
+    datapoint_filter: DataPointFilter = None,
+
+    datapoint_transformations: Union[List[DataPointTransformation], DataPointTransformation] = None
+
+    def validate(self):
+        if self.dataset_filter is not None and self.datapoint_filter is not None:
+            return ValueError('dataset_filter and datapoint_filter can not be both defined.')
 
     def __post_init__(self):
         if self.data_cache_url[-1] == '/':
             self.data_cache_url = self.data_cache_url[:-1]
 
-    def get_dataset(self):
-        if self.query_type == DataQueryType.FROM_DISK:
-            self.create_dataset_from_disk()
-        else:
-            raise NotImplementedError()
-
-    def create_dataset_from_disk(self):
-        if self.dataset_type == DatasetFormat.BY_REGEX:
-            meta_inputs = file_gatherer(self.path, self.regexes)
-
-    def parse_meta_inputs(self):
-        pass
 
 def get_dataset(input_query: DataQuery):
     pass
 
+def get_meta_files(input_query: DataQuery) -> List[MetaInput]:
+    files = get_files(input_query)
+
+    for file_hash, reLfile_path in files:
+        meta_input_list = []
+
+        file_name = Path(reLfile_path).parts[-1]
+        rel_file_path = '/'.join(Path(reLfile_path).parts[:-1])
+
+        http_params = {
+
+        }
+        remote_loc = HttpLocation(input_query.data_cache_url, )
+        meta_input = MetaInput()
 
 def get_files(input_query: DataQuery) -> Dict[FileHash, RelFilePath]:
     params = {

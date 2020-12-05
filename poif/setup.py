@@ -35,6 +35,7 @@ setuptools.setup(
         'dvc[s3]',
         'dataclasses_json',
         'opencv-python',
-        'awscli'
+        'awscli',
+        'flask'
     ]
 )
