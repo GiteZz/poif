@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from typing import Callable, List, Set
-from poif.project_interface.base_classes.parameters import Parameters
-from poif.project_interface.base_classes.output import Output
-from poif.project_interface.base_classes.resource import Resource
-from poif.project_interface.base_classes.data_query import DataQuery
+from poif.project_interface.classes.parameters import Parameters
+from poif.project_interface.classes.output import Output
+from poif.project_interface.classes.resource import Resource
+from poif.project_interface.classes.data import DataQuery
 
 
 # Should provide functions for accessing the data

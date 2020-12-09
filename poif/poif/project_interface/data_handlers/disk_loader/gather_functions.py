@@ -1,5 +1,5 @@
-from poif.project_interface.base_classes.input import Input
-from poif.project_interface.base_classes.resource import MetaFilePath, DataFilePath
+from poif.project_interface.classes.input import Input
+from poif.project_interface.classes.resource import MetaFilePath, DataFilePath
 from pathlib import Path
 from typing import List, Tuple, Dict
 import yaml

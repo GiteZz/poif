@@ -1,13 +1,20 @@
 import pytest
 
-from poif.project_interface.base_classes.input import Input
-from poif.project_interface.base_classes.location import DataLocation, StringLocation
-from poif.project_interface.base_classes.input import Input
-from poif.project_interface.base_classes.transform import DataSetTransformation, DataPointTransformation, DataPointSplitter, DataSetSplitter
-from poif.project_interface.base_classes.data_query import DataQuery, transform_inputs, split_inputs
+from poif.project_interface.classes.input import Input
+from poif.project_interface.classes.location import DataLocation, StringLocation
+from poif.project_interface.classes.input import Input
+from poif.project_interface.classes.transform import (
+    DataSetTransformation,
+    DataPointTransformation,
+    DataPointSplitter,
+    DataSetSplitter
+)
+from poif.project_interface.classes.data import DataQuery
+from poif.project_interface.ops.data_query import transform_inputs, split_inputs
 import uuid
 from collections import defaultdict
 from typing import List, Optional, Union
+
 
 @pytest.fixture
 def meta_input_list():
@@ -37,7 +44,13 @@ def meta_input_list():
             'rel_file_path': 'test/mask'
         }
     ]
-    return [Input(meta_data=meta_data, data_locations=StringLocation(data_tag=uuid.uuid4().hex, data_str=meta_data['rel_file_path'] + meta_data['file_name'])) for meta_data in meta_data_list]
+    return [Input(
+        meta_data=meta_data,
+        data_locations=StringLocation(
+            data_tag=uuid.uuid4().hex,
+            data_str=meta_data['rel_file_path'] + meta_data['file_name']))
+        for meta_data in meta_data_list
+    ]
 
 
 def filter_bw_img(meta_input: Input) -> Optional[Union[List[Input], Input]]:

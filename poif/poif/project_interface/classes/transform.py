@@ -3,10 +3,10 @@ from pathlib import Path
 import requests
 
 from typing import List, Tuple, Union, Callable, Dict, Any, Optional
-from poif.project_interface.base_classes.input import Input
+from poif.project_interface.classes.input import Input
 from poif.project_interface.data_handlers.disk_loader.gather_functions import file_gatherer
 from poif.typing import FileHash, RelFilePath
-from poif.project_interface.base_classes.location import HttpLocation
+from poif.project_interface.classes.location import HttpLocation
 
 ZeroOrMoreMetaInput = Optional[Union[Input, List[Input]]]
 CallableDataPointTransformation = Callable[[Input], ZeroOrMoreMetaInput]
@@ -17,7 +17,7 @@ CallableDataSetTransformation = Callable[[List[Input]], List[Input]]
 CallableDataSetSplitter = Callable[[List[Input]], Dict[str, List[Input]]]
 CallableDataPointSplitter = Callable[[Input], str]
 
-Transform = Any
+CallableOutputFilter = Callable[[Input], Any]
 
 
 class DataSetSplitter:
@@ -50,3 +50,11 @@ class DataSetTransformation:
 
     def __call__(self, dataset: List[Input]) -> List[Input]:
         return self.function(dataset)
+
+
+class OutputFilter:
+    def __init__(self, filter: CallableOutputFilter):
+        self.function = filter
+
+    def __call__(self, datapoint: Input) -> Any:
+        return self.function(datapoint)

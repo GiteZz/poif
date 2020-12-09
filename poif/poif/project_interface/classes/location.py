@@ -25,16 +25,18 @@ class StringLocation(DataLocation):
 @dataclass
 class HttpLocation(DataLocation):
     url: URL
-    commit: str
+    git_commit: str
     git_url: str
 
     def get_params(self) -> UrlParams:
         return {
-
+            'git_url': self.git_url,
+            'git_commit': self.git_commit,
+            'file_tag': self.data_tag
         }
 
     def get(self):
         r = requests.get(self.url, params=self.get_params())
-        np_buf = np.frombuffer(r.content)
+        np_buf = np.frombuffer(r.content, np.uint8)
         # TODO check if correct with all formats eg black and white img
         return cv2.imdecode(np_buf, cv2.IMREAD_COLOR)

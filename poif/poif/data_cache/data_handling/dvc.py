@@ -119,7 +119,8 @@ def download_s3_file(s3_config: S3Config, file_hash: FileHash, dest_file: Path) 
     s3.Bucket(f'{s3_config.bucket}').download_file(file_name, str(dest_file))
 
 
-def get_file_path(dataset_id: str, file_id: FileHash) -> Path:
+def get_file_path(git_url: str, git_commit: str, file_id: FileHash) -> Path:
+    dataset_id = git_to_tag(git_url, git_commit)
     file_path = poif_data_folder / dataset_id / file_id
     if file_path.is_file():
         return file_path

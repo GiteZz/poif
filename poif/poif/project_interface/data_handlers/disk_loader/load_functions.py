@@ -1,4 +1,4 @@
-from poif.project_interface.base_classes.resource import DataFilePath, Image
+from poif.project_interface.classes.resource import DataFilePath, Image
 import cv2
 
 

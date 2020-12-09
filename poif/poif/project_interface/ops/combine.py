@@ -1,6 +1,6 @@
-from poif.project_interface.base_classes.experiment import Experiment
-from poif.project_interface.base_classes.parameters import Parameters
-from poif.project_interface.base_classes.data_query import DataQuery
+from poif.project_interface.classes.experiment import Experiment
+from poif.project_interface.classes.parameters import Parameters
+from poif.project_interface.classes.data import DataQuery
 from copy import deepcopy
 
 
