@@ -4,7 +4,7 @@ import cv2
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import shutil
-from load_csv_utils import parse_bbs, to_supervisely_json
+from load_csv_utils import parse_bbs, to_supervisely_json, get_label
 import json
 
 training_all_file = '/home/gilles/datasets/cones/yolov3-training_all.csv'
@@ -55,4 +55,5 @@ for index in range(5, len(rows)):
     shutil.copy(img_loc, new_img_loc)
 
     with open(new_ann_loc, 'w') as f:
-        json.dump(to_supervisely_json(width, height, bbs), f, indent=4)
+        labels = get_label(img_loc, bbs)
+        json.dump(to_supervisely_json(width, height, bbs, labels), f, indent=4)
