@@ -13,7 +13,7 @@ def parse_bbs(bbs):
 
 
 def get_crops(img, bbs):
-    return [img[bb[1]:bb[1] + bb[3], bb[0]:bb[0] + bb[2]] for bb in bbs]
+    return [img[bb[1]:bb[1] + bb[2], bb[0]:bb[0] + bb[3]] for bb in bbs]
 
 
 def get_label(image_path: Path, bbs):
@@ -72,8 +72,8 @@ def to_supervisely_json(img_width, img_height, bbs, labels):
                             bb[1]
                         ],
                         [
-                            bb[0] + bb[2],
-                            bb[1] + bb[3]
+                            bb[0] + bb[3],
+                            bb[1] + bb[2]
                         ]
                     ],
                     "interior": []

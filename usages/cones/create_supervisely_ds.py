@@ -1,30 +1,17 @@
-import csv
 from pathlib import Path
-import cv2
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches
 import shutil
-from load_csv_utils import parse_bbs, to_supervisely_json, get_label
 import json
 
-training_all_file = '/home/gilles/datasets/cones/yolov3-training_all.csv'
-orig_img_dir = Path('/home/gilles/datasets/cones/YOLO_Dataset')
+from general_loading import rows, orig_img_dir
+from utils import parse_bbs, get_label, to_supervisely_json
 
-supervisely_project_folder = Path('/home/gilles/datasets/cones/supervisely_format')
+
+supervisely_project_folder = Path('/home/gilles/datasets/cones/supervisely')
 supervisely_project_folder.mkdir(exist_ok=True)
-
-
 
 meta_file = supervisely_project_folder / 'meta.json'
 ex_path = Path(__file__).parent
 shutil.copy(ex_path / 'cone_meta.json', meta_file)
-
-rows = []
-with open(training_all_file) as csvfile:
-    spamreader = csv.reader(csvfile)
-    for row in spamreader:
-        rows.append(row)
-
 
 for index in range(5, len(rows)):
     current_row = rows[index]
@@ -41,9 +28,6 @@ for index in range(5, len(rows)):
     annotation_folder.mkdir(exist_ok=True)
     img_folder = ds_folder / 'img'
     img_folder.mkdir(exist_ok=True)
-
-
-
 
     bbs = current_row[5:]
     bbs = parse_bbs(bbs)
