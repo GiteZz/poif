@@ -10,6 +10,7 @@ new_height = 256
 
 
 def upload_datasets_images(s3_config: S3Config, files: List[Tuple[Path, Path]]):
+    print(f'uploading {len(files)} files for readme')
     dataset_sess = boto3.session.Session(profile_name=s3_config.profile)
     s3 = dataset_sess.resource('s3',
                                endpoint_url=s3_config.endpoint,

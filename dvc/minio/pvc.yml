@@ -5,7 +5,7 @@ metadata:
   name: dvc-minio-backend-pvc
   namespace: dvc
 spec:
-  storageClassName: "default"
+  storageClassName: "local-path"
   # Read more about access modes here: http://kubernetes.io/docs/user-guide/persistent-volumes/#access-modes
   accessModes:
     # The volume is mounted as read-write by a single node
