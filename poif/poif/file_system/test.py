@@ -24,7 +24,7 @@ import slugid
 from ftplib import FTP
 from urllib.parse import urlparse
 
-from poif.disk_mounting.utils import create_dir_attr, create_file_attr
+from poif.file_system.utils import create_dir_attr, create_file_attr
 
 CLEANUP_INTERVAL = 60
 CLEANUP_EXPIRED = 60
