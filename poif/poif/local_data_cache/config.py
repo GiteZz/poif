@@ -5,21 +5,7 @@ from pathlib import Path
 import json
 from poif.typing import FileHash, RelFilePath
 
-poif_base_folder = Path.home() / 'datasets'
-poif_config_folder = poif_base_folder / 'config'
-poif_ds_info_folder = poif_config_folder / 'ds_info'
-poif_git_folder = poif_base_folder / 'git_repos'
-poif_data_folder = poif_base_folder / 'data'
 
-
-def setup_folders():
-    poif_base_folder.mkdir(exist_ok=True)
-    poif_config_folder.mkdir(exist_ok=True)
-    poif_git_folder.mkdir(exist_ok=True)
-    poif_data_folder.mkdir(exist_ok=True)
-    poif_ds_info_folder.mkdir(exist_ok=True)
-
-setup_folders()
 
 
 @dataclass_json
@@ -54,8 +40,3 @@ class DatasetInfo:
         return DatasetInfo.from_dict(ds_info_dict)
 
 
-poif_ds_info_dict = {}
-for file in poif_ds_info_folder.glob('*.json'):
-    ds_info = DatasetInfo.load(file)
-    ds_id = file.parts[-1].replace('.json', '')
-    poif_ds_info_dict[ds_id] = ds_info

@@ -21,9 +21,18 @@ class StringLocation(DataLocation):
     def get(self):
         return self.data_str
 
+@dataclass
+class DvcOrigin:
+    git_url: str
+    git_commit: str
+
 
 @dataclass
-class HttpLocation(DataLocation):
+class DvcDataPoint(DvcOrigin):
+    data_tag: str
+
+@dataclass
+class DvcLocation(DataLocation):
     url: URL
     git_commit: str
     git_url: str
