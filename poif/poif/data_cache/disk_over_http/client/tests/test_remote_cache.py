@@ -1,32 +1,66 @@
 import tempfile
 
 import cv2
-import numpy as np
-import requests
-from flask import jsonify
-from httmock import HTTMock, urlmatch
+import json
+from httmock import HTTMock, urlmatch, response, all_requests
 
 from poif.data_cache.disk_over_http import GET_FILE_PATH, GET_FILES_PATH
 from poif.data_cache.disk_over_http.client import RemoteCache
-from poif.project_interface.classes.location import DvcDataPoint
+from poif.project_interface.classes.location import DvcDataPoint, DvcOrigin
 from poif.tests import get_img
 
 
-@urlmatch(path=GET_FILE_PATH)
+img = get_img()
+
+img_extension = 'png'
+img_file = tempfile.mkstemp(suffix=f'.{img_extension}')[1]
+cv2.imwrite(img_file, img)
+
+
+@all_requests
 def mock_get_file(url, request):
-    img = get_img()
-    img_file = tempfile.mkstemp(suffix='.png')[1]
 
-    cv2.imwrite(img_file, img)
-    return 'Feeling lucky, punk?'
+    with open(img_file, 'rb') as f:
+        img_bytes = f.read()
+
+    headers = {'extension': img_extension}
+    content = img_bytes
+    return response(200, content, headers)
+
+test_files = {
+        'aa': '01.jpg',
+        'bb': '02.jpg'
+    }
+
+@all_requests
+def mock_get_files(url, request):
+    headers = {'mimetype':' application/json'}
+
+    return response(200, json.dumps(test_files), headers)
 
 
-datacache_url = 'datasets.com'
+datacache_url = 'http://datasets.com'
 
 
 def test_get_file():
     remote_cache = RemoteCache(datacache_url)
-    datapoint = DvcDataPoint(data_tag='aa', git_commit='aa', git_url='git.com')
+    datapoint = DvcOrigin(git_commit='aa', git_url='git.com')
     with HTTMock(mock_get_file):
-        img = remote_cache.get_file(datapoint)
-        assert isinstance(img, np.ndarray)
+        # This is read in RGB
+        cache_img = remote_cache.get_files(datapoint)
+
+        # This is read in BGR
+        original_img = cv2.imread(img_file)
+        original_img_rgb = cv2.cvtColor(original_img, cv2.COLOR_BGR2RGB)
+
+        assert (cache_img == original_img_rgb).all()
+
+
+def test_get_files():
+    remote_cache = RemoteCache(datacache_url)
+    origin = DvcDataPoint(data_tag='aa', git_commit='aa', git_url='git.com')
+    with HTTMock(mock_get_files):
+        # This is read in RGB
+        retrieved_files = remote_cache.get_files(origin)
+
+        assert retrieved_files == test_files

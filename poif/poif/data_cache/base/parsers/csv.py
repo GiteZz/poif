@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 import pandas as pd
 
-from poif.data_cache.base.parsers import Parser
+from poif.data_cache.base.parsers.base import Parser
 
 
 class CsvPandasParser(Parser):

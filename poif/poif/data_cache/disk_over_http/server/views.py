@@ -40,5 +40,7 @@ def route_get_file_contents():
     response.headers['extension'] = extension
     return response
 
+# def response_for_file_contents
+
 
 print('Views loaded')

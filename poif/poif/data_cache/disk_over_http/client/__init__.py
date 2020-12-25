@@ -4,7 +4,7 @@ from typing import Any, Dict
 
 import requests
 
-from poif.data_cache.base import DvcCache
+from poif.data_cache.base.base import DvcCache
 from poif.data_cache.disk_over_http import GET_FILE_PATH, GET_FILES_PATH
 from poif.project_interface.classes.location import DvcDataPoint, DvcOrigin
 from poif.typing import FileHash, RelFilePath
