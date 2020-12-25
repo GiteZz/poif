@@ -1,11 +1,11 @@
 import sys
 
 from poif.data_interface.cli_commands.config import config
-from poif.data_interface.cli_commands.init import init
-from poif.data_interface.cli_commands.get import get
-from poif.data_interface.cli_commands.update import update
-from poif.data_interface.cli_commands.push import push
 from poif.data_interface.cli_commands.create import create
+from poif.data_interface.cli_commands.get import get
+from poif.data_interface.cli_commands.init import init
+from poif.data_interface.cli_commands.push import push
+from poif.data_interface.cli_commands.update import update
 
 
 def main():

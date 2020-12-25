@@ -1,5 +1,6 @@
-from poif.project_interface.classes.resource import DataFilePath, Image
 import cv2
+
+from poif.project_interface.classes.resource import DataFilePath, Image
 
 
 def load(path: DataFilePath):

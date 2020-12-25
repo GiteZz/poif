@@ -1,10 +1,12 @@
-import boto3
-from botocore.client import Config
-from typing import List, Tuple
-from pathlib import Path
-from poif.data_interface.tools.config import DatasetConfig, S3Config
 import tempfile
+from pathlib import Path
+from typing import List, Tuple
+
+import boto3
 import cv2
+from botocore.client import Config
+
+from poif.data_interface.tools.config import DatasetConfig, S3Config
 
 new_height = 256
 

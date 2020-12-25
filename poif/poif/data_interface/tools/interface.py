@@ -1,7 +1,9 @@
-import jinja2
-from pathlib import Path
-from poif.data_interface.tools.config import DatasetConfig
 import subprocess
+from pathlib import Path
+
+import jinja2
+
+from poif.data_interface.tools.config import DatasetConfig
 
 
 def create_interface(dataset_config: DatasetConfig, git_add=True, git_commit=False):

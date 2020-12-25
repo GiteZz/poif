@@ -1,7 +1,8 @@
+from copy import deepcopy
+
+from poif.project_interface.classes.data import DataQuery
 from poif.project_interface.classes.experiment import Experiment
 from poif.project_interface.classes.parameters import Parameters
-from poif.project_interface.classes.data import DataQuery
-from copy import deepcopy
 
 
 def combine_experiments(base_experiment: Experiment, override_experiment: Experiment) -> Experiment:

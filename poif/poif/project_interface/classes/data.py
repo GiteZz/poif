@@ -1,20 +1,20 @@
+from collections import defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
-import requests
-from collections import defaultdict
+from typing import Any, Callable, Dict, List, Tuple, Union
 
-from typing import List, Tuple, Union, Callable, Dict, Any
+import requests
+
 from poif.project_interface.classes.input import Input
-from poif.project_interface.data_handlers.disk_loader.gather_functions import file_gatherer
-from poif.typing import FileHash, RelFilePath
 from poif.project_interface.classes.location import HttpLocation
-from poif.project_interface.classes.transform import (
-    DataPointTransformation,
-    DataSetTransformation,
-    DataPointSplitter,
-    DataSetSplitter,
-    OutputFilter
-)
+from poif.project_interface.classes.transform import (DataPointSplitter,
+                                                      DataPointTransformation,
+                                                      DataSetSplitter,
+                                                      DataSetTransformation,
+                                                      OutputFilter)
+from poif.project_interface.data_handlers.disk_loader.gather_functions import \
+    file_gatherer
+from poif.typing import FileHash, RelFilePath
 
 SplitterType = Union[DataPointSplitter, DataSetSplitter]
 TransformationType = Union[DataPointTransformation, DataSetTransformation]

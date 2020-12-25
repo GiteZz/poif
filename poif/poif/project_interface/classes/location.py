@@ -1,9 +1,11 @@
 from dataclasses import dataclass
 from typing import Dict
-from poif.typing import URL, UrlParams
-import requests
-import numpy as np
+
 import cv2
+import numpy as np
+import requests
+
+from poif.typing import URL, FileHash, UrlParams
 
 
 @dataclass
@@ -26,10 +28,23 @@ class DvcOrigin:
     git_url: str
     git_commit: str
 
+    def to_url_params(self):
+        return {
+            'git_url': self.git_url,
+            'git_commit': self.git_commit
+        }
+
 
 @dataclass
 class DvcDataPoint(DvcOrigin):
-    data_tag: str
+    data_tag: FileHash
+
+    def to_url_params(self):
+        return {
+            'git_url': self.git_url,
+            'git_commit': self.git_commit,
+            'data_tag': self.data_tag
+        }
 
 @dataclass
 class DvcLocation(DataLocation):
@@ -41,7 +56,7 @@ class DvcLocation(DataLocation):
         return {
             'git_url': self.git_url,
             'git_commit': self.git_commit,
-            'file_tag': self.data_tag
+            'data_tag': self.data_tag
         }
 
     def get(self):

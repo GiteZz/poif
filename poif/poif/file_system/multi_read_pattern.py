@@ -1,5 +1,6 @@
 import asyncio
 from collections import defaultdict
+
 import aiohttp
 
 http_retrievals = {}
@@ -10,6 +11,10 @@ add_new_retrieval_lock = asyncio.Lock()
 decrease_reader_lock = asyncio.Lock()
 
 data_buffer = {}
+
+class DataSetFileSystemWithCache:
+    def __init__(self, cache):
+        pass
 
 
 async def get_url_bytes(url, offset, length):

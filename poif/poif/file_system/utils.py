@@ -1,8 +1,5 @@
-from stat import (
-    S_IFDIR,  # Directory type
-    S_IFREG  # Regular file type
-)
-
+from stat import S_IFDIR  # Directory type
+from stat import S_IFREG  # Regular file type
 from time import time
 
 

@@ -1,9 +1,11 @@
-from poif.project_interface.classes.input import Input
-from poif.project_interface.classes.resource import MetaFilePath, DataFilePath
-from pathlib import Path
-from typing import List, Tuple, Dict
-import yaml
 import hashlib
+from pathlib import Path
+from typing import Dict, List, Tuple
+
+import yaml
+
+from poif.project_interface.classes.input import Input
+from poif.project_interface.classes.resource import DataFilePath, MetaFilePath
 
 
 def poif_format_file_gatherer(path: Path) -> List[Input]:

@@ -1,9 +1,12 @@
-from poif.data_interface.tools.git import get_existing_credentials, add_git_credential
-from poif.data_interface.tools.cli import yes, yes_with_question, simple_input, s3_input
 import getpass
-import poif.data_interface.tools.config as config_tools
-from poif.data_interface.tools.config import DaifConfig
 from typing import Tuple
+
+import poif.data_interface.tools.config as config_tools
+from poif.data_interface.tools.cli import (s3_input, simple_input, yes,
+                                           yes_with_question)
+from poif.data_interface.tools.config import DaifConfig
+from poif.data_interface.tools.git import (add_git_credential,
+                                           get_existing_credentials)
 
 
 def config(args):

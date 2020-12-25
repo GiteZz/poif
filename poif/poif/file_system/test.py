@@ -1,28 +1,24 @@
 import collections
 import logging
-import numpy as np
 import os
 import os.path as op
-import requests
+import re
 import sys
 import traceback
-import re
 from errno import EIO, ENOENT
+from ftplib import FTP
 from stat import S_IFDIR, S_IFREG
 from threading import Timer
-from tenacity import retry, wait_exponential
-
-from time import sleep
-from time import time
+from time import sleep, time
+from urllib.parse import urlparse
 
 import boto3
-
-from fuse import FUSE, FuseOSError, Operations, LoggingMixIn
 import diskcache as dc
-
+import numpy as np
+import requests
 import slugid
-from ftplib import FTP
-from urllib.parse import urlparse
+from fuse import FUSE, FuseOSError, LoggingMixIn, Operations
+from tenacity import retry, wait_exponential
 
 from poif.file_system.utils import create_dir_attr, create_file_attr
 

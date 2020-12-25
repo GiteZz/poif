@@ -1,4 +1,4 @@
-from poif.remote_data_cache.server import app
+from poif.data_cache.disk_over_http.server import app
 
 
 def run(port, host='0.0.0.0', debug=False):

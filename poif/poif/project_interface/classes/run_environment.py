@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 from typing import List, Union
+
 from poif.project_interface.classes.docker_environment import DockerEnvironment
 
 RUN_ENV_DOCKER = 0

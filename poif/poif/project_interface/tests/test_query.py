@@ -1,19 +1,19 @@
-import pytest
-
-from poif.project_interface.classes.input import Input
-from poif.project_interface.classes.location import DataLocation, StringLocation
-from poif.project_interface.classes.input import Input
-from poif.project_interface.classes.transform import (
-    DataSetTransformation,
-    DataPointTransformation,
-    DataPointSplitter,
-    DataSetSplitter
-)
-from poif.project_interface.classes.data import DataQuery
-from poif.project_interface.ops.data_query import transform_inputs, split_inputs
 import uuid
 from collections import defaultdict
 from typing import List, Optional, Union
+
+import pytest
+
+from poif.project_interface.classes.data import DataQuery
+from poif.project_interface.classes.input import Input
+from poif.project_interface.classes.location import (DataLocation,
+                                                     StringLocation)
+from poif.project_interface.classes.transform import (DataPointSplitter,
+                                                      DataPointTransformation,
+                                                      DataSetSplitter,
+                                                      DataSetTransformation)
+from poif.project_interface.ops.data_query import (split_inputs,
+                                                   transform_inputs)
 
 
 @pytest.fixture

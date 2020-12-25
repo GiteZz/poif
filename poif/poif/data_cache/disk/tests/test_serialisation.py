@@ -1,8 +1,8 @@
-import unittest
-
-from poif_data_cache.data_handling.config import S3Config, DatasetInfo
-from pathlib import Path
 import json
+import unittest
+from pathlib import Path
+
+from poif_data_cache.data_handling.config import DatasetInfo, S3Config
 
 
 def test_dsinfo():

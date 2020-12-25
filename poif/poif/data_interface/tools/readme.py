@@ -1,12 +1,14 @@
-from typing import List, Dict
-from pathlib import Path
-from collections import defaultdict
-import uuid
-from poif.data_interface.tools.cli import s3_input
-from poif.data_interface.tools.minio import upload_datasets_images
-from poif.data_interface.tools.config import DatasetConfig
-from poif.data_interface.tools import folder_list_to_pathlib, get_url
 import subprocess
+import uuid
+from collections import defaultdict
+from pathlib import Path
+from typing import Dict, List
+
+from poif.data_interface.tools import folder_list_to_pathlib, get_url
+from poif.data_interface.tools.cli import s3_input
+from poif.data_interface.tools.config import DatasetConfig
+from poif.data_interface.tools.minio import upload_datasets_images
+
 img_extensions = ['.png', '.jpg', '.jpeg']
 
 

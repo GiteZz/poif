@@ -1,6 +1,6 @@
 from copy import deepcopy
 
-from poif.base_classes import MetaInput, DataInput, DatasetOutput
+from poif.base_classes import DataInput, DatasetOutput, MetaInput
 
 
 def add_pneumonia(meta_input: MetaInput) -> MetaInput:

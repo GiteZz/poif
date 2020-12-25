@@ -1,16 +1,20 @@
+import hashlib
+import subprocess
 from dataclasses import dataclass, field
 from pathlib import Path
-from poif.local_data_cache.config import DatasetInfo, S3Config
-from poif.project_interface.classes.location import DvcOrigin, DvcDataPoint
-from poif.typing import FileHash
-from typing import Dict, List, Tuple
-from .dvc import get_dvc_remote_config, read_dvc_file, download_s3_file
-import subprocess
-import hashlib
+from typing import Dict, List
+
+from disk.config import DatasetInfo, S3Config
+
+from poif.data_cache.base import DvcCache
+from poif.project_interface.classes.location import DvcDataPoint, DvcOrigin
+from poif.typing import FileHash, RelFilePath
+
+from .dvc import download_s3_file, get_dvc_remote_config, read_dvc_file
 
 
 @dataclass
-class LocalCache:
+class LocalCache(DvcCache):
     work_dir: Path
 
     config_folder: Path = field(init=False)
@@ -50,7 +54,7 @@ class LocalCache:
         repo_path = self.git_folder / ds_key
 
         if initialize:
-            # We presume that if the folder exist that it contains the correct remote repo
+            # We presume that if the folder exist that it contains the correct disk_over_http repo
             if not repo_path.exists():
                 self.init_git(dvc_origin)
 
@@ -104,19 +108,39 @@ class LocalCache:
         self.cached_ds_info[ds_key] = new_ds_info
         return new_ds_info
 
+    def get_files(self, dvc_origin: DvcOrigin) -> Dict[FileHash, RelFilePath]:
+        ds_info = self.get_dataset_info(dvc_origin)
+
+        return ds_info.files
+
+    def get_extension(self, file_location: DvcDataPoint):
+        ds_info = self.get_dataset_info(file_location)
+        original_file_path = ds_info.files[file_location.data_tag]
+        file_name = original_file_path.parts[-1]
+        extension = file_name.split('.')[-1]
+
+        return extension
+
     def get_file(self, file_location: DvcDataPoint):
-        file_path = self.get_file_path(file_location)
+        hash_file_path = self.get_file_path(file_location)
+
+        extension = self.get_extension(file_location)
+
+        with open(hash_file_path, 'rb') as f:
+            file_bytes = f.read()
+
+        return self.parse_file(file_bytes, extension)
 
     def get_file_path(self, file_location: DvcDataPoint) -> Path:
+        """
+        Files are saved under their hash and not under their original filename
+        """
         dataset_id = LocalCache.git_to_tag(file_location)
         file_path = self.data_folder / dataset_id / file_location.data_tag
         if file_path.is_file():
             return file_path
 
-        if not dataset_id in self.cached_ds_info:
-            ds_info = self.get_dataset_info(file_location)
-        else:
-            ds_info = self.cached_ds_info[dataset_id]
+        ds_info = self.get_dataset_info(file_location)
 
         download_s3_file(ds_info.s3_config, file_location, file_path)
 

@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
-from typing import Dict, Any, List, Union
 from pathlib import Path
+from typing import Any, Dict, List, Union
 
 # from poif.project_interface.classes.transform import Transform
 from poif.project_interface.classes.location import DataLocation

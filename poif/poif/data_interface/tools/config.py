@@ -1,11 +1,11 @@
-import yaml
-from typing import List, Optional
-from pathlib import Path
-from dataclasses import dataclass, field
-from dataclasses_json import dataclass_json
-import subprocess
 import json
+import subprocess
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import List, Optional
 
+import yaml
+from dataclasses_json import dataclass_json
 
 config_folder = Path.home() / '.daif'
 config_folder.mkdir(exist_ok=True)

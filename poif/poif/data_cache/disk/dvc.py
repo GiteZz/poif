@@ -1,19 +1,13 @@
-import hashlib
-from pathlib import Path
-import subprocess
-import yaml
 import configparser
-from typing import List, Dict
-from dataclasses import dataclass, field
-from botocore.client import Config
-import boto3
 import json
-from poif.local_data_cache.config import (
-    S3Config,
-    DatasetInfo,
-    RelFilePath,
-    FileHash
-)
+from pathlib import Path
+from typing import Dict
+
+import boto3
+import yaml
+from botocore.client import Config
+from disk.config import FileHash, RelFilePath, S3Config
+
 from poif.project_interface.classes.location import DvcDataPoint
 
 DatasetID = str
@@ -24,7 +18,7 @@ def get_dvc_remote_config(repo_url: Path) -> S3Config:
     parser = configparser.ConfigParser()
     parser.read(dvc_config_file)
     for key in parser.keys():
-        if 'remote' in key:
+        if 'disk_over_http' in key:
             return S3Config(
                 url=parser[key]['url'],
                 endpointurl=parser[key]['endpointurl'],

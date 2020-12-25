@@ -1,6 +1,8 @@
-from poif.base_classes import Parameters
 from dataclasses import dataclass
+
 from dataclasses_json import dataclass_json
+
+from poif.base_classes import Parameters
 
 
 @dataclass_json

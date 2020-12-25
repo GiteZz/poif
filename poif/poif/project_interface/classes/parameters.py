@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+
 @dataclass
 class Parameters:
     img_size: int = None

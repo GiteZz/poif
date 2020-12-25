@@ -1,6 +1,7 @@
-import subprocess
-import yaml
 import pathlib
+import subprocess
+
+import yaml
 
 
 def get(args):

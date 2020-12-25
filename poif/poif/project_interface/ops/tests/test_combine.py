@@ -1,7 +1,9 @@
-from poif.base_classes.parameters import Parameters
 from dataclasses import dataclass
 from typing import List
-from poif.operations.combine import combine_parameters, combine_data_queries, combine_experiments
+
+from poif.base_classes.parameters import Parameters
+from poif.operations.combine import (combine_data_queries, combine_experiments,
+                                     combine_parameters)
 
 
 def test_parameters():

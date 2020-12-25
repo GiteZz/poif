@@ -1,11 +1,11 @@
-from dataclasses import dataclass, field
-from dataclasses_json import dataclass_json
-from typing import List, Dict, Set
-from pathlib import Path
 import json
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Dict, List, Set
+
+from dataclasses_json import dataclass_json
+
 from poif.typing import FileHash, RelFilePath
-
-
 
 
 @dataclass_json

@@ -1,5 +1,7 @@
 import pathlib
+
 import requests
+
 import poif.data_interface.tools.requests as requests_tools
 from poif.data_interface.tools.config import DaifConfig
 

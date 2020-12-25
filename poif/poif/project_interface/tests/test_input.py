@@ -1,6 +1,7 @@
 from poif.project_interface.classes.input import Input
 from poif.project_interface.classes.location import StringLocation
 
+
 def test_setting_data():
     meta_data = {
         'file_name': '01.jpg',
