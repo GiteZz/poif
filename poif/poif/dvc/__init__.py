@@ -1,17 +1,13 @@
-from typing import List
-
-from poif.data.cache.base.remote import Remote
-
-import tempfile
-
 import configparser
 import json
+import tempfile
 from pathlib import Path
-from typing import Dict
+from typing import Dict, List
 
 import yaml
 
-from poif.data.cache.base.remote import S3Remote
+from poif.data.remote.base import Remote
+from poif.data.remote.s3 import S3Remote
 from poif.typing import FileHash, RelFilePath
 
 

@@ -1,4 +1,4 @@
-from poif.data_interface.tools.config import S3Config
+from poif.data.remote.s3 import S3Remote
 
 
 def simple_input(title: str, value_when_empty="", use_empy_value=True) -> str:
@@ -36,7 +36,7 @@ def yes(empy_is_true=False) -> bool:
             print('Provide a valid answer. [y / yes / n / no]')
 
 
-def s3_input(default_bucket="", default_endpoint="", default_profile="") -> S3Config:
+def s3_input(default_bucket="", default_endpoint="", default_profile="") -> S3Remote:
     s3_config = {}
     s3_config['bucket'] = simple_input(
         'S3 bucket',
@@ -51,4 +51,4 @@ def s3_input(default_bucket="", default_endpoint="", default_profile="") -> S3Co
         value_when_empty=default_profile
     )
 
-    return S3Config(**s3_config)
+    return S3Remote(**s3_config)

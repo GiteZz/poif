@@ -1,11 +1,10 @@
 import hashlib
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import List
 
 import yaml
 
-from poif.project_interface.classes.input import Input
-from poif.project_interface.classes.resource import DataFilePath, MetaFilePath
+from poif.data.access.input import Input
 
 
 def poif_format_file_gatherer(path: Path) -> List[Input]:

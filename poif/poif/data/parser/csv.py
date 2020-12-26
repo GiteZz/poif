@@ -2,7 +2,7 @@ from io import BytesIO
 
 import pandas as pd
 
-from poif.data.cache.base import Parser
+from poif.data.parser.base import Parser
 
 
 class CsvPandasParser(Parser):

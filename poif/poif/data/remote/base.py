@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from pathlib import Path
 
-from poif.project_interface.classes.data_location import DvcDataPoint
+from poif.data.access.datapoint import DvcDataPoint
 
 
 @dataclass

@@ -2,15 +2,15 @@ import tempfile
 from pathlib import Path
 from typing import Dict
 
-import pytest
 import cv2
+import pytest
 
+from poif.data.access.datapoint import DvcDataPoint
+from poif.data.access.origin import Origin
 from poif.data.cache.base.remote import Remote
 from poif.data.cache.disk import LocalCache
-from poif.project_interface.classes.data_location import DvcDataPoint, Origin
-from poif.typing import FileHash, RelFilePath
-
 from poif.tests import get_img
+from poif.typing import FileHash, RelFilePath
 
 files = {
     'aa': get_img(),

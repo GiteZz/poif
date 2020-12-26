@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-from poif.data.cache.base import Parser
+from poif.data.parser.base import Parser
 
 
 class ImageParser(Parser):

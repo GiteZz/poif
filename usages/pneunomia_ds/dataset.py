@@ -1,4 +1,4 @@
-from poif.project_interface.classes.data import Dataset, DataQuery
+from poif.data.access.dataquery import DataQuery
 from poif.project_interface.ops.data_query import get_dataset
 from filters import output_filter, add_label_transformation, data_splitter
 

@@ -5,7 +5,7 @@ from typing import Dict
 
 from dataclasses_json import dataclass_json
 
-from poif.data.remote import Remote
+from poif.data.remote.base import Remote
 from poif.typing import FileHash, RelFilePath
 
 

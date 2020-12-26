@@ -4,9 +4,10 @@ from typing import Any, Dict
 
 import requests
 
-from poif.data.cache.base import DvcCache
-from poif.data_cache.disk_over_http import GET_FILE_PATH, GET_FILES_PATH
-from poif.project_interface.classes.data_location import DvcDataPoint, DvcOrigin
+from poif.data.access.datapoint import DvcDataPoint
+from poif.data.access.origin import DvcOrigin
+from poif.data.cache.disk import DvcCache
+from poif.data.cache.disk_over_http import GET_FILE_PATH, GET_FILES_PATH
 from poif.typing import FileHash, RelFilePath
 
 

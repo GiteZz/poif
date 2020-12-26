@@ -5,8 +5,8 @@ import boto3
 from botocore.config import Config
 from dataclasses_json import dataclass_json
 
-from poif.data.cache.base.remote import Remote
-from poif.project_interface.classes.data_location import DvcDataPoint
+from poif.data.access.datapoint import DvcDataPoint
+from poif.data.remote.base import Remote
 
 
 @dataclass_json

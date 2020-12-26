@@ -1,14 +1,6 @@
-from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+from typing import Any, Callable, Dict, List, Optional, Union
 
-import requests
-
-from poif.project_interface.classes.input import Input
-from poif.project_interface.classes.data_location import HttpLocation
-from poif.project_interface.data_handlers.disk_loader.gather_functions import \
-    file_gatherer
-from poif.typing import FileHash, RelFilePath
+from poif.data.access.input import Input
 
 ZeroOrMoreMetaInput = Optional[Union[Input, List[Input]]]
 CallableDataPointTransformation = Callable[[Input], ZeroOrMoreMetaInput]

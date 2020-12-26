@@ -1,8 +1,8 @@
 from typing import Tuple
 
-import poif.data_interface.tools.config as config_tools
-from poif.cli.datasets.tools.cli import (s3_input, yes_with_question)
-from poif.data_interface.tools.config import DaifConfig
+import poif.cli.datasets.tools.config as config_tools
+from poif.cli.datasets.tools.cli import s3_input, yes_with_question
+from poif.cli.datasets.tools.config import DaifConfig
 
 
 def config(args):

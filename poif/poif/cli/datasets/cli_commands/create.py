@@ -1,6 +1,6 @@
-import poif.data_interface.tools.interface as interface_tools
-import poif.data_interface.tools.readme as readme_tools
-from poif.data_interface.tools.config import DatasetConfig
+import poif.cli.datasets.tools.interface as interface_tools
+import poif.cli.datasets.tools.readme as readme_tools
+from poif.cli.datasets.tools.config import DatasetConfig
 
 
 def create(args):

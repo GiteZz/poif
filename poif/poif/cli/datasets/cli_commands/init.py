@@ -2,14 +2,14 @@ import subprocess
 from pathlib import Path
 from typing import List
 
-import poif.data_interface.tools.config as config_tools
-import poif.data_interface.tools.git as git_tools
-import poif.data_interface.tools.interface as interface_tools
-import poif.data_interface.tools.readme as readme_tools
-from poif.data_interface.tools import (folder_list_to_pathlib,
-                                       remove_empty_strings)
+import poif.cli.datasets.tools.config as config_tools
+import poif.cli.datasets.tools.git as git_tools
+import poif.cli.datasets.tools.interface as interface_tools
+import poif.cli.datasets.tools.readme as readme_tools
 from poif.cli.datasets.tools.cli import (s3_input, simple_input,
                                          yes_with_question)
+from poif.cli.datasets.tools import (folder_list_to_pathlib,
+                                       remove_empty_strings)
 
 
 def init_git(dataset_config: config_tools.DatasetConfig):

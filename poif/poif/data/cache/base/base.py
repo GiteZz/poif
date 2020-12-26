@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict
 
-from poif.data.cache.base import ParseMixin
-from poif.project_interface.classes.data_location import DvcDataPoint, DvcOrigin
+from poif.data.access.datapoint import DvcDataPoint
+from poif.data.access.origin import DvcOrigin
+from poif.data.cache.base.mixins import ParseMixin
 from poif.typing import FileHash, RelFilePath
 
 

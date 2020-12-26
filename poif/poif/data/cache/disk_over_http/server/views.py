@@ -2,9 +2,10 @@ from dataclasses import fields
 
 from flask import jsonify, make_response, request, send_file
 
-from poif.data_cache.disk_over_http import GET_FILE_PATH, GET_FILES_PATH
+from poif.data.access.datapoint import DvcDataPoint
+from poif.data.access.origin import DvcOrigin
+from poif.data.cache.disk_over_http import GET_FILE_PATH, GET_FILES_PATH
 from poif.data.cache.disk_over_http.server import app, file_cache
-from poif.project_interface.classes.data_location import DvcDataPoint, DvcOrigin
 
 
 def request_to_dataclass(request, class_type):

@@ -1,9 +1,7 @@
-from dataclasses import dataclass, field
-from pathlib import Path
+from dataclasses import dataclass
 from typing import Any, Dict, List, Union
 
-# from poif.project_interface.classes.transform import Transform
-from poif.project_interface.classes.data_location import DataLocation
+from poif.data.access.datapoint import DataLocation
 
 
 class Input:

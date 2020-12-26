@@ -3,9 +3,10 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict
 
-from poif.data.cache.base import DvcCache
-from poif.data.cache.base import DatasetInfo
-from poif.project_interface.classes.data_location import DvcDataPoint, DvcOrigin
+from poif.data.access.datapoint import DvcDataPoint
+from poif.data.access.origin import DvcOrigin
+from poif.data.cache.base.base import DvcCache
+from poif.data.cache.base.config import DatasetInfo
 from poif.typing import FileHash, RelFilePath
 
 

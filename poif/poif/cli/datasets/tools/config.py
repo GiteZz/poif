@@ -5,7 +5,7 @@ from typing import List, Optional
 
 from dataclasses_json import dataclass_json
 
-from poif.data.cache.base.remote import S3Remote
+from poif.data.remote.s3 import S3Remote
 
 config_folder = Path.home() / '.daif'
 config_folder.mkdir(exist_ok=True)
@@ -72,4 +72,4 @@ class OriginConfig:
     name: str
     git_url: Optional[str] = None
     git_api_key: Optional[str] = None
-    default_s3: Optional[S3Config] = None
+    default_s3: Optional[S3Remote] = None

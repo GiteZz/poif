@@ -4,8 +4,9 @@ import tempfile
 import cv2
 from httmock import HTTMock, all_requests, response
 
+from poif.data.access.datapoint import DvcDataPoint
+from poif.data.access.origin import DvcOrigin
 from poif.data.cache.disk_over_http.client import RemoteCache
-from poif.project_interface.classes.data_location import DvcDataPoint, DvcOrigin
 from poif.tests import get_img
 
 img = get_img()

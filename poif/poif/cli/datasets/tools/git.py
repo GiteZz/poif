@@ -2,8 +2,8 @@ import pathlib
 
 import requests
 
-import poif.data_interface.tools.requests as requests_tools
-from poif.data_interface.tools.config import DaifConfig
+import poif.cli.datasets.tools.requests as requests_tools
+from poif.cli.datasets.tools.config import DaifConfig
 
 git_credential_file = pathlib.Path.home() / '.git-credentials'
 

@@ -6,12 +6,14 @@ import boto3
 import cv2
 from botocore.client import Config
 
-from poif.data_interface.tools.config import DatasetConfig, S3Config
+from poif.cli.datasets.tools.config import DatasetConfig
+from poif.data.remote.s3 import S3Remote
 
 new_height = 256
 
 
-def upload_datasets_images(s3_config: S3Config, files: List[Tuple[Path, Path]]):
+def upload_datasets_images(s3_config: S3Remote, files: List[Tuple[Path, Path]]):
+    # TODO upload with remote
     print(f'uploading {len(files)} files for readme')
     dataset_sess = boto3.session.Session(profile_name=s3_config.profile)
     s3 = dataset_sess.resource('s3',
