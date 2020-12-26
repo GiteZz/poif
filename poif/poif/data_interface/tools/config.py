@@ -7,6 +7,8 @@ from typing import List, Optional
 import yaml
 from dataclasses_json import dataclass_json
 
+from poif.data_cache.base.remote.s3 import S3Remote
+
 config_folder = Path.home() / '.daif'
 config_folder.mkdir(exist_ok=True)
 
@@ -16,11 +18,11 @@ daif_config_file = config_folder / 'config.json'
 @dataclass_json
 @dataclass
 class DatasetConfig:
-    dvc_s3: 'S3Config'
+    dvc_s3: S3Remote
     dataset_name: str
     data_folders: List[str]
     git_remote_url: str
-    readme_s3: Optional['S3Config'] = None
+    readme_s3: Optional[S3Remote] = None
 
     @staticmethod
     def get_config_file():
@@ -43,16 +45,6 @@ class DatasetConfig:
         with open(dataset_config_file, 'r') as f:
             return DatasetConfig.from_dict(json.load(f))
 
-
-@dataclass_json
-@dataclass
-class S3Config:
-    bucket: str
-    endpoint: str
-    profile: str
-
-    def to_dict(self):
-        return vars(self)
 
 
 @dataclass_json

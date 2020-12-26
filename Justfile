@@ -86,6 +86,9 @@ setup-pypi:
     kubectl apply -f ./pypi/namespace.yml
     kubectl apply -f ./pypi/
 
+sort:
+    cd poif && isort .
+
 # K3S commands
 
 uninstall-k3s:
