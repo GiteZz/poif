@@ -26,3 +26,6 @@ class RemoteCache(DvcCache):
         r = requests.get(f'{self.datacache_url}{GET_FILES_PATH}', params=dvc_origin.to_url_params())
 
         return r.json()
+
+    def get_file_size(self, dvc_datapoint: DvcDataPoint) -> int:
+        pass

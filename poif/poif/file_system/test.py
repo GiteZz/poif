@@ -104,7 +104,7 @@ class HttpFetcher:
         return block_data
 
 
-class HttpFs(LoggingMixIn, Operations):
+class HttpFileSystem(LoggingMixIn, Operations):
     """
     A read only http/https/ftp filesystem.
     """
@@ -314,7 +314,7 @@ class HttpFs(LoggingMixIn, Operations):
 
 if __name__ == "__main__":
     fuse = FUSE(
-        HttpFs(
+        HttpFileSystem(
                disk_cache_size=2**30,
                disk_cache_dir='/tmp/xx',
                lru_capacity=400,

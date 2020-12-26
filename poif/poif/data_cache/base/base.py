@@ -15,6 +15,10 @@ class DvcCache(ABC, ParseMixin):
     def get_file(self, dvc_datapoint: DvcDataPoint) -> Any:
         pass
 
+    @abstractmethod
+    def get_file_size(self, dvc_datapoint: DvcDataPoint) -> int:
+        pass
+
 
 class SingleRepoCache(ParseMixin):
     def __init__(self, dvc_origin: DvcOrigin, base_cache: DvcCache):

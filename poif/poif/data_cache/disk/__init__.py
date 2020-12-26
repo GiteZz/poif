@@ -1,16 +1,18 @@
 import hashlib
+import os
 import subprocess
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List
 
-from disk.config import DatasetInfo, S3Config
+from poif.data_cache.disk.config import DatasetInfo, S3Config
 
-from poif.data_cache.base import DvcCache
+from poif.data_cache.base.base import DvcCache
 from poif.project_interface.classes.location import DvcDataPoint, DvcOrigin
 from poif.typing import FileHash, RelFilePath
 
-from .dvc import download_s3_file, get_dvc_remote_config, read_dvc_file
+from .dvc import get_dvc_remote_config, read_dvc_file
+from poif.data_cache.disk.s3 import s3_download_file, s3_get_object_size
 
 
 @dataclass
@@ -131,6 +133,17 @@ class LocalCache(DvcCache):
 
         return self.parse_file(file_bytes, extension)
 
+    def get_file_size(self, file_location: DvcDataPoint) -> int:
+        # TODO fix duplication
+        dataset_id = LocalCache.git_to_tag(file_location)
+        file_path = self.data_folder / dataset_id / file_location.data_tag
+        if file_path.is_file():
+            return os.path.getsize(file_path)
+
+        ds_info = self.get_dataset_info(file_location)
+        return s3_get_object_size(ds_info.s3_config, file_location)
+
+
     def get_file_path(self, file_location: DvcDataPoint) -> Path:
         """
         Files are saved under their hash and not under their original filename
@@ -142,6 +155,6 @@ class LocalCache(DvcCache):
 
         ds_info = self.get_dataset_info(file_location)
 
-        download_s3_file(ds_info.s3_config, file_location, file_path)
+        s3_download_file(ds_info.s3_config, file_location, file_path)
 
         return file_path

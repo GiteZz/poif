@@ -3,12 +3,10 @@ import json
 from pathlib import Path
 from typing import Dict
 
-import boto3
 import yaml
-from botocore.client import Config
 from disk.config import FileHash, RelFilePath, S3Config
 
-from poif.project_interface.classes.location import DvcDataPoint
+from poif.data_cache.disk import s3_download_file
 
 DatasetID = str
 
@@ -40,7 +38,7 @@ def read_dvc_file(dvc_file: Path, s3_config: S3Config, data_folder: Path) -> Dic
             dvc_file_folder_path.mkdir(exist_ok=True)
             dir_dest = dvc_file_folder_path / 'folder.dir'
 
-            download_s3_file(s3_config, file_info["md5"], dir_dest)
+            s3_download_file(s3_config, file_info["md5"], dir_dest)
 
             with open(dir_dest, 'r') as f:
                 dir_file_contents = json.load(f)
@@ -50,18 +48,6 @@ def read_dvc_file(dvc_file: Path, s3_config: S3Config, data_folder: Path) -> Dic
             raise NotImplemented("")
 
         return new_files
-
-
-def download_s3_file(s3_config: S3Config, dvc_datapoint: DvcDataPoint, dest_file: Path) -> None:
-    dataset_sess = boto3.session.Session(profile_name=s3_config.profile)
-    s3 = dataset_sess.resource('s3',
-                               endpoint_url=s3_config.endpointurl,
-                               config=Config(signature_version='s3v4')
-                               )
-    file_name = f'{s3_config.folder}/{dvc_datapoint.data_tag[:2]}/{dvc_datapoint.data_tag[2:]}'
-
-    s3.Bucket(f'{s3_config.bucket}').download_file(file_name, str(dest_file))
-
 
 
 if __name__ == "__main__":
