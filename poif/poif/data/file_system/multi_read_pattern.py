@@ -12,9 +12,7 @@ decrease_reader_lock = asyncio.Lock()
 
 data_buffer = {}
 
-class DataSetFileSystemWithCache:
-    def __init__(self, cache):
-        pass
+
 
 
 async def get_url_bytes(url, offset, length):

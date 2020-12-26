@@ -1,8 +1,7 @@
+import typing
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from pathlib import Path
-
-import typing
 
 if typing.TYPE_CHECKING:
     from poif.data.access.datapoint import DvcDataPoint

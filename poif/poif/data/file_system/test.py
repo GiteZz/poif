@@ -5,11 +5,9 @@ import re
 import traceback
 from errno import ENOENT
 
-import diskcache as dc
 import numpy as np
 import requests
 from fuse import FUSE, FuseOSError, LoggingMixIn, Operations
-from tenacity import retry, wait_exponential
 
 from poif.data.file_system.utils import create_dir_attr, create_file_attr
 
@@ -24,75 +22,6 @@ DISK_CACHE_DIR_ENV = "HTTPFS_DISK_CACHE_DIR"
 
 FALSY = {0, "0", False, "false", "False", "FALSE", "off", "OFF"}
 
-
-class LRUCache:
-    def __init__(self, capacity):
-        self.capacity = capacity
-        self.cache = collections.OrderedDict()
-
-    def __getitem__(self, key):
-        value = self.cache.pop(key)
-        self.cache[key] = value
-        return value
-
-    def __setitem__(self, key, value):
-        try:
-            self.cache.pop(key)
-        except KeyError:
-            if len(self.cache) >= self.capacity:
-                self.cache.popitem(last=False)
-        self.cache[key] = value
-
-    def __contains__(self, key):
-        return key in self.cache
-
-    def __len__(self):
-        return len(self.cache)
-
-
-class HttpFetcher:
-    SSL_VERIFY = os.environ.get("SSL_VERIFY", True) not in FALSY
-
-    def __init__(self, logger):
-        self.logger = logger
-        if not self.SSL_VERIFY:
-            logger.warning(
-                "You have set ssl certificates to not be verified. "
-                "This may leave you vulnerable. "
-                "http://docs.python-requests.org/en/master/user/advanced/#ssl-cert-verification"
-            )
-
-    def get_size(self, url):
-        # If .head doesn't work try the normal GET requests
-        try:
-            # requests.head only requests the header instead of the entire get
-            head = requests.head(url, allow_redirects=True, verify=self.SSL_VERIFY)
-            return int(head.headers["Content-Length"])
-        except:
-            head = requests.get(
-                url,
-                allow_redirects=True,
-                verify=self.SSL_VERIFY,
-                headers={"Range": "bytes=0-1"},
-            )
-            crange = head.headers["Content-Range"]
-            match = re.search(r"/(\d+)$", crange)
-            if match:
-                return int(match.group(1))
-
-            self.logger.error(traceback.format_exc())
-            raise FuseOSError(ENOENT)
-
-    @retry(wait=wait_exponential(multiplier=1, min=4, max=10))
-    def get_data(self, url, start, end):
-        headers = {"Range": "bytes={}-{}".format(start, end), "Accept-Encoding": ""}
-        self.logger.info("gettings %s %s %s", url, start, end)
-        r = requests.get(url, headers=headers)
-        self.logger.info("got %s", r.status_code)
-        print("got", r.status_code)
-        r.raise_for_status()
-        block_data = np.frombuffer(r.content, dtype=np.uint8)
-        return block_data
 
 
 class HttpFileSystem(LoggingMixIn, Operations):
@@ -135,7 +64,7 @@ class HttpFileSystem(LoggingMixIn, Operations):
         self.disk_misses = 0
         self.block_size = block_size
 
-        f = open("/home/gilles/datasets/pneumonia/test/NORMAL/IM-0001-0001.jpeg", "rb")
+        f = open("/home/gilles/datasets/pneunomia/test/NORMAL/IM-0001-0001.jpeg", "rb")
         num = bytearray(f.read())
 
         self.file = num

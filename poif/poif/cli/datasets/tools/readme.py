@@ -4,8 +4,8 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Dict, List
 
-from poif.cli.datasets.tools.cli import s3_input
 from poif.cli.datasets.tools import folder_list_to_pathlib, get_url
+from poif.cli.datasets.tools.cli import s3_input
 from poif.cli.datasets.tools.config import DatasetConfig
 from poif.cli.datasets.tools.minio import upload_datasets_images
 

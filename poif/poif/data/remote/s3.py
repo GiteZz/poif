@@ -1,3 +1,4 @@
+import typing
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -5,10 +6,8 @@ import boto3
 from botocore.config import Config
 from dataclasses_json import dataclass_json
 
-
 from poif.data.remote.base import Remote
 
-import typing
 if typing.TYPE_CHECKING:
     from poif.data.access.datapoint import DvcDataPoint
 

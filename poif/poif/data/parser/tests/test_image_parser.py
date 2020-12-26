@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 
 from poif.data.parser.image import ImageParser
-from poif.tests import get_img, assert_image_nearly_equal
+from poif.tests import assert_image_nearly_equal, get_img
 
 
 def test_correct_loading():

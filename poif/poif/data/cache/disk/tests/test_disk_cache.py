@@ -1,19 +1,18 @@
+import shutil
 import tempfile
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict
 
 import cv2
 import pytest
-from dataclasses import dataclass
 
 from poif.data.access.datapoint import DvcDataPoint
-from poif.data.access.origin import Origin, DvcOrigin
-from poif.data.remote.base import Remote
+from poif.data.access.origin import DvcOrigin
 from poif.data.cache.disk import LocalCache
-from poif.tests import get_img, assert_image_nearly_equal
+from poif.data.remote.base import Remote
+from poif.tests import assert_image_nearly_equal, get_img
 from poif.typing import FileHash, RelFilePath
-
-import shutil
 
 files = {
     'aa': get_img(),
@@ -56,6 +55,7 @@ class MockRemote(Remote):
 
 
 class MockOrigin(DvcOrigin):
+    remote = None
     @property
     def dataset_tag(self):
         return 'dataset'
@@ -68,7 +68,10 @@ class MockOrigin(DvcOrigin):
         return tag_file_mapping
 
     def get_remote(self) -> Remote:
-        return MockRemote()
+        if self.remote is None:
+            self.remote = MockRemote()
+        return self.remote
+
 
 @dataclass
 class MockDataPoint(MockOrigin):
@@ -94,3 +97,4 @@ def test_get_dataset_info(dvc_origin):
                                                          data_tag=data_tag)
                                             )
             assert_image_nearly_equal(files[data_tag], img_from_cache)
+    assert dvc_origin.remote.files_downloaded == 4
