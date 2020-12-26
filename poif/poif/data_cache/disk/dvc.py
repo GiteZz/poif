@@ -6,6 +6,7 @@ from typing import Dict
 import yaml
 from disk.config import FileHash, RelFilePath, S3Config
 
+from poif.data_cache.base.remote.base import Remote
 from poif.data_cache.disk import s3_download_file
 
 DatasetID = str
@@ -16,7 +17,7 @@ def get_dvc_remote_config(repo_url: Path) -> S3Config:
     parser = configparser.ConfigParser()
     parser.read(dvc_config_file)
     for key in parser.keys():
-        if 'disk_over_http' in key:
+        if 'remote' in key:
             return S3Config(
                 url=parser[key]['url'],
                 endpointurl=parser[key]['endpointurl'],
@@ -24,7 +25,7 @@ def get_dvc_remote_config(repo_url: Path) -> S3Config:
                 )
 
 
-def read_dvc_file(dvc_file: Path, s3_config: S3Config, data_folder: Path) -> Dict[FileHash, RelFilePath]:
+def read_dvc_file(dvc_file: Path, remote: Remote, data_folder: Path) -> Dict[FileHash, RelFilePath]:
     """
     Read one dvc file and return the contents.
     """
@@ -38,7 +39,7 @@ def read_dvc_file(dvc_file: Path, s3_config: S3Config, data_folder: Path) -> Dic
             dvc_file_folder_path.mkdir(exist_ok=True)
             dir_dest = dvc_file_folder_path / 'folder.dir'
 
-            s3_download_file(s3_config, file_info["md5"], dir_dest)
+            remote.download_file(file_info["md5"], dir_dest)
 
             with open(dir_dest, 'r') as f:
                 dir_file_contents = json.load(f)

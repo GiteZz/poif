@@ -5,14 +5,13 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List
 
-from poif.data_cache.disk.config import DatasetInfo, S3Config
-
 from poif.data_cache.base.base import DvcCache
+from poif.data_cache.base.config import DatasetInfo
+from poif.data_cache.base.remote.base import Remote
 from poif.project_interface.classes.location import DvcDataPoint, DvcOrigin
 from poif.typing import FileHash, RelFilePath
 
 from .dvc import get_dvc_remote_config, read_dvc_file
-from poif.data_cache.disk.s3 import s3_download_file, s3_get_object_size
 
 
 @dataclass
@@ -74,7 +73,7 @@ class LocalCache(DvcCache):
 
         return dvc_files
 
-    def get_dvc_remote(self, dvc_origin: DvcOrigin) -> S3Config:
+    def get_dvc_remote(self, dvc_origin: DvcOrigin) -> Remote:
         repo_path = self.dvc_origin_to_repo_path(dvc_origin, initialize=True)
         remote_config = get_dvc_remote_config(repo_path)
 
@@ -94,7 +93,7 @@ class LocalCache(DvcCache):
             return ds_info
 
         dvc_files = self.get_dvc_files(dvc_origin)
-        dvc_remote_config = self.get_dvc_remote(dvc_origin)
+        dvc_remote = self.get_dvc_remote(dvc_origin)
 
         repo_data_folder = self.data_folder / ds_key
         repo_data_folder.mkdir(exist_ok=True)
@@ -103,9 +102,9 @@ class LocalCache(DvcCache):
         for dvc_file in dvc_files:
             if not dvc_file.is_file():
                 continue
-            data_files = {**data_files, **read_dvc_file(dvc_file, dvc_remote_config, repo_data_folder)}
+            data_files = {**data_files, **read_dvc_file(dvc_file, dvc_remote, repo_data_folder)}
 
-        new_ds_info = DatasetInfo(files=data_files, s3_config=dvc_remote_config)
+        new_ds_info = DatasetInfo(files=data_files, remote=dvc_remote)
         new_ds_info.save(self.ds_info_cache / f'{ds_key}.json')
         self.cached_ds_info[ds_key] = new_ds_info
         return new_ds_info
@@ -141,8 +140,7 @@ class LocalCache(DvcCache):
             return os.path.getsize(file_path)
 
         ds_info = self.get_dataset_info(file_location)
-        return s3_get_object_size(ds_info.s3_config, file_location)
-
+        return ds_info.remote.get_object_size(file_location)
 
     def get_file_path(self, file_location: DvcDataPoint) -> Path:
         """
@@ -155,6 +153,6 @@ class LocalCache(DvcCache):
 
         ds_info = self.get_dataset_info(file_location)
 
-        s3_download_file(ds_info.s3_config, file_location, file_path)
+        ds_info.remote.download_file(file_location, file_path)
 
         return file_path

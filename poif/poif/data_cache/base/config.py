@@ -1,33 +1,19 @@
 import json
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Set
+from typing import Dict
 
 from dataclasses_json import dataclass_json
 
+from poif.data_cache.base.remote.base import Remote
 from poif.typing import FileHash, RelFilePath
-
-
-@dataclass_json
-@dataclass
-class S3Config:
-    url: str
-    endpointurl: str
-    profile: str
-
-    bucket: str = field(init=False)
-    folder: str = field(init=False)
-
-    def __post_init__(self):
-        url_no_URI = self.url.replace('s3://', '')
-        self.bucket, self.folder = url_no_URI.split('/')
 
 
 @dataclass_json
 @dataclass
 class DatasetInfo:
     files: Dict[FileHash, RelFilePath]
-    s3_config: S3Config
+    remote: Remote
 
     def save(self, file: Path):
         with open(file, 'w') as f:

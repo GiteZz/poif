@@ -1,14 +1,13 @@
+import json
 import tempfile
 
 import cv2
-import json
-from httmock import HTTMock, urlmatch, response, all_requests
+from httmock import HTTMock, all_requests, response, urlmatch
 
 from poif.data_cache.disk_over_http import GET_FILE_PATH, GET_FILES_PATH
 from poif.data_cache.disk_over_http.client import RemoteCache
 from poif.project_interface.classes.location import DvcDataPoint, DvcOrigin
 from poif.tests import get_img
-
 
 img = get_img()
 
