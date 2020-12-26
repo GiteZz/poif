@@ -7,7 +7,7 @@ import requests
 
 from poif.project_interface.classes.data import DataQuery, Dataset
 from poif.project_interface.classes.input import Input
-from poif.project_interface.classes.location import HttpLocation
+from poif.project_interface.classes.data_location import HttpLocation
 from poif.project_interface.classes.transform import (DataPointSplitter,
                                                       DataPointTransformation,
                                                       DataSetSplitter,

@@ -5,7 +5,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 import requests
 
 from poif.project_interface.classes.input import Input
-from poif.project_interface.classes.location import HttpLocation
+from poif.project_interface.classes.data_location import HttpLocation
 from poif.project_interface.data_handlers.disk_loader.gather_functions import \
     file_gatherer
 from poif.typing import FileHash, RelFilePath

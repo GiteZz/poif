@@ -27,7 +27,7 @@ setuptools.setup(
     ],
     python_requires='>=3.6',
     entry_points={
-        'console_scripts': ['daif=poif.data_interface.cli:main']
+        'console_scripts': ['daif=poif.datasets.cli:main']
     },
     install_requires=[
         'PyYAML',

@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Union
 
 # from poif.project_interface.classes.transform import Transform
-from poif.project_interface.classes.location import DataLocation
+from poif.project_interface.classes.data_location import DataLocation
 
 
 class Input:

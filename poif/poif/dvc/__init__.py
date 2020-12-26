@@ -1,8 +1,6 @@
-import configparser
-from pathlib import Path
 from typing import List
 
-from poif.data_cache.base.remote.base import Remote
+from poif.data.cache.base.remote import Remote
 
 import tempfile
 
@@ -13,7 +11,7 @@ from typing import Dict
 
 import yaml
 
-from poif.data_cache.base.remote.s3 import S3Remote
+from poif.data.cache.base.remote import S3Remote
 from poif.typing import FileHash, RelFilePath
 
 

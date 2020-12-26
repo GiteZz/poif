@@ -1,5 +1,5 @@
 from poif.project_interface.classes.input import Input
-from poif.project_interface.classes.location import StringLocation
+from poif.project_interface.classes.data_location import StringLocation
 
 
 def test_setting_data():

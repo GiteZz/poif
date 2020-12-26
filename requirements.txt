@@ -1,3 +1,4 @@
+requests
 -e poif/interface
 -e poif/data_cache
 -e dvc/dataset_cli
