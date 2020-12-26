@@ -3,7 +3,7 @@ import tempfile
 import pandas as pd
 import pytest
 
-from poif.data.cache.base import CsvPandasParser
+from poif.data.parser.csv import CsvPandasParser
 
 
 @pytest.fixture

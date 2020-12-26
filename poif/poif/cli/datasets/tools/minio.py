@@ -6,7 +6,6 @@ import boto3
 import cv2
 from botocore.client import Config
 
-from poif.cli.datasets.tools.config import DatasetConfig
 from poif.data.remote.s3 import S3Remote
 
 new_height = 256

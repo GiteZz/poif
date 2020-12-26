@@ -19,7 +19,7 @@ class LocalCache(DvcCache):
     git_folder: Path = field(init=False)
     data_folder: Path = field(init=False)
 
-    cached_ds_info: Dict[FileHash, DatasetInfo] = field(init=False)
+    cached_ds_info: Dict[FileHash, DatasetInfo] = field(default_factory=dict)
 
     def __post_init__(self):
         # Folder initiation
@@ -93,8 +93,9 @@ class LocalCache(DvcCache):
         """
         Files are saved under their hash and not under their original filename
         """
-        dataset_id = LocalCache.git_to_tag(file_location)
-        file_path = self.data_folder / dataset_id / file_location.data_tag
+        dataset_folder = self.data_folder / file_location.data_tag
+        dataset_folder.mkdir(exist_ok=True)
+        file_path = dataset_folder / file_location.data_tag
         if file_path.is_file():
             return file_path
 

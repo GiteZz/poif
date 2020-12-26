@@ -5,8 +5,12 @@ import boto3
 from botocore.config import Config
 from dataclasses_json import dataclass_json
 
-from poif.data.access.datapoint import DvcDataPoint
+
 from poif.data.remote.base import Remote
+
+import typing
+if typing.TYPE_CHECKING:
+    from poif.data.access.datapoint import DvcDataPoint
 
 
 @dataclass_json
@@ -23,7 +27,7 @@ class S3Remote(Remote):
         url_no_URI = self.url.replace('s3://', '')
         self.bucket, self.folder = url_no_URI.split('/')
 
-    def download_file(self, dvc_datapoint: DvcDataPoint, dest_file: Path) -> None:
+    def download_file(self, dvc_datapoint: 'DvcDataPoint', dest_file: Path) -> None:
         dataset_sess = boto3.session.Session(profile_name=self.profile)
         s3 = dataset_sess.resource('s3',
                                    endpoint_url=self.endpointurl,
@@ -33,7 +37,7 @@ class S3Remote(Remote):
 
         s3.Bucket(f'{self.bucket}').download_file(file_name, str(dest_file))
 
-    def get_object_size(self, dvc_datapoint: DvcDataPoint) -> int:
+    def get_object_size(self, dvc_datapoint: 'DvcDataPoint') -> int:
         dataset_sess = boto3.session.Session(profile_name=self.profile)
         s3 = dataset_sess.resource('s3',
                                    endpoint_url=self.endpointurl,

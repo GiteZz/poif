@@ -37,6 +37,13 @@ class DvcDataPoint(DvcOrigin):
             'data_tag': self.data_tag
         }
 
+    @staticmethod
+    def from_origin(dvc_origin: DvcOrigin, data_tag: FileHash) -> 'DvcDataPoint':
+        return DvcDataPoint(data_tag=data_tag,
+                            git_url=dvc_origin.git_url,
+                            git_commit=dvc_origin.git_commit
+                            )
+
 
 @dataclass
 class DvcLocation(DataLocation):

@@ -31,3 +31,11 @@ def get_img_file():
     cv2.imwrite(img_file, img)
 
     return img_file
+
+
+def assert_image_nearly_equal(original_img: np.ndarray, new_img: np.ndarray):
+    h, w, c = original_img.shape
+    abs_map = np.abs(original_img.astype(np.int16) - new_img.astype(np.int16))
+    av_pixel_diff = np.sum(abs_map) / (w * h * 3)
+    # some extension are lossy so we can't be sure that the image will be exactly the same
+    assert av_pixel_diff < 5

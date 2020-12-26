@@ -18,7 +18,6 @@ cv2.imwrite(img_file, img)
 
 @all_requests
 def mock_get_file(url, request):
-
     with open(img_file, 'rb') as f:
         img_bytes = f.read()
 
@@ -26,14 +25,16 @@ def mock_get_file(url, request):
     content = img_bytes
     return response(200, content, headers)
 
+
 test_files = {
-        'aa': '01.jpg',
-        'bb': '02.jpg'
-    }
+    'aa': '01.jpg',
+    'bb': '02.jpg'
+}
+
 
 @all_requests
 def mock_get_files(url, request):
-    headers = {'mimetype':' application/json'}
+    headers = {'mimetype': ' application/json'}
 
     return response(200, json.dumps(test_files), headers)
 

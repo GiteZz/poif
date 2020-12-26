@@ -3,8 +3,8 @@ import tempfile
 import cv2
 import numpy as np
 
-from poif.data.cache.base import ImageParser
-from poif.tests import get_img
+from poif.data.parser.image import ImageParser
+from poif.tests import get_img, assert_image_nearly_equal
 
 
 def test_correct_loading():
@@ -24,8 +24,4 @@ def test_correct_loading():
         loaded_img = ImageParser.parse(img_bytes)
 
         file_by_extension[extension] = tempfile.mkstemp(suffix=f'.{extension}')[1]
-        # Convert to np.int16 otherwise a difference of -1 is converted to 255
-        abs_map = np.abs(original_img.astype(np.int16) - loaded_img.astype(np.int16))
-        av_pixel_diff = np.sum(abs_map) / (w * h * 3)
-        # some extension are lossy so we can't be sure that the image will be exactly the same
-        assert av_pixel_diff < 5
+        assert_image_nearly_equal(original_img, loaded_img)

@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict
 
+from poif.data.remote.base import Remote
 from poif.dvc import dvc_files_to_tag_file_mapping, get_dvc_remote_config
 from poif.typing import FileHash, RelFilePath
 
@@ -31,7 +32,7 @@ class Origin(ABC):
 
 
 @dataclass
-class DvcOrigin:
+class DvcOrigin(Origin):
     """
     Class is lazy loaded which means that until get_tag_file_mapping or get_remote is called the repo
     information is not yet present. If one of these two is called the repo will be cloned and data

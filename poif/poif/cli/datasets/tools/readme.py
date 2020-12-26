@@ -5,9 +5,9 @@ from pathlib import Path
 from typing import Dict, List
 
 from poif.cli.datasets.tools.cli import s3_input
-from poif.data_interface.tools import folder_list_to_pathlib, get_url
-from poif.data_interface.tools.config import DatasetConfig
-from poif.data_interface.tools.minio import upload_datasets_images
+from poif.cli.datasets.tools import folder_list_to_pathlib, get_url
+from poif.cli.datasets.tools.config import DatasetConfig
+from poif.cli.datasets.tools.minio import upload_datasets_images
 
 img_extensions = ['.png', '.jpg', '.jpeg']
 
