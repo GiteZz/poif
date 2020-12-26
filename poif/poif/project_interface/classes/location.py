@@ -1,6 +1,7 @@
 import configparser
 import hashlib
 import subprocess
+from abc import ABC, abstractmethod
 from pathlib import Path
 
 from dataclasses import dataclass, field
@@ -12,7 +13,6 @@ import numpy as np
 import requests
 
 from poif.data_cache.base.remote.base import Remote
-from poif.data_interface.tools.config import S3Config
 from poif.typing import URL, FileHash, UrlParams, RelFilePath
 from poif.dvc import get_dvc_remote_config, dvc_files_to_tag_file_mapping
 
@@ -31,6 +31,26 @@ class StringLocation(DataLocation):
 
     def get(self):
         return self.data_str
+
+
+class Origin(ABC):
+    @property
+    @abstractmethod
+    def dataset_tag(self):
+        pass
+
+    @property
+    @abstractmethod
+    def origin_tag(self):
+        pass
+
+    @abstractmethod
+    def get_tag_file_mapping(self) -> Dict[FileHash, RelFilePath]:
+        pass
+
+    @abstractmethod
+    def get_remote(self) -> Remote:
+        pass
 
 
 @dataclass

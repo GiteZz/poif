@@ -7,7 +7,6 @@ from typing import Dict, List
 
 from poif.data_cache.base.base import DvcCache
 from poif.data_cache.base.config import DatasetInfo
-from poif.data_cache.base.remote.base import Remote
 from poif.project_interface.classes.location import DvcDataPoint, DvcOrigin
 from poif.typing import FileHash, RelFilePath
 
