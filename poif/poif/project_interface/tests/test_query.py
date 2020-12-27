@@ -4,7 +4,7 @@ from typing import List, Optional, Union
 
 import pytest
 
-from poif.data.access.datapoint import StringLocation
+from poif.data.datapoint.base import StringLocation
 from poif.data.access.dataquery import DataQuery
 from poif.data.access.input import Input
 from poif.data.access.transform import (DataPointSplitter,

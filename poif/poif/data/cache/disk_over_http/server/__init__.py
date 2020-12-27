@@ -4,8 +4,10 @@ from flask import Flask
 
 app = Flask(__name__)
 
-from poif.data.cache.disk import LocalCache
+from poif.data.cache.disk import CacheConfig
 
-file_cache = LocalCache(work_dir=Path.cwd() / 'file_cache')
+default_work_dir = Path('./datasets_cache')
+
+cache_config = CacheConfig(default_work_dir)
 
 from poif.data.cache.disk_over_http.server import views

@@ -1,4 +1,3 @@
-import typing
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -7,9 +6,7 @@ from botocore.config import Config
 from dataclasses_json import dataclass_json
 
 from poif.data.remote.base import Remote
-
-if typing.TYPE_CHECKING:
-    from poif.data.access.datapoint import DvcDataPoint
+from poif.typing import FileHash
 
 
 @dataclass_json
@@ -26,24 +23,26 @@ class S3Remote(Remote):
         url_no_URI = self.url.replace('s3://', '')
         self.bucket, self.folder = url_no_URI.split('/')
 
-    def download_file(self, dvc_datapoint: 'DvcDataPoint', dest_file: Path) -> None:
+    def get_session(self):
         dataset_sess = boto3.session.Session(profile_name=self.profile)
-        s3 = dataset_sess.resource('s3',
-                                   endpoint_url=self.endpointurl,
-                                   config=Config(signature_version='s3v4')
-                                   )
-        file_name = f'{self.folder}/{dvc_datapoint.data_tag[:2]}/{dvc_datapoint.data_tag[2:]}'
+        return dataset_sess.resource('s3',
+                                     endpoint_url=self.endpointurl,
+                                     config=Config(signature_version='s3v4')
+                                     )
 
-        s3.Bucket(f'{self.bucket}').download_file(file_name, str(dest_file))
+    def get_bucket(self):
+        return self.get_session().Bucket(f'{self.bucket}')
 
-    def get_object_size(self, dvc_datapoint: 'DvcDataPoint') -> int:
-        dataset_sess = boto3.session.Session(profile_name=self.profile)
-        s3 = dataset_sess.resource('s3',
-                                   endpoint_url=self.endpointurl,
-                                   config=Config(signature_version='s3v4')
-                                   )
-        file_name = f'{self.folder}/{dvc_datapoint.data_tag[:2]}/{dvc_datapoint.data_tag[2:]}'
+    def get_file(self, tag: FileHash) -> bytes:
 
-        size = s3.Bucket(f'{self.bucket}').lookup(file_name).size
+        file_name = f'{self.folder}/{tag[:2]}/{tag[2:]}'
+
+        response = self.get_bucket().get_object(file_name)
+        return response['body'].read()
+
+    def get_object_size(self, tag: FileHash) -> int:
+        file_name = f'{self.folder}/{tag[:2]}/{tag[2:]}'
+
+        size = self.get_bucket().lookup(file_name).size
 
         return size

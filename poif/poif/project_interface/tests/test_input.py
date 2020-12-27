@@ -1,4 +1,4 @@
-from poif.data.access.datapoint import StringLocation
+from poif.data.datapoint.base import StringLocation
 from poif.data.access.input import Input
 
 

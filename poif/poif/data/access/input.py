@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Any, Dict, List, Union
 
-from poif.data.access.datapoint import DataLocation
+from poif.data.datapoint.base import DataLocation
 
 
 class Input:

@@ -1,34 +1,15 @@
 import hashlib
 import subprocess
 import tempfile
-from abc import ABC, abstractmethod
-from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Any
 
+from dataclasses import dataclass, field
+
+from poif.data.origin.base import Origin
 from poif.data.remote.base import Remote
-from poif.dvc import dvc_files_to_tag_file_mapping, get_dvc_remote_config
+from poif.dvc import get_dvc_remote_config, dvc_files_to_tag_file_mapping, get_tag_to_file_from_repo
 from poif.typing import FileHash, RelFilePath
-
-
-class Origin(ABC):
-    @property
-    @abstractmethod
-    def dataset_tag(self):
-        pass
-
-    @property
-    @abstractmethod
-    def origin_tag(self):
-        pass
-
-    @abstractmethod
-    def get_tag_file_mapping(self) -> Dict[FileHash, RelFilePath]:
-        pass
-
-    @abstractmethod
-    def get_remote(self) -> Remote:
-        pass
 
 
 @dataclass
@@ -51,16 +32,11 @@ class DvcOrigin(Origin):
     _origin_tag is defined to have a unique way of representing a specific version of a dataset such that
     the meta information (dir files etc.) are not overwritten of mixed.
     """
+
     _origin_tag: str = field(init=False)
 
     _remote: Remote = field(init=False)
     _tag_file_mapping: Dict[FileHash, RelFilePath] = field(init=False)
-
-    def to_url_params(self):
-        return {
-            'git_url': self.git_url,
-            'git_commit': self.git_commit
-        }
 
     @property
     def dataset_tag(self):
@@ -77,23 +53,36 @@ class DvcOrigin(Origin):
 
         return self._dataset_tag
 
-    def init(self):
-        repo_path = Path(tempfile.mkdtemp())
-
-        subprocess.call(['git', 'clone', self.git_url, str(repo_path)])
-        subprocess.call(['git', 'checkout', self.git_commit], cwd=str(repo_path))
-
-        dvc_files = list(repo_path.rglob('*.dvc'))
-
-        self._remote = get_dvc_remote_config(repo_path)
-        self._tag_file_mapping = dvc_files_to_tag_file_mapping(dvc_files, self._remote)
-
-    def get_tag_file_mapping(self) -> Dict[FileHash, RelFilePath]:
+    @property
+    def tag_to_original_file(self) -> Dict[FileHash, RelFilePath]:
         if self._tag_file_mapping is None:
             self.init()
         return self._tag_file_mapping
 
-    def get_remote(self) -> Remote:
+    @property
+    def remote(self) -> Remote:
         if self._remote is None:
             self.init()
         return self._remote
+
+    def init(self):
+        repo = Path(tempfile.mkdtemp())
+
+        subprocess.call(['git', 'clone', self.git_url, str(repo)])
+        subprocess.call(['git', 'checkout', self.git_commit], cwd=str(repo))
+
+        self._remote = get_dvc_remote_config(repo)
+        self._tag_file_mapping = get_tag_to_file_from_repo(repo, self._remote)
+
+    def get_file(self, tag: FileHash) -> bytes:
+        return self.remote.get_file(tag)
+
+    def get_file_size(self, tag: FileHash) -> Any:
+        return self.remote.get_object_size(tag)
+
+    def get_extension(self, tag: FileHash) -> str:
+        original_file = self.tag_to_original_file[tag]
+        file_name = Path(original_file).parts[-1]
+        extension = file_name.split('.')[-1]
+
+        return extension

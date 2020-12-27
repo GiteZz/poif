@@ -7,8 +7,8 @@ from typing import Dict
 import cv2
 import pytest
 
-from poif.data.access.datapoint import DvcDataPoint
-from poif.data.access.origin import DvcOrigin
+from poif.data.datapoint.base import DvcDataPoint
+from poif.data.origin.dvc import DvcOrigin
 from poif.data.cache.disk import LocalCache
 from poif.data.remote.base import Remote
 from poif.tests import assert_image_nearly_equal, get_img

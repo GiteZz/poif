@@ -4,7 +4,7 @@ from typing import Dict, List
 
 import requests
 
-from poif.data.access.datapoint import HttpLocation
+from poif.data.datapoint.base import HttpLocation
 from poif.data.access.dataquery import DataQuery
 from poif.data.access.dataset import Dataset
 from poif.data.access.input import Input
