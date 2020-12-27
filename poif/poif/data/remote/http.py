@@ -1,9 +1,10 @@
 from dataclasses import dataclass
 
+import requests
+
+from poif.data.cache.disk_over_http import GET_FILE_PATH, GET_FILES_PATH
 from poif.data.remote.base import Remote
 from poif.typing import FileHash
-import requests
-from poif.data.cache.disk_over_http import GET_FILE_PATH, GET_FILES_PATH
 
 
 @dataclass

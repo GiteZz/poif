@@ -3,6 +3,7 @@ from stat import S_IFREG  # Regular file type
 from time import time
 from typing import Dict, Union
 
+
 class Directory:
     def __init__(self, contents: Dict[str, Union['Directory', 'File']]):
         self.contents = contents

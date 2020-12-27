@@ -1,30 +1,29 @@
+from dataclasses import dataclass, field
 from hashlib import md5
 from pathlib import Path
 from typing import Dict
-
-from dataclasses import dataclass, field
 
 from poif.typing import FileHash
 
 
 def file_to_relative_path(base_dir: Path, file: Path):
-    return str(file)[len(str(base_dir)):]
+    """
+    base_dir = Path('/home/user/datasets')
+    file_path = Path('/home/user/datasets/name/train/01.jpg')
+
+    => 'name/train/01.jpg'
+    """
+    return str(file)[len(str(base_dir)) + 1:]
 
 
-def get_md5_hash(file: Path):
+def hash_object(file: Path):
     with open(file, 'rb') as f:
         hash = md5(f.read()).hexdigest()
     return hash
 
 
-def get_directory_hash(tag_to_file: Dict[FileHash, str]):
-
-    intermediate_hash = md5()
-
-    for key in sorted(tag_to_file.keys()):
-        intermediate_hash.update(tag_to_file[key].encode('utf-8'))
-
-    return intermediate_hash.hexdigest()
+def hash_string(string: str):
+    return md5(string.encode('utf-8')).hexdigest()
 
 
 @dataclass

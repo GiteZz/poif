@@ -1,11 +1,11 @@
 import json
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict
 
-from dataclasses import dataclass, field
 from tqdm import tqdm
 
-from poif.dvc.utils import get_md5_hash, file_to_relative_path, get_directory_hash, FileIterator
+from poif.dvc.utils import file_to_relative_path, hash_object
 from poif.typing import FileHash
 
 
@@ -14,31 +14,27 @@ class VersionedFile:
     base_dir: Path
     file_path: Path
 
-    tag: str = field(init=False)
-    rel_path: str = field(init=False)
+    _tag: FileHash = None
+
+    @property
+    def tag(self):
+        if self._tag is None:
+            self.set_file_hash()
+        return self._tag
+
+    @property
+    def relative_path(self):
+        return file_to_relative_path(self.base_dir, self.file_path)
 
     def set_file_hash(self):
-        self.tag = get_md5_hash(self.file_path)
+        self._tag = hash_object(self.file_path)
 
-    def set_rel_file_path(self):
+    def get_remote_path(self):
+        return f'{self.tag[:2]}/{self.tag[2:]}'
 
-
-    def init(self):
-        self.set_file_hash()
-        self.set_rel_file_path()
-
-    def write_vdir(self, file: Path):
-        if self.directory_hash is not None:
-            self.init()
-
+    def write_vfile(self, file: Path):
         with open(file, 'w') as f:
             json.dump({
-                'data_folder': self.data_folder,
-                'tag': self.directory_hash
-            },f)
-
-    def write_mapping(self, file: Path):
-        if self.directory_hash is not None:
-            self.init()
-        with open(file, 'w') as f:
-            json.dump(self.tag_to_file,f)
+                'path': self.relative_path,
+                'tag': self.tag
+            }, f)

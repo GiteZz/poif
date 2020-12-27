@@ -1,9 +1,9 @@
+import copy
+from typing import Union
+
 from fuse import FUSE, Operations
 
 from poif.data.file_system.io import Directory, File
-import copy
-
-from typing import Union
 
 
 class DataSetFileSystem(Operations):

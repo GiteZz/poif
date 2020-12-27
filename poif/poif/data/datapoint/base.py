@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import Any
-
 from dataclasses import dataclass
+from typing import Any
 
 from poif.data.origin.base import Origin
 from poif.data.parser.base import ParseMixin

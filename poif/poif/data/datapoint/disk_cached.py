@@ -1,6 +1,5 @@
-from typing import Any
-
 from dataclasses import dataclass, field
+from typing import Any
 
 from poif.data.cache.disk import CacheConfig
 from poif.data.datapoint.base import DataPoint

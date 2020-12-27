@@ -1,5 +1,5 @@
-from poif.data.datapoint.base import StringLocation
 from poif.data.access.input import Input
+from poif.data.datapoint.base import StringLocation
 
 
 def test_setting_data():

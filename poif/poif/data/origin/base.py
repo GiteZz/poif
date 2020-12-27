@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Dict, Any
+from typing import Any, Dict
 
 from poif.data.remote.base import Remote
 from poif.typing import FileHash, RelFilePath

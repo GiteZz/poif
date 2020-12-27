@@ -1,5 +1,6 @@
 import random
 import tempfile
+from pathlib import Path
 
 import cv2
 import numpy as np
@@ -24,13 +25,16 @@ def get_img():
     return img
 
 
-def get_img_file():
-    img = get_img()
-    img_file = tempfile.mkstemp(suffix='.png')[1]
-
-    cv2.imwrite(img_file, img)
+def get_img_file() -> Path:
+    img_file = Path(tempfile.mkstemp(suffix='.png')[1])
+    write_image_in_file(img_file)
 
     return img_file
+
+
+def write_image_in_file(file: Path):
+    img = get_img()
+    cv2.imwrite(str(file), img)
 
 
 def assert_image_nearly_equal(original_img: np.ndarray, new_img: np.ndarray):

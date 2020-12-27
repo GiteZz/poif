@@ -1,14 +1,14 @@
 import hashlib
 import subprocess
 import tempfile
-from pathlib import Path
-from typing import Dict, Any
-
 from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Any, Dict
 
 from poif.data.origin.base import Origin
 from poif.data.remote.base import Remote
-from poif.dvc import get_dvc_remote_config, dvc_files_to_tag_file_mapping, get_tag_to_file_from_repo
+from poif.dvc import (dvc_files_to_tag_file_mapping, get_dvc_remote_config,
+                      get_tag_to_file_from_repo)
 from poif.typing import FileHash, RelFilePath
 
 
