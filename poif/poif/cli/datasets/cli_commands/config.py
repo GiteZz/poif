@@ -2,7 +2,7 @@ from typing import Tuple
 
 import poif.cli.datasets.tools.config as config_tools
 from poif.cli.datasets.tools.cli import s3_input, yes_with_question
-from poif.cli.datasets.tools.config import DaifConfig
+from poif.cli.datasets.tools.config import CliConfig
 
 
 def config(args):
@@ -51,7 +51,7 @@ def config_new_origin_collect_options() -> Tuple[config_tools.OriginConfig, bool
 
 
 def config_new_origin(args):
-    current_config = DaifConfig.load()
+    current_config = CliConfig.load()
     origin_config, set_as_current = config_new_origin_collect_options()
     current_config.origins.append(origin_config)
     if set_as_current:

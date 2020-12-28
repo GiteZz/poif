@@ -9,19 +9,17 @@ from poif.data.remote.base import Remote
 from poif.typing import FileHash
 
 
-@dataclass_json
 @dataclass
-class S3Remote(Remote):
+class S3Config:
     url: str
     endpointurl: str
     profile: str
+    bucket: str
 
-    bucket: str = field(init=False)
-    folder: str = field(init=False)
-
-    def __post_init__(self):
-        url_no_URI = self.url.replace('s3://', '')
-        self.bucket, self.folder = url_no_URI.split('/')
+@dataclass_json
+@dataclass
+class S3Remote(Remote):
+    config: S3Config
 
     def get_session(self):
         dataset_sess = boto3.session.Session(profile_name=self.profile)
@@ -33,10 +31,7 @@ class S3Remote(Remote):
     def get_bucket(self):
         return self.get_session().Bucket(f'{self.bucket}')
 
-    def get_file(self, tag: FileHash) -> bytes:
-
-        file_name = f'{self.folder}/{tag[:2]}/{tag[2:]}'
-
+    def get_file(self, file_name: str) -> bytes:
         response = self.get_bucket().get_object(file_name)
         return response['body'].read()
 

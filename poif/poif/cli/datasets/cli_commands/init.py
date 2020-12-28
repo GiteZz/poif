@@ -45,7 +45,7 @@ def ask_for_interface_creation(dataset_config: config_tools.DatasetConfig):
     interface_tools.create_interface(dataset_config, git_add=True, git_commit=False)
 
 
-def init_collect_options(config: config_tools.DaifConfig) -> config_tools.DatasetConfig:
+def init_collect_options(config: config_tools.CliConfig) -> config_tools.DatasetConfig:
     new_dataset_dict = {}
 
     new_dataset_dict['dataset_name'] = simple_input('Dataset name', use_empy_value=False)
@@ -68,7 +68,7 @@ def init_collect_options(config: config_tools.DaifConfig) -> config_tools.Datase
 
 
 def init(args: List[str]) -> None:
-    current_config = config_tools.DaifConfig.load()
+    current_config = config_tools.CliConfig.load()
     if current_config is None:
         print("Please create or set origin.")
         return

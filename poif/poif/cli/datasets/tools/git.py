@@ -3,7 +3,7 @@ import pathlib
 import requests
 
 import poif.cli.datasets.tools.requests as requests_tools
-from poif.cli.datasets.tools.config import DaifConfig
+from poif.cli.datasets.tools.config import CliConfig
 
 git_credential_file = pathlib.Path.home() / '.git-credentials'
 
@@ -30,13 +30,13 @@ def add_git_credential(username, password, url):
         f.write(new_line)
 
 
-def headers_from_config(config: DaifConfig):
+def headers_from_config(config: CliConfig):
     return {
         'PRIVATE-TOKEN': config.current_origin.git_api_key
     }
 
 
-def git_api_url_from_config(config: DaifConfig) -> str:
+def git_api_url_from_config(config: CliConfig) -> str:
     git_url = config.current_origin.git_url
     return f'{git_url}{"/" if git_url[-1] != "/" else ""}/api/v4/'
 
@@ -50,7 +50,7 @@ def get_group_id(name, config):
     return group_info_response.json()['id']
 
 
-def create_repo(config: DaifConfig, share_group, name) -> str:
+def create_repo(config: CliConfig, share_group, name) -> str:
     create_repo_git_api = git_api_url_from_config(config) + 'projects'
     git_api_headers = headers_from_config(config)
     create_repo_param = {

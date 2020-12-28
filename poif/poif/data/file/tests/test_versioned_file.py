@@ -4,8 +4,8 @@ from pathlib import Path
 
 import pytest
 
-from poif.dvc.file import VersionedFile
-from poif.dvc.utils import hash_object
+from poif.data.file import VersionedFile
+from poif.utils import hash_object
 from poif.tests import get_img_file, write_image_in_file
 
 
@@ -32,9 +32,8 @@ img_hash = hash_object(img_path)
 
 
 def test_writing():
-    vfile = temp_dir / 'test.vfile'
     file = VersionedFile(base_dir=temp_dir, file_path=img_path)
-    file.write_vfile(vfile)
+    vfile = file.write_vfile_to_folder(temp_dir)
 
     with open(vfile, 'r') as f:
         vfile_contents = json.load(f)

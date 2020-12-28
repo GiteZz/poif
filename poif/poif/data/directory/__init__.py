@@ -7,17 +7,15 @@ from typing import Dict, List
 
 from tqdm import tqdm
 
-from poif.dvc.file import VersionedFile
-from poif.dvc.utils import FileIterator, file_to_relative_path, hash_object
+from poif.data.file import VersionedFile
+from poif.utils import FileIterator, get_relative_path, hash_object
 from poif.typing import FileHash
 
 
 @dataclass
 class VersionedDirectory:
     base_dir: Path
-    data_folder: str
-
-    data_path: Path = None
+    data_dir: Path
 
     _tag: FileHash = None
     _versioned_files = None
@@ -34,14 +32,14 @@ class VersionedDirectory:
             self.set_tag()
         return self._tag
 
-    def __post_init__(self):
-        self.data_path = self.base_dir / self.data_folder
-
     def set_versioned_files(self):
         self._versioned_files = []
-        for file in tqdm(FileIterator(self.data_path)):
+        for file in tqdm(FileIterator(self.data_dir)):
             versioned_file = VersionedFile(base_dir=self.base_dir, file_path=file)
             self._versioned_files.append(versioned_file)
+
+    def set_tag(self):
+        self._tag = self.get_directory_hash()
 
     def get_directory_hash(self):
         # Sort the files (Can't be sure that the file system gives them in order)
@@ -53,17 +51,40 @@ class VersionedDirectory:
 
         return intermediate_hash.hexdigest()
 
-    def set_tag(self):
-        self._tag = self.get_directory_hash()
+    def write_vdir_to_folder(self, folder: Path) -> Path:
+        file_name = self._get_vdir_file_name()
+        file_path = folder / file_name
 
-    def write_vdir(self, file: Path):
-        with open(file, 'w') as f:
+        with open(file_path, 'w') as f:
             json.dump({
-                'data_folder': self.data_folder,
+                'data_folder': get_relative_path(self.base_dir, self.data_dir),
                 'tag': self.tag
-            },f)
+            }, f)
 
-    def write_mapping(self, file: Path):
+        return file_path
+
+    def write_mapping_to_folder(self, folder: Path) -> Path:
+        file_name = self._get_vdir_file_name()
+        file_path = folder / file_name
+
         mapping_dict = {file.tag: file.relative_path for file in self.versioned_files}
-        with open(file, 'w') as f:
+        with open(file_path, 'w') as f:
             json.dump(mapping_dict, f)
+
+        return file_path
+
+    def _get_vdir_file_name(self):
+        file_name = self._get_file_name()
+
+        return f'{file_name}.vdir'
+
+    def _get_mapping_file_name(self):
+        file_name = self._get_file_name()
+
+        return f'{file_name}.dir'
+
+    def _get_file_name(self):
+        relative_path = get_relative_path(self.base_dir, self.data_dir)
+        path_snake_case = relative_path.replace('/', '_')
+
+        return path_snake_case

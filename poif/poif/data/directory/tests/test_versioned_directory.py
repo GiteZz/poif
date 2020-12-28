@@ -4,9 +4,9 @@ from pathlib import Path
 
 import pytest
 
-from poif.dvc.directory import VersionedDirectory
-from poif.dvc.file import VersionedFile
-from poif.dvc.utils import hash_object, hash_string
+from poif.data.directory import VersionedDirectory
+from poif.data.file import VersionedFile
+from poif.utils import hash_object, hash_string
 from poif.tests import get_img_file, write_image_in_file
 
 temp_dir = Path(tempfile.mkdtemp())
@@ -26,10 +26,9 @@ dir_hash = hash_string(img1_hash + img2_hash)
 
 
 def test_writing():
-    directory = VersionedDirectory(base_dir=temp_dir, data_folder='image')
+    directory = VersionedDirectory(base_dir=temp_dir, data_dir=img_folder)
 
-    vdir_file = temp_dir / 'image.vdir'
-    directory.write_vdir(vdir_file)
+    vdir_file = directory.write_vdir_to_folder(temp_dir)
 
     with open(vdir_file, 'r') as f:
         vdir_contents = json.load(f)
@@ -37,8 +36,7 @@ def test_writing():
     assert vdir_contents['data_folder'] == 'image'
     assert vdir_contents['tag'] == dir_hash
 
-    mapping_file = temp_dir / 'image.dir'
-    directory.write_mapping(mapping_file)
+    mapping_file = directory.write_mapping_to_folder(temp_dir)
 
     with open(mapping_file, 'r') as f:
         mapping_contents = json.load(f)
