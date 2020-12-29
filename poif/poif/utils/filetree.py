@@ -9,7 +9,7 @@ from poif.utils import InOrderPathIterator, get_file_depth
 class FileTree:
     base_dir: Path
 
-    def get_printed_tree(self) -> List[str]:
+    def line_iterator(self) -> List[str]:
         lines = [self.base_dir.parts[-1]]
         for file in InOrderPathIterator(self.base_dir, file_per_directory_amount=2):
             lines.append('  ' * get_file_depth(self.base_dir, file) + '- ' + file.parts[-1])

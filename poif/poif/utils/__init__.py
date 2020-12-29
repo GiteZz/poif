@@ -100,11 +100,15 @@ class LimitLength:
 
     count: int = 0
 
+    was_stopped_early: bool = False
+
     def __iter__(self):
         return self
 
     def __next__(self):
         if self.count == self.limit:
+            next(self.iterator)
+            self.was_limited = True
             raise StopIteration
 
         next_iter_item = next(self.iterator)
@@ -116,6 +120,7 @@ class LimitLength:
 class InOrderPathIterator:
     dir: Path
     file_per_directory_amount: int
+    limit_reached_str: str = '...'
     stack: List[Path] = None
 
     def __post_init__(self):
