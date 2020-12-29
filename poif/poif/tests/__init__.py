@@ -71,3 +71,6 @@ def create_standard_folder_structure():
         (temp_dir / file).touch()
 
     return temp_dir
+
+def get_temp_path() -> Path:
+    return Path(tempfile.mkdtemp())

@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Dict, List
 from itertools import islice
 from poif.typing import FileHash
-
+from collections import defaultdict
 
 def get_relative_path(base_dir: Path, file: Path):
     """
@@ -30,8 +30,13 @@ def hash_string(string: str):
 
 def get_file_name_from_path(file: Path):
     name_with_extension = file.parts[-1]
-    name_without_extension = name_with_extension.split('.')[-1]
+    name_without_extension = name_with_extension.split('.')[0]
     return name_without_extension
+
+def get_extension_from_path(file: Path):
+    name_with_extension = file.parts[-1]
+    extension = name_with_extension.split('.')[-1]
+    return extension
 
 
 def get_file_depth(base_dir: Path, file: Path):
@@ -57,7 +62,7 @@ class PathOperator(ABC):
     def __iter__(self):
         return self
 
-    def __next__(self):
+    def __next__(self) -> Path:
         next_dir_item = next(self.dir_contents)
         while not self.is_valid(next_dir_item):
             next_dir_item = next(self.dir_contents)
@@ -84,12 +89,12 @@ class RecursiveFileIterator(RecursivePathOperator):
         return path.is_file()
 
 
-class FolderIterator(PathOperator):
+class DirectoryIterator(PathOperator):
     def is_valid(self, path: Path):
         return path.is_dir()
 
 
-class RecursiveFolderIterator(RecursivePathOperator):
+class RecursiveDirectoryIterator(RecursivePathOperator):
     def is_valid(self, path: Path):
         return path.is_dir()
 
@@ -119,8 +124,6 @@ class LimitLength:
 @dataclass
 class InOrderPathIterator:
     dir: Path
-    file_per_directory_amount: int
-    limit_reached_str: str = '...'
     stack: List[Path] = None
 
     def __post_init__(self):
@@ -140,7 +143,57 @@ class InOrderPathIterator:
         else:
             raise StopIteration
 
-    def add_dir_to_stack(self, dir: Path):
-        dirs_in_dir = sorted(list(FolderIterator(dir)))
-        files_in_dir = sorted(list(LimitLength(FileIterator(dir), limit=self.file_per_directory_amount)))
+    def add_dir_to_stack(self, directory: Path):
+        dirs_in_dir = self.select_directories_from_directory(directory)
+        files_in_dir = self.select_files_from_directory(directory)
         self.stack = dirs_in_dir + files_in_dir + self.stack
+
+    def select_files_from_directory(self, directory: Path):
+        return sorted_files_from_directory(directory)
+
+    def select_directories_from_directory(self, directory: Path):
+        return sorted_directories_from_directory(directory)
+
+
+def sorted_files_from_directory(directory: Path):
+    return sorted(list(FileIterator(directory)))
+
+
+def sorted_directories_from_directory(directory: Path):
+    return sorted(list(DirectoryIterator(directory)))
+
+
+def files_by_extension(directory: Path, limit=None):
+    extension_bins = defaultdict(list)
+
+    for file in FileIterator(directory):
+        extension = get_extension_from_path(file)
+
+        if limit is not None and len(extension_bins[extension]) >= limit:
+            continue
+
+        extension_bins[extension].append(file)
+
+    return extension_bins
+
+
+def sorted_files_by_extension(directory: Path, limit=None):
+    extension_bins = files_by_extension(directory, limit=None)
+
+    for extension, files in extension_bins.items():
+        extension_bins[extension] = sorted(files)[:limit]
+
+    return extension_bins
+
+
+def is_more_populated(directory: Path, value: int) -> bool:
+    """
+    Efficient way to check if a directory contains more files the value
+    """
+    remaining = value
+    for _ in FileIterator(directory):
+        remaining -= 1
+        if remaining < 0:
+            break
+
+    return remaining < 0
