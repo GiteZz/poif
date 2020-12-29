@@ -43,3 +43,31 @@ def assert_image_nearly_equal(original_img: np.ndarray, new_img: np.ndarray):
     av_pixel_diff = np.sum(abs_map) / (w * h * 3)
     # some extension are lossy so we can't be sure that the image will be exactly the same
     assert av_pixel_diff < 5
+
+
+def create_standard_folder_structure():
+    t = tempfile.mkdtemp()
+    temp_dir = Path(t)
+
+    files = [f'0{i}.jpg' for i in range(10)]
+    base_folders = ['train', 'val', 'test']
+    sub_folders = ['image', 'mask']
+
+    additional_files = [
+        'meta.json',
+        'train/train_meta.json',
+        'val/val_meta.json',
+        'test/test_meta.json',
+    ]
+
+    for base_folder in base_folders:
+        for sub_folder in sub_folders:
+            for file in files:
+                file_path = temp_dir / base_folder / sub_folder / file
+                file_path.parent.mkdir(parents=True, exist_ok=True)
+                file_path.touch()
+
+    for file in additional_files:
+        (temp_dir / file).touch()
+
+    return temp_dir

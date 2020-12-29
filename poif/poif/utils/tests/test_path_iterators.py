@@ -1,7 +1,7 @@
 from pathlib import Path
 import tempfile
 from poif.utils import FileIterator, FolderIterator, RecursiveFileIterator, RecursivePathOperator, \
-    RecursiveFolderIterator
+    RecursiveFolderIterator, InOrderPathIterator
 
 t = tempfile.mkdtemp()
 temp_dir = Path(t)
@@ -54,3 +54,11 @@ def test_recursive_folder_iterator():
         count += 1
 
     assert count == len(folder_names) + len(folder_names) * len(folder_names)
+
+
+def test_in_order_iterator():
+    for folder in InOrderPathIterator(temp_dir, file_per_directory_amount=2):
+        print(folder)
+
+if __name__ == "__main__":
+    test_in_order_iterator()

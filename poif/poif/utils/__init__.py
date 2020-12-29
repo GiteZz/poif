@@ -3,8 +3,8 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from hashlib import md5
 from pathlib import Path
-from typing import Dict
-
+from typing import Dict, List
+from itertools import islice
 from poif.typing import FileHash
 
 
@@ -32,6 +32,10 @@ def get_file_name_from_path(file: Path):
     name_with_extension = file.parts[-1]
     name_without_extension = name_with_extension.split('.')[-1]
     return name_without_extension
+
+
+def get_file_depth(base_dir: Path, file: Path):
+    return len(file.parts) - len(base_dir.parts)
 
 
 def convert_zero_or_more(arg):
@@ -88,3 +92,50 @@ class FolderIterator(PathOperator):
 class RecursiveFolderIterator(RecursivePathOperator):
     def is_valid(self, path: Path):
         return path.is_dir()
+
+@dataclass
+class LimitLength:
+    iterator: PathOperator
+    limit: int
+
+    count: int = 0
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.count == self.limit:
+            raise StopIteration
+
+        next_iter_item = next(self.iterator)
+        self.count += 1
+        return next_iter_item
+
+
+@dataclass
+class InOrderPathIterator:
+    dir: Path
+    file_per_directory_amount: int
+    stack: List[Path] = None
+
+    def __post_init__(self):
+        self.stack = []
+        self.add_dir_to_stack(self.dir)
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if len(self.stack) > 0:
+            first_item = self.stack.pop(0)
+            if first_item.is_dir():
+                self.add_dir_to_stack(first_item)
+            return first_item
+
+        else:
+            raise StopIteration
+
+    def add_dir_to_stack(self, dir: Path):
+        dirs_in_dir = sorted(list(FolderIterator(dir)))
+        files_in_dir = sorted(list(LimitLength(FileIterator(dir), limit=self.file_per_directory_amount)))
+        self.stack = dirs_in_dir + files_in_dir + self.stack
