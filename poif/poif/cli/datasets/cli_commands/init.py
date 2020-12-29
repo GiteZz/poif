@@ -2,23 +2,22 @@ import subprocess
 from pathlib import Path
 from typing import List
 
-import poif.cli.datasets.tools.config as config_tools
-import poif.cli.datasets.tools.git as git_tools
-import poif.cli.datasets.tools.interface as interface_tools
-import poif.cli.datasets.tools.readme as readme_tools
 from poif.cli.datasets.tools import (folder_list_to_pathlib,
                                      remove_empty_strings)
-from poif.cli.datasets.tools.cli import (s3_input, simple_input,
+from poif.cli.datasets.tools.cli import (multi_input, s3_input, simple_input,
                                          yes_with_question)
+from poif.cli.datasets.tools.config import DefaultConfig, get_default_config
+from poif.data.versioning.dataset import (VersionedDataset,
+                                          VersionedDatasetConfig)
 
 
-def init_git(dataset_config: config_tools.DatasetConfig):
+def init_git(dataset_config: VersionedDatasetConfig):
     # init disk git
     subprocess.call(['git', 'init'])
     subprocess.call(['git', 'disk_over_http', 'add', 'origin', dataset_config.git_remote_url])
 
 
-def init_dvc(dataset_config: config_tools.DatasetConfig):
+def init_dvc(dataset_config: VersionedDatasetConfig):
     subprocess.call(['dvc', 'init'])
 
     for data_folder in folder_list_to_pathlib(dataset_config.data_folders):
@@ -33,49 +32,54 @@ def init_dvc(dataset_config: config_tools.DatasetConfig):
     subprocess.call(['git', 'commit', '-am', 'Initial dvc commit'])
 
 
-def ask_for_readme_creation(dataset_config: config_tools.DatasetConfig):
+def ask_for_readme_creation(dataset_config: VersionedDatasetConfig):
     if not yes_with_question('Create readme?'):
         return
     readme_tools.create_readme(dataset_config, git_add=True, git_commit=False)
 
 
-def ask_for_interface_creation(dataset_config: config_tools.DatasetConfig):
+def ask_for_interface_creation(dataset_config: VersionedDatasetConfig):
     if not yes_with_question('Do you want to create an project_interface package for the dataset?'):
         return
     interface_tools.create_interface(dataset_config, git_add=True, git_commit=False)
 
 
-def init_collect_options(config: config_tools.CliConfig) -> config_tools.DatasetConfig:
-    new_dataset_dict = {}
+def init_collect_options(config: DefaultConfig) -> VersionedDatasetConfig:
+    dataset_name = simple_input('Dataset name', use_empy_value=False)
 
-    new_dataset_dict['dataset_name'] = simple_input('Dataset name', use_empy_value=False)
+    folders = multi_input('Data folders', empty_allowed=True)
+    files = multi_input('Individual files', empty_allowed=True)
 
-    new_dataset_dict['dvc_s3'] = s3_input(
-        default_bucket=config.current_origin.default_s3.bucket,
-        default_endpoint=config.current_origin.default_s3.endpoint,
-        default_profile=config.current_origin.default_s3.profile
-    )
+    git_url = simple_input('Remote git repo')
 
-    data_folders = simple_input('Data folder, if multiple folder are tracked separate by space', value_when_empty='data')
-    new_dataset_dict['data_folders'] = remove_empty_strings(data_folders.split(' '))
+    print('S3 bucket configuration for uploading data')
+    data_s3 = s3_input(default_config=config.data_s3)
 
-    if config.current_origin.git_url is not None and yes_with_question('Create git disk_over_http?'):
-        new_dataset_dict['git_remote_url'] = git_tools.create_repo(config, 'datasets', new_dataset_dict['dataset_name'])
+    if yes_with_question('Add images to readme? Files are displayed via http accessible S3 bucket.'):
+        print('S3 bucket configuration for uploading data')
+        readme_s3 = s3_input(default_config=config.readme_s3)
     else:
-        new_dataset_dict['git_remote_url'] = simple_input('Remote git repo')
+        readme_s3 = None
 
-    return config_tools.DatasetConfig(**new_dataset_dict)
+    return VersionedDatasetConfig(dataset_name=dataset_name,
+                                  folders=folders,
+                                  files=files,
+                                  git_url=git_url,
+                                  data_s3=data_s3,
+                                  readme_s3=readme_s3)
+
+
+def setup_package_structure(base_dir: Path):
 
 
 def init(args: List[str]) -> None:
-    current_config = config_tools.CliConfig.load()
-    if current_config is None:
-        print("Please create or set origin.")
-        return
-    dataset_config = init_collect_options(current_config)
+    default_config = get_default_config()
+
+    dataset_config = init_collect_options(default_config)
+
+    versioned_dataset = VersionedDataset(base_dir=Path.cwd(), config=dataset_config)
 
     init_git(dataset_config)
-    init_dvc(dataset_config)
     ask_for_readme_creation(dataset_config)
     save_loc = dataset_config.save()
     subprocess.call(['git', 'add', str(save_loc)])

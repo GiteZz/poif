@@ -10,7 +10,6 @@ from poif.cli.datasets.cli_commands.update import update
 
 def main():
     args = sys.argv
-    print(args)
     if len(args) <= 1:
         print(f'Please provide a command.')
 

@@ -12,7 +12,6 @@ from poif.typing import FileHash
 @dataclass
 class S3Config:
     url: str
-    endpointurl: str
     profile: str
     bucket: str
 
@@ -25,7 +24,7 @@ class S3Remote(Remote):
     def get_session(self):
         dataset_sess = boto3.session.Session(profile_name=self.profile)
         return dataset_sess.resource('s3',
-                                     endpoint_url=self.endpointurl,
+                                     endpoint_url=self.url,
                                      config=Config(signature_version='s3v4')
                                      )
 

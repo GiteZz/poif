@@ -1,4 +1,7 @@
-from poif.data.remote.s3 import S3Remote
+import copy
+from typing import Optional
+
+from poif.data.remote.s3 import S3Config, S3Remote
 
 
 def simple_input(title: str, value_when_empty="", use_empy_value=True) -> str:
@@ -15,6 +18,21 @@ def simple_input(title: str, value_when_empty="", use_empy_value=True) -> str:
             return value_when_empty
         else:
             print('Please provide valid answer')
+
+
+def multi_input(title: str, empty_allowed=False):
+    print(title + ' [Empty input to stop]')
+
+    answers = []
+    while True:
+        answer = input()
+        if answer != "":
+            answers.append(answer)
+        else:
+            if len(answers) > 0 or empty_allowed:
+                return answers
+            else:
+                print('Please provide one or more answers')
 
 
 def yes_with_question(question: str, empty_is_true=False) -> bool:
@@ -36,19 +54,25 @@ def yes(empy_is_true=False) -> bool:
             print('Provide a valid answer. [y / yes / n / no]')
 
 
-def s3_input(default_bucket="", default_endpoint="", default_profile="") -> S3Remote:
+def s3_input(default_config: Optional[S3Config] = None) -> S3Config:
     s3_config = {}
-    s3_config['bucket'] = simple_input(
-        'S3 bucket',
-        value_when_empty=default_bucket
-    )
-    s3_config['endpoint'] = simple_input(
-        'S3 endpoint',
-        value_when_empty=default_endpoint
-    )
-    s3_config['profile'] = simple_input(
-        'S3 profile',
-        value_when_empty=default_profile
-    )
 
-    return S3Remote(**s3_config)
+    if default_config is not None:
+        s3_config['bucket'] = simple_input(
+            'S3 bucket',
+            value_when_empty=default_config.bucket
+        )
+        s3_config['url'] = simple_input(
+            'S3 endpoint',
+            value_when_empty=default_config.url
+        )
+        s3_config['profile'] = simple_input(
+            'S3 profile',
+            value_when_empty=default_config.profile
+        )
+    else:
+        s3_config['bucket'] = simple_input('S3 bucket')
+        s3_config['url'] = simple_input('S3 endpoint')
+        s3_config['profile'] = simple_input('S3 profile')
+
+    return S3Config(**s3_config)

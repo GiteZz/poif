@@ -1,26 +1,56 @@
+import json
 import tempfile
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Union
+from typing import List, Optional, Union
+
+from dataclasses_json import dataclass_json
 
 from poif.data.remote.base import Remote
+from poif.data.remote.s3 import S3Config
 from poif.data.versioning.directory import VersionedDirectory
 from poif.data.versioning.file import VersionedFile
 from poif.typing import ZeroOrMorePaths
 from poif.utils import convert_zero_or_more
 
 
+@dataclass_json
+@dataclass
+class VersionedDatasetConfig:
+    data_s3: S3Config
+    dataset_name: str
+    folders: List[str]
+    files: List[str]
+    git_url: str
+
+    readme_s3: S3Config = None
+
+    def save(self, config_path: Path):
+        with open(config_path, 'w') as f:
+            json.dump(self.to_dict(), f, indent=4)
+
+    @staticmethod
+    def load(config_path: Path) -> Optional['VersionedDatasetConfig']:
+        with open(config_path, 'r') as f:
+            return VersionedDatasetConfig.from_dict(json.load(f))
+
+
+@dataclass
 class VersionedDataset:
-    def __init__(self, name: str, base_dir: Path, directories: ZeroOrMorePaths, files: ZeroOrMorePaths):
-        self.name = name
-        self.base_dir = base_dir
+    base_dir: Path
+    config: VersionedDatasetConfig
 
-        self.directories = []
-        for directory in convert_zero_or_more(directories):
-            self.directories.append(VersionedDirectory(base_dir=self.base_dir, data_dir=directory))
+    directories: List[VersionedDirectory] = field(default_factory=list)
+    files: List[VersionedFile] = field(default_factory=list)
 
-        self.files = []
-        for file in convert_zero_or_more(files):
-            self.files.append(VersionedFile(base_dir=self.base_dir, file_path=file))
+    def __post_init__(self):
+        for directory in self.config.folders:
+            actual_directory = self.base_dir / directory
+            self.directories.append(VersionedDirectory(base_dir=self.base_dir, data_dir=actual_directory))
+
+        for file in self.config.files:
+            actual_file = self.base_dir / file
+            self.files.append(VersionedFile(base_dir=self.base_dir, file_path=actual_file))
 
     def upload(self, remote: Remote):
         self.upload_directories(remote)
@@ -47,3 +77,5 @@ class VersionedDataset:
 
     def get_remote_name(self, tag_object: Union[VersionedFile, VersionedDirectory]):
         return f'{self.name}/{tag_object.remote_file_name()}'
+
+
