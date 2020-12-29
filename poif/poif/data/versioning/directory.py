@@ -9,7 +9,7 @@ from tqdm import tqdm
 from poif.data.versioning.base import TagMixin
 from poif.data.versioning.file import VersionedFile
 from poif.typing import FileHash
-from poif.utils import FileIterator, get_relative_path
+from poif.utils import RecursiveFileIterator, get_relative_path
 
 
 @dataclass
@@ -27,7 +27,7 @@ class VersionedDirectory(TagMixin):
 
     def set_files(self):
         self._files = []
-        for file in tqdm(FileIterator(self.data_dir)):
+        for file in tqdm(RecursiveFileIterator(self.data_dir)):
             versioned_file = VersionedFile(base_dir=self.base_dir, file_path=file)
             self._files.append(versioned_file)
 

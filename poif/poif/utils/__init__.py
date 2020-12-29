@@ -1,3 +1,5 @@
+from abc import ABC, abstractmethod
+
 from dataclasses import dataclass, field
 from hashlib import md5
 from pathlib import Path
@@ -39,20 +41,50 @@ def convert_zero_or_more(arg):
         return arg
     return [arg]
 
+
 @dataclass
-class FileIterator:
+class PathOperator(ABC):
     dir: Path
     dir_contents: Path.rglob = field(init=False)
 
     def __post_init__(self):
-        self.dir_contents = self.dir.rglob('*')
+        self.dir_contents = self.dir.glob('*')
 
     def __iter__(self):
         return self
 
     def __next__(self):
         next_dir_item = next(self.dir_contents)
-        while not next_dir_item.is_file():
+        while not self.is_valid(next_dir_item):
             next_dir_item = next(self.dir_contents)
 
         return next_dir_item
+
+    @abstractmethod
+    def is_valid(self, path: Path):
+        pass
+
+# TODO remove duplication
+class RecursivePathOperator(PathOperator, ABC):
+    def __post_init__(self):
+        self.dir_contents = self.dir.rglob('*')
+
+
+class FileIterator(PathOperator):
+    def is_valid(self, path: Path):
+        return path.is_file()
+
+
+class RecursiveFileIterator(RecursivePathOperator):
+    def is_valid(self, path: Path):
+        return path.is_file()
+
+
+class FolderIterator(PathOperator):
+    def is_valid(self, path: Path):
+        return path.is_dir()
+
+
+class RecursiveFolderIterator(RecursivePathOperator):
+    def is_valid(self, path: Path):
+        return path.is_dir()

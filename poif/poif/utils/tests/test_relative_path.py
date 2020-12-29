@@ -1,6 +1,6 @@
 from pathlib import Path
-
-from poif.utils import get_relative_path
+import tempfile
+from poif.utils import get_relative_path, FileIterator, FolderIterator
 
 
 def test_rel_file():
