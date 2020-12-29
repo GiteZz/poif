@@ -4,9 +4,9 @@ from pathlib import Path
 
 import pytest
 
-from poif.data.file import VersionedFile
-from poif.utils import hash_object
+from poif.data.versioning.file import VersionedFile
 from poif.tests import get_img_file, write_image_in_file
+from poif.utils import hash_object
 
 
 def test_rel_file():
@@ -33,7 +33,8 @@ img_hash = hash_object(img_path)
 
 def test_writing():
     file = VersionedFile(base_dir=temp_dir, file_path=img_path)
-    vfile = file.write_vfile_to_folder(temp_dir)
+    vfile = temp_dir / file.get_vfile_name()
+    file.write_vfile_to_file(vfile)
 
     with open(vfile, 'r') as f:
         vfile_contents = json.load(f)

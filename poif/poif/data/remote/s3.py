@@ -16,6 +16,7 @@ class S3Config:
     profile: str
     bucket: str
 
+
 @dataclass_json
 @dataclass
 class S3Remote(Remote):
@@ -35,9 +36,10 @@ class S3Remote(Remote):
         response = self.get_bucket().get_object(file_name)
         return response['body'].read()
 
-    def get_object_size(self, tag: FileHash) -> int:
-        file_name = f'{self.folder}/{tag[:2]}/{tag[2:]}'
-
+    def get_object_size(self, file_name: str) -> int:
         size = self.get_bucket().lookup(file_name).size
 
         return size
+
+    def upload_file(self, source: Path, dest: str):
+        self.get_bucket().upload_file(str(source), dest)

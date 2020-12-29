@@ -1,12 +1,12 @@
 import json
+import logging
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Optional
-import logging
 
 from dataclasses_json import dataclass_json
 
-from poif.data.remote.s3 import S3Remote, S3Config
+from poif.data.remote.s3 import S3Config, S3Remote
 
 logger = logging.getLogger(__name__)
 

@@ -8,11 +8,11 @@ from poif.typing import FileHash
 @dataclass
 class Remote(ABC):
     @abstractmethod
-    def get_file(self, tag: FileHash) -> bytes:
+    def get_file(self, file_name: str) -> bytes:
         pass
 
     @abstractmethod
-    def get_object_size(self, tag: FileHash):
+    def get_object_size(self, file_name: str):
         pass
 
     def download_file(self, tag: FileHash, dest: Path):
@@ -20,3 +20,7 @@ class Remote(ABC):
 
         with open(dest, 'wb') as f:
             f.write(file)
+
+    @abstractmethod
+    def upload_file(self, source: Path, dest: str):
+        pass

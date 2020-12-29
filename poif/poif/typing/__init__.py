@@ -1,6 +1,5 @@
-from typing import Dict, Optional, Union, List
 from pathlib import Path
-
+from typing import Dict, List, Optional, Union
 
 FileHash = str
 RelFilePath = str

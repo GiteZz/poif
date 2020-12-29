@@ -31,6 +31,14 @@ def get_file_name_from_path(file: Path):
     name_without_extension = name_with_extension.split('.')[-1]
     return name_without_extension
 
+
+def convert_zero_or_more(arg):
+    if arg is None:
+        return []
+    if isinstance(arg, list):
+        return arg
+    return [arg]
+
 @dataclass
 class FileIterator:
     dir: Path
