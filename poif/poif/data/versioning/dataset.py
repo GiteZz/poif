@@ -25,8 +25,8 @@ class VersionedDatasetConfig:
 
     readme_s3: S3Config = None
 
-    def save(self, config_path: Path):
-        with open(config_path, 'w') as f:
+    def write(self, file: Path):
+        with open(file, 'w') as f:
             json.dump(self.to_dict(), f, indent=4)
 
     @staticmethod
@@ -42,6 +42,8 @@ class VersionedDataset:
 
     directories: List[VersionedDirectory] = field(default_factory=list)
     files: List[VersionedFile] = field(default_factory=list)
+
+    _created_files: List[str] = field(default_factory=list)
 
     def __post_init__(self):
         for directory in self.config.folders:
@@ -77,5 +79,28 @@ class VersionedDataset:
 
     def get_remote_name(self, tag_object: Union[VersionedFile, VersionedDirectory]):
         return f'{self.name}/{tag_object.remote_file_name()}'
+
+    def write_directories(self, save_directory: Path):
+        for directory in self.directories:
+            created_file = directory.write_vdir_to_folder(save_directory)
+
+            self._created_files.append(created_file)
+
+    def write_files(self, save_directory: Path):
+        for directory in self.files:
+            created_file = directory.write_vfile_to_folder(save_directory)
+
+            self._created_files.append(created_file)
+
+    def write_versioning_files(self, save_directory: Path):
+        self.write_directories(save_directory)
+        self.write_files(save_directory)
+
+    def write_mappings(self, save_directory: Path):
+        for directory in self.directories:
+            directory.write_mapping_to_folder(save_directory)
+
+    def get_created_files(self):
+        return self._created_files
 
 

@@ -1,5 +1,6 @@
 import sys
 
+from poif.cli.datasets.cli_commands.cleanup import cleanup
 from poif.cli.datasets.cli_commands.config import config
 from poif.cli.datasets.cli_commands.create import create
 from poif.cli.datasets.cli_commands.get import get
@@ -20,7 +21,8 @@ def main():
         'get': get,
         'update': update,
         'push': push,
-        'create': create
+        'create': create,
+        'cleanup': cleanup
     }
     if command in valid_commands.keys():
         valid_commands[command](args[2:])

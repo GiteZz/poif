@@ -54,7 +54,6 @@ class PythonPackage:
         with open(destination, 'w') as f:
             f.write(rendered_template)
 
-
     def get_created_files(self):
         return self._created_files
 

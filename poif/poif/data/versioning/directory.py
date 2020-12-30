@@ -44,17 +44,23 @@ class VersionedDirectory(TagMixin):
 
         return intermediate_hash.hexdigest()
 
-    def write_vdir_to_file(self, file: Path):
-        with open(file, 'w') as f:
+    def write_vdir_to_folder(self, directory: Path) -> Path:
+        vdir_file= directory /self.get_vdir_name()
+        with open(vdir_file, 'w') as f:
             json.dump({
                 'data_folder': get_relative_path(self.base_dir, self.data_dir),
                 'tag': self.tag
-            }, f)
+            }, f, indent=4)
 
-    def write_mapping_to_file(self, file: Path):
+        return vdir_file
+
+    def write_mapping_to_folder(self, directory: Path) -> Path:
         mapping_dict = {file.tag: file.relative_path for file in self.files}
-        with open(file, 'w') as f:
+        mapping_file = directory / self.get_mapping_name()
+        with open(mapping_file, 'w') as f:
             json.dump(mapping_dict, f)
+
+        return mapping_file
 
     def get_vdir_name(self):
         file_name = self._get_file_name()
@@ -64,7 +70,7 @@ class VersionedDirectory(TagMixin):
     def get_mapping_name(self):
         file_name = self._get_file_name()
 
-        return f'{file_name}.dir'
+        return f'{file_name}.mapping'
 
     def _get_file_name(self):
         relative_path = get_relative_path(self.base_dir, self.data_dir)

@@ -27,9 +27,12 @@ class VersionedFile(TagMixin):
 
         return f'{file_name}.vfile'
 
-    def write_vfile_to_file(self, file: Path):
-        with open(file, 'w') as f:
+    def write_vfile_to_folder(self, directory: Path) -> Path:
+        vfile = directory / self.get_vfile_name()
+        with open(vfile, 'w') as f:
             json.dump({
                 'path': self.relative_path,
                 'tag': self.tag
-            }, f)
+            }, f, indent=4)
+
+        return vfile
