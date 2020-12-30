@@ -7,7 +7,7 @@ def test_filetree():
 
     tree = FileTree(base_dir)
 
-    for line in tree.line_iterator():
+    for line in tree.get_lines():
         print(line)
 
 if __name__ == "__main__":

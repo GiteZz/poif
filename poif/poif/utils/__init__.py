@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Dict, List
 
 from poif.typing import FileHash
+from poif.config import img_extensions
 
 
 def get_relative_path(base_dir: Path, file: Path):
@@ -39,6 +40,9 @@ def get_extension_from_path(file: Path):
     extension = name_with_extension.split('.')[-1]
     return extension
 
+def is_image(path: Path):
+    return get_extension_from_path(path) in img_extensions
+
 
 def get_file_depth(base_dir: Path, file: Path):
     return len(file.parts) - len(base_dir.parts)
@@ -57,24 +61,52 @@ def has_newline(line: str):
         return False
     return line[-1] == '\n'
 
-class IteratorValidator(ABC):
+
+class Iterator(ABC):
+    def __iter__(self):
+        return self
+
+    @abstractmethod
+    def __next__(self):
+        pass
+
+class IteratorValidator:
     def is_valid(self, path: Path) -> bool:
         return True
 
-class OnlyDirectoryMixin(IteratorValidator):
+
+class OnlyDirectory(IteratorValidator):
     def is_valid(self, path: Path) -> bool:
         return path.is_dir()
 
+
+class OnlyFile(IteratorValidator):
+    def is_valid(self, path: Path) -> bool:
+        return path.is_file()
+
+
+class OnlyImage(OnlyFile):
+    def is_valid(self, path: Path) -> bool:
+        return super().is_valid(path) and is_image(path)
+
+
+class DirectoryExpander:
+    def expand_directory(self, directory: Path):
+        return directory.glob('*')
+
+
+class RecursiveDirectoryExpand(DirectoryExpander):
+    def expand_directory(self, directory: Path):
+        return directory.rglob('*')
+
+
 @dataclass
-class PathOperator(ABC):
+class PathOperator(Iterator, IteratorValidator, DirectoryExpander):
     dir: Path
     dir_contents: Path.rglob = field(init=False)
 
     def __post_init__(self):
-        self.dir_contents = self.dir.glob('*')
-
-    def __iter__(self):
-        return self
+        self.dir_contents = self.expand_directory(self.dir)
 
     def __next__(self) -> Path:
         next_dir_item = next(self.dir_contents)
@@ -83,47 +115,31 @@ class PathOperator(ABC):
 
         return next_dir_item
 
-    @abstractmethod
-    def is_valid(self, path: Path):
-        pass
 
-# TODO remove duplication
-class RecursivePathOperator(PathOperator, ABC):
-    def __post_init__(self):
-        self.dir_contents = self.dir.rglob('*')
+class FileIterator(OnlyFile, PathOperator):
+    pass
 
 
-class FileIterator(PathOperator):
-    def is_valid(self, path: Path):
-        return path.is_file()
+class RecursiveFileIterator(OnlyFile, RecursiveDirectoryExpand, PathOperator):
+    pass
 
 
-class RecursiveFileIterator(RecursivePathOperator):
-    def is_valid(self, path: Path):
-        return path.is_file()
+class DirectoryIterator(OnlyDirectory, PathOperator):
+    pass
 
 
-class DirectoryIterator(PathOperator):
-    def is_valid(self, path: Path):
-        return path.is_dir()
-
-
-class RecursiveDirectoryIterator(RecursivePathOperator):
-    def is_valid(self, path: Path):
-        return path.is_dir()
+class RecursiveDirectoryIterator(OnlyDirectory, RecursiveDirectoryExpand, PathOperator):
+    pass
 
 
 @dataclass
-class LimitLength:
+class LimitLength(Iterator):
     iterator: PathOperator
     limit: int
 
     count: int = 0
 
     was_stopped_early: bool = False
-
-    def __iter__(self):
-        return self
 
     def __next__(self):
         if self.count == self.limit:
@@ -136,17 +152,51 @@ class LimitLength:
         return next_iter_item
 
 
+class CombinedIterator(Iterator):
+    iterator_list: List[Iterator]
+    current_iterator: Iterator
+
+    def __init__(self):
+        self.iterator_list = []
+        self.current_iterator = None
+
+    def append(self, iterator: Iterator):
+        self.iterator_list.append(iterator)
+
+    def prepend(self, iterator: Iterator):
+        self.iterator_list.insert(0, iterator)
+
+    def set_new_iterator(self):
+        if len(self.iterator_list) == 0:
+            raise StopIteration
+        else:
+            self.current_iterator = self.iterator_list.pop(0)
+
+    def __next__(self):
+        if self.current_iterator is None:
+            self.set_new_iterator()
+
+        if not isinstance(self.current_iterator, Iterator):
+            value = self.current_iterator
+            self.current_iterator = None
+            return value
+
+        while True:
+            try:
+                return next(self.current_iterator)
+            except StopIteration:
+                self.set_new_iterator()
+
+
+
 @dataclass
-class InOrderPathIterator:
+class InOrderPathIterator(Iterator):
     dir: Path
     stack: List[Path] = None
 
     def __post_init__(self):
         self.stack = []
         self.add_dir_to_stack(self.dir)
-
-    def __iter__(self):
-        return self
 
     def __next__(self):
         if len(self.stack) > 0:

@@ -2,7 +2,7 @@ from pathlib import Path
 
 from poif.tests import get_temp_path
 from poif.utils import (files_by_extension, get_extension_from_path,
-                        is_more_populated)
+                        is_more_populated, get_file_name_from_path)
 
 
 def test_get_extension():
@@ -17,8 +17,8 @@ def test_get_filename():
     f1 = Path('/test/dataset/file.jpg')
     f2 = Path('/hello/home/test_long_name.png')
 
-    assert get_extension_from_path(f1) == 'file'
-    assert get_extension_from_path(f2) == 'test_long_name'
+    assert get_file_name_from_path(f1) == 'file'
+    assert get_file_name_from_path(f2) == 'test_long_name'
 
 
 def test_extension_bins():
