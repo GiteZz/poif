@@ -1,12 +1,13 @@
 from abc import ABC, abstractmethod
-
+from collections import defaultdict
 from dataclasses import dataclass, field
 from hashlib import md5
+from itertools import islice
 from pathlib import Path
 from typing import Dict, List
-from itertools import islice
+
 from poif.typing import FileHash
-from collections import defaultdict
+
 
 def get_relative_path(base_dir: Path, file: Path):
     """
@@ -50,6 +51,19 @@ def convert_zero_or_more(arg):
         return arg
     return [arg]
 
+
+def has_newline(line: str):
+    if len(line) == 0:
+        return False
+    return line[-1] == '\n'
+
+class IteratorValidator(ABC):
+    def is_valid(self, path: Path) -> bool:
+        return True
+
+class OnlyDirectoryMixin(IteratorValidator):
+    def is_valid(self, path: Path) -> bool:
+        return path.is_dir()
 
 @dataclass
 class PathOperator(ABC):
@@ -97,6 +111,7 @@ class DirectoryIterator(PathOperator):
 class RecursiveDirectoryIterator(RecursivePathOperator):
     def is_valid(self, path: Path):
         return path.is_dir()
+
 
 @dataclass
 class LimitLength:

@@ -1,7 +1,9 @@
-from pathlib import Path
 import tempfile
-from poif.utils import FileIterator, DirectoryIterator, RecursiveFileIterator, RecursivePathOperator, \
-    RecursiveDirectoryIterator, InOrderPathIterator
+from pathlib import Path
+
+from poif.utils import (DirectoryIterator, FileIterator, InOrderPathIterator,
+                        RecursiveDirectoryIterator, RecursiveFileIterator,
+                        RecursivePathOperator)
 
 t = tempfile.mkdtemp()
 temp_dir = Path(t)

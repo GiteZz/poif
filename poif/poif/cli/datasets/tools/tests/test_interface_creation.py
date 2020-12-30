@@ -36,6 +36,7 @@ def test_rendered_path(dummy_config):
     assert render_path(jinja_file, dummy_config) == 'test/dummy/__init__.py'
 
 
+# TODO a bit more extensive
 def test_interface_creation(dummy_config):
     base_dir = get_temp_path()
 

@@ -2,17 +2,16 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import List
 
-from poif.utils import InOrderPathIterator, get_file_depth, FileIterator, sorted_files_by_extension, is_more_populated
+from poif.utils import (FileIterator, InOrderPathIterator, get_file_depth,
+                        is_more_populated, sorted_files_by_extension)
 
-
+@dataclass
 class FileTreeIterator(InOrderPathIterator):
     limit: int = 2
 
     def __next__(self):
         if len(self.stack) > 0:
             first_item = self.stack.pop(0)
-            if not isinstance(first_item, Path):
-                return first_item
 
             if first_item.is_dir():
                 self.add_dir_to_stack(first_item)
@@ -42,12 +41,10 @@ class FileTreeIterator(InOrderPathIterator):
 @dataclass
 class FileTree:
     base_dir: Path
+    limit: int = 2
 
-    def line_iterator(self) -> List[str]:
+    def get_lines(self) -> List[str]:
         lines = [self.base_dir.parts[-1]]
-        for file in FileTreeIterator(self.base_dir):
+        for file in FileTreeIterator(self.base_dir, limit=self.limit):
             lines.append('  ' * get_file_depth(self.base_dir, file) + '- ' + file.parts[-1])
         return lines
-
-    def get_all_folders(self) -> List[Path]:
-        pass
