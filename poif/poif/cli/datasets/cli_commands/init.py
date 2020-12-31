@@ -44,7 +44,8 @@ def init(args: List[str]) -> None:
     default_config = get_default_config()
 
     dataset_config = init_collect_options(default_config)
-    config_file = Path.cwd() / 'dataset'
+    config_file = Path.cwd() / 'dataset_config.json'
+    dataset_config.write(config_file)
 
     versioned_dataset = VersionedDataset(base_dir=Path.cwd(), config=dataset_config)
 
@@ -65,7 +66,7 @@ def init(args: List[str]) -> None:
     readme = DatasetReadme(Path.cwd(), config=dataset_config)
     readme.write_to_file(readme_file)
 
-    git_repo = GitRepo(base_dir=Path.cwd())
+    git_repo = GitRepo(base_dir=Path.cwd(), init=True)
     git_repo.add_files(package.get_created_files())
     git_repo.add_files(versioned_dataset.get_created_files())
     git_repo.add_files([readme_file])

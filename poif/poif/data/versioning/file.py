@@ -12,6 +12,8 @@ class VersionedFile(TagMixin):
     base_dir: Path
     file_path: Path
 
+    _tag: str = None
+
     @property
     def relative_path(self):
         return get_relative_path(self.base_dir, self.file_path)

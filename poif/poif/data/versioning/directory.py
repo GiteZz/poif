@@ -1,4 +1,6 @@
 import json
+from typing import List
+
 from dataclasses import dataclass
 from hashlib import md5
 from operator import attrgetter
@@ -15,9 +17,9 @@ from poif.utils import RecursiveFileIterator, get_relative_path
 @dataclass
 class VersionedDirectory(TagMixin):
     base_dir: Path
-    data_dir: Path
+    data_dir: Path = None
 
-    _files = None
+    _files: List[VersionedFile] = None
 
     @property
     def files(self):
@@ -77,3 +79,18 @@ class VersionedDirectory(TagMixin):
         path_snake_case = relative_path.replace('/', '_')
 
         return path_snake_case
+
+    def load_vdir_file(self, file: Path):
+        with open(file, 'r') as f:
+            vdir_contents = json.load(f)
+
+        self._tag = vdir_contents['tag']
+        self.data_dir = self.base_dir / vdir_contents['data_folder']
+
+    def load_mapping_file(self, file: Path):
+        with open(file, 'r') as f:
+            mapping = json.load(f)
+
+        for tag, relative_file in mapping.items():
+            versioned_file_path = self.base_dir / relative_file
+            VersionedFile(base_dir=self.base_dir, file_path=versioned_file_path, _tag=tag)

@@ -6,8 +6,8 @@ from itertools import islice
 from pathlib import Path
 from typing import Dict, List
 
-from poif.typing import FileHash
 from poif.config import img_extensions
+from poif.typing import FileHash
 
 
 def get_relative_path(base_dir: Path, file: Path):

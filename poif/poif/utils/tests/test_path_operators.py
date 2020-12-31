@@ -2,7 +2,7 @@ from pathlib import Path
 
 from poif.tests import get_temp_path
 from poif.utils import (files_by_extension, get_extension_from_path,
-                        is_more_populated, get_file_name_from_path)
+                        get_file_name_from_path, is_more_populated)
 
 
 def test_get_extension():

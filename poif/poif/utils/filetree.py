@@ -5,6 +5,7 @@ from typing import List
 from poif.utils import (FileIterator, InOrderPathIterator, get_file_depth,
                         is_more_populated, sorted_files_by_extension)
 
+
 @dataclass
 class FileTreeIterator(InOrderPathIterator):
     limit: int = 2

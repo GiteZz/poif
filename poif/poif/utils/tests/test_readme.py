@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from poif.utils.readme import ReadmeSection, FileTreeSection
+from poif.utils.readme import FileTreeSection, ReadmeSection
 
 
 def test_readme():
