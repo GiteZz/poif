@@ -7,6 +7,7 @@ from typing import Any, Dict
 
 from poif.data.origin.base import Origin
 from poif.data.remote.base import Remote
+from poif.data.versioning.base import Tagged
 from poif.dvc import (dvc_files_to_tag_file_mapping, get_dvc_remote_config,
                       get_tag_to_file_from_repo)
 from poif.typing import FileHash, RelFilePath
@@ -37,6 +38,8 @@ class DvcOrigin(Origin):
 
     _remote: Remote = field(init=False)
     _tag_file_mapping: Dict[FileHash, RelFilePath] = field(init=False)
+
+    _dataset_name: str = field(init=False)
 
     @property
     def dataset_tag(self):
@@ -74,7 +77,7 @@ class DvcOrigin(Origin):
         self._remote = get_dvc_remote_config(repo)
         self._tag_file_mapping = get_tag_to_file_from_repo(repo, self._remote)
 
-    def get_file(self, tag: FileHash) -> bytes:
+    def get_file(self, item: Tagged) -> bytes:
         return self.remote.get_file(tag)
 
     def get_file_size(self, tag: FileHash) -> Any:

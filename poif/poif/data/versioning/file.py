@@ -2,17 +2,15 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
-from poif.data.versioning.base import TagMixin
+from poif.data.versioning.base import LazyLoadingTagged
 from poif.typing import FileHash
 from poif.utils import get_file_name_from_path, get_relative_path, hash_object
 
 
 @dataclass
-class VersionedFile(TagMixin):
+class VersionedFile(LazyLoadingTagged):
     base_dir: Path
     file_path: Path
-
-    _tag: str = None
 
     @property
     def relative_path(self):
@@ -20,9 +18,6 @@ class VersionedFile(TagMixin):
 
     def set_tag(self):
         self._tag = hash_object(self.file_path)
-
-    def get_remote_path(self):
-        return f'{self.tag[:2]}/{self.tag[2:]}'
 
     def get_vfile_name(self):
         file_name = get_file_name_from_path(self.file_path)

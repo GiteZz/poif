@@ -8,14 +8,14 @@ from pathlib import Path
 
 from tqdm import tqdm
 
-from poif.data.versioning.base import TagMixin
+from poif.data.versioning.base import LazyLoadingTagged
 from poif.data.versioning.file import VersionedFile
 from poif.typing import FileHash
 from poif.utils import RecursiveFileIterator, get_relative_path
 
 
 @dataclass
-class VersionedDirectory(TagMixin):
+class VersionedDirectory(LazyLoadingTagged):
     base_dir: Path
     data_dir: Path = None
 

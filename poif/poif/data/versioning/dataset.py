@@ -106,6 +106,7 @@ class VersionedDataset:
     def add_vdir_file(self, file: Path):
         filename = get_file_name_from_path(file)
         directory = self.get_dir_with_filename(filename)
+        # TODO
 
 
     def get_dir_with_filename(self, filename: str) -> VersionedDirectory:
@@ -116,5 +117,6 @@ class VersionedDataset:
 
 
     def add_vfile(self, file: Path):
+        # TODO
 
 
