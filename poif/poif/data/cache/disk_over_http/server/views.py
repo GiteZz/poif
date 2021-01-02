@@ -6,7 +6,7 @@ from poif.data.cache.disk_over_http import (GET_FILE_PATH, GET_FILES_PATH,
                                             GET_SIZE_PATH)
 from poif.data.cache.disk_over_http.server import app, cache_config
 from poif.data.datapoint.disk_cached import DiskCachedDataPoint
-from poif.data.origin.dvc import DvcOrigin
+from poif.data.origin.git import DvcOrigin
 
 cached_objects = {}
 

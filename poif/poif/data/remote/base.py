@@ -2,25 +2,57 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from pathlib import Path
 
+from poif.data.datapoint.base import TaggedData
 from poif.typing import FileHash
 
 
 @dataclass
-class Remote(ABC):
+class FileRemote(ABC):
+    """
+    This is meant for remotes where data is stored as files (e.g. object stores)
+    """
     @abstractmethod
-    def get_file(self, file_name: str) -> bytes:
+    def download(self, remote_source: str) -> bytes:
         pass
 
     @abstractmethod
     def get_object_size(self, file_name: str):
         pass
 
-    def download_file(self, tag: FileHash, dest: Path):
-        file = self.get_file(tag)
+    @abstractmethod
+    def upload(self, source: bytes, remote_dest: str):
+        pass
 
-        with open(dest, 'wb') as f:
-            f.write(file)
+    def file_upload(self, file: Path, remote_dest: str):
+        with open(file, 'rb') as f:
+            file_bytes = f.read()
+        self.upload(file_bytes, remote_dest)
+
+    def file_download(self, destination_file: Path, remote_source: str):
+        file_bytes = self.download(remote_source)
+        with open(destination_file, 'wb') as f:
+            f.write(file_bytes)
+
+
+class HttpRemote(ABC):
+    @abstractmethod
+    def download(self, remote_url: str, params: dict):
+        pass
 
     @abstractmethod
-    def upload_file(self, source: Path, dest: str):
+    def get_object_size(self, remote_url: str, params: dict):
+        pass
+
+
+class TaggedRemote:
+    @abstractmethod
+    def download(self, data: TaggedData) -> bytes:
+        pass
+
+    @abstractmethod
+    def get_object_size(self, data: TaggedData):
+        pass
+
+    @abstractmethod
+    def upload(self, data: TaggedData):
         pass

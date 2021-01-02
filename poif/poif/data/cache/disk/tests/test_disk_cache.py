@@ -9,7 +9,7 @@ import pytest
 
 from poif.data.cache.disk import LocalCache
 from poif.data.datapoint.base import DvcDataPoint
-from poif.data.origin.dvc import DvcOrigin
+from poif.data.origin.git import DvcOrigin
 from poif.data.remote.base import Remote
 from poif.tests import assert_image_nearly_equal, get_img
 from poif.typing import FileHash, RelFilePath

@@ -13,10 +13,22 @@ from poif.data.versioning.file import VersionedFile
 from poif.typing import ZeroOrMorePaths
 from poif.utils import convert_zero_or_more, get_file_name_from_path
 
+@dataclass
+class ReadmeConfig:
+    enabled: bool = True
+    enable_filetree: bool = True
+    enable_image_gallery: bool = True
+    s3_config: S3Config = None
+
+@dataclass
+class CachingConfig:
+    enabled: bool = True
+    folder: Path = field(default_factory=lambda : Path.cwd() / '.data_versioning_cache')
+
 
 @dataclass_json
 @dataclass
-class VersionedDatasetConfig:
+class VersionedDataCollectionConfig:
     data_s3: S3Config
     dataset_name: str
     folders: List[str]

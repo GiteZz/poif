@@ -2,22 +2,18 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
-from poif.data.versioning.base import LazyLoadingTagged
+from poif.data.datapoint.base import FileData
 from poif.typing import FileHash
 from poif.utils import get_file_name_from_path, get_relative_path, hash_object
 
 
-@dataclass
-class VersionedFile(LazyLoadingTagged):
+class VersionedFile(FileData):
     base_dir: Path
     file_path: Path
 
-    @property
-    def relative_path(self):
-        return get_relative_path(self.base_dir, self.file_path)
-
-    def set_tag(self):
-        self._tag = hash_object(self.file_path)
+    def __init__(self, base_dir: Path, file_path: Path, tag: FileHash = None):
+        relative_path = get_relative_path(base_dir, file_path)
+        super().__init__(file_path, relative_path, tag=tag)
 
     def get_vfile_name(self):
         file_name = get_file_name_from_path(self.file_path)
@@ -33,3 +29,10 @@ class VersionedFile(LazyLoadingTagged):
             }, f, indent=4)
 
         return vfile
+
+    @staticmethod
+    def from_file(vfile: Path, base_dir: Path) -> 'VersionedFile':
+        with open(vfile) as f:
+            file_content = json.load(f)
+        file_path = base_dir / file_content['path']
+        return VersionedFile(base_dir=base_dir, file_path=file_path, tag=file_content['tag'])

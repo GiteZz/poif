@@ -6,7 +6,7 @@ from httmock import HTTMock, all_requests, response
 
 from poif.data.cache.disk_over_http.client import RemoteCache
 from poif.data.datapoint.base import DvcDataPoint
-from poif.data.origin.dvc import DvcOrigin
+from poif.data.origin.git import DvcOrigin
 from poif.tests import get_img
 
 img = get_img()

@@ -13,8 +13,23 @@ from poif.dvc import (dvc_files_to_tag_file_mapping, get_dvc_remote_config,
 from poif.typing import FileHash, RelFilePath
 
 
+class LocalGitOrigin(Origin):
+
+    @property
+    def dataset_tag(self) -> str:
+        pass
+
+    @property
+    def origin_tag(self) -> str:
+        pass
+
+    @property
+    def tag_to_original_file(self) -> Dict[FileHash, RelFilePath]:
+        pass
+
+
 @dataclass
-class DvcOrigin(Origin):
+class RemoteGitOrigin(LocalGitOrigin):
     """
     Class is lazy loaded which means that until get_tag_file_mapping or get_remote is called the repo
     information is not yet present. If one of these two is called the repo will be cloned and data
@@ -89,3 +104,4 @@ class DvcOrigin(Origin):
         extension = file_name.split('.')[-1]
 
         return extension
+

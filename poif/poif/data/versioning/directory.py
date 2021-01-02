@@ -1,5 +1,5 @@
 import json
-from typing import List
+from typing import List, Dict, Tuple
 
 from dataclasses import dataclass
 from hashlib import md5
@@ -8,18 +8,60 @@ from pathlib import Path
 
 from tqdm import tqdm
 
-from poif.data.versioning.base import LazyLoadingTagged
+from poif.data.datapoint.base import LazyTagged, LazyLoadedTaggedData, TaggedData
 from poif.data.versioning.file import VersionedFile
 from poif.typing import FileHash
 from poif.utils import RecursiveFileIterator, get_relative_path
 
 
-@dataclass
-class VersionedDirectory(LazyLoadingTagged):
+class Mapping(LazyLoadedTaggedData):
+    mapping: Dict[FileHash, TaggedData]
+
+    def __init__(self):
+        super().__init__(relative_path="")
+
+    @property
+    def size(self) -> int:
+        return len(self.get())
+
+    @property
+    def extension(self) -> str:
+        return 'mapping'
+
+    def get(self) -> bytes:
+        return json.dumps(self.mapping).encode('utf-8')
+
+    def set_tag(self):
+        self._tag = self.get_mapping_hash()
+
+    def get_mapping_hash(self):
+        # Sort the files (Can't be sure that the file system gives them in order)
+        sorted_tags = self.get_sorted_mapping()
+        intermediate_hash = md5()
+
+        for tag in sorted_tags:
+            intermediate_hash.update(tag.encode('utf-8'))
+
+        return intermediate_hash.hexdigest()
+
+    def get_sorted_mapping(self) -> List[FileHash, TaggedData]:
+        tags = list(self.mapping.keys())
+        relative_files = [data.relative_path for data in self.mapping.values()]
+
+        return [tag for _, tag in sorted(zip(relative_files, tags), key=lambda pair: pair[0])]
+
+
+class VersionedDirectory(Mapping):
     base_dir: Path
     data_dir: Path = None
 
     _files: List[VersionedFile] = None
+
+    def __init__(self, base_dir: Path, data_dir: Path, tag=None):
+        super().__init__()
+
+        self.base_dir = base_dir
+        self.data_dir = data_dir
 
     @property
     def files(self):
@@ -32,19 +74,6 @@ class VersionedDirectory(LazyLoadingTagged):
         for file in tqdm(RecursiveFileIterator(self.data_dir)):
             versioned_file = VersionedFile(base_dir=self.base_dir, file_path=file)
             self._files.append(versioned_file)
-
-    def set_tag(self):
-        self._tag = self.get_directory_hash()
-
-    def get_directory_hash(self):
-        # Sort the files (Can't be sure that the file system gives them in order)
-        sorted_files = sorted(self.files, key=attrgetter("relative_path"))
-        intermediate_hash = md5()
-
-        for versioned_file in sorted_files:
-            intermediate_hash.update(versioned_file.tag.encode('utf-8'))
-
-        return intermediate_hash.hexdigest()
 
     def write_vdir_to_folder(self, directory: Path) -> Path:
         vdir_file= directory /self.get_vdir_name()
@@ -80,8 +109,8 @@ class VersionedDirectory(LazyLoadingTagged):
 
         return path_snake_case
 
-    def load_vdir_file(self, file: Path):
-        with open(file, 'r') as f:
+    def from_vdir_file(self, vdir_file: Path, base_dir: Path) -> 'VersionedDirectory':
+        with open(vdir_file, 'r') as f:
             vdir_contents = json.load(f)
 
         self._tag = vdir_contents['tag']
@@ -94,3 +123,10 @@ class VersionedDirectory(LazyLoadingTagged):
         for tag, relative_file in mapping.items():
             versioned_file_path = self.base_dir / relative_file
             VersionedFile(base_dir=self.base_dir, file_path=versioned_file_path, _tag=tag)
+
+    @property
+    def size(self) -> int:
+        return 0
+
+    def get(self) -> bytes:
+        self.m

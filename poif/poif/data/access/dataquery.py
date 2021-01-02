@@ -1,3 +1,5 @@
+from enum import Enum
+
 from dataclasses import dataclass
 from typing import List, Union
 
@@ -6,6 +8,7 @@ from poif.data.access.transform import (DataPointSplitter,
                                         DataPointTransformation,
                                         DataSetSplitter, DataSetTransformation,
                                         OutputFilter)
+
 
 
 @dataclass
