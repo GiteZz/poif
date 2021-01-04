@@ -1,11 +1,10 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
 
-from dataclasses import dataclass
 from typing import Any
 
-from poif.data.origin.base import Origin
 from poif.data.parser.base import ParseMixin
+from poif.data.remote.base import TaggedRepo
 from poif.typing import FileHash
 from poif.utils import hash_object
 
@@ -56,7 +55,7 @@ class LazyLoadedTaggedData(TaggedData, ABC):
         pass
 
 
-class FileData(LazyLoadedTaggedData):
+class DiskData(LazyLoadedTaggedData):
     file_path: Path = None
 
     def __init__(self, file_path: Path, relative_path: str, tag: FileHash = None):
@@ -76,11 +75,12 @@ class FileData(LazyLoadedTaggedData):
         self._tag = hash_object(self.file_path)
 
 
-class S3Data(TaggedData):
+class RepoData(TaggedData):
+    repo: TaggedRepo
 
     @property
     def size(self) -> int:
-        pass
+        return self.repo.get_object_size(self)
 
     def get(self) -> bytes:
-        pass
+        return self.repo.get(self)
