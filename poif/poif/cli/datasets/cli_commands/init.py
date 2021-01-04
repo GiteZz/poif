@@ -15,7 +15,6 @@ from poif.utils.git import GitRepo
 from poif.utils.readme import DatasetReadme, ReadmeSection
 
 
-
 def init_collect_options(config: DefaultConfig) -> VersionedDatasetConfig:
     dataset_name = simple_input('Dataset name', use_empy_value=False)
 

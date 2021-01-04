@@ -1,4 +1,5 @@
 import json
+
 from poif.data.parser.base import Parser
 
 

@@ -1,5 +1,4 @@
 from abc import ABC
-
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -10,13 +9,6 @@ from dataclasses_json import dataclass_json
 from poif.data.datapoint.base import TaggedData
 from poif.data.remote.base import FileRemote, TaggedRemote
 from poif.typing import FileHash
-
-
-@dataclass
-class S3Config:
-    url: str
-    profile: str
-    bucket: str
 
 
 @dataclass

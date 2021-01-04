@@ -1,23 +1,19 @@
-import copy
-from typing import Optional
 
-from poif.data.remote.s3 import S3Config, S3Remote
+from typing import Callable, List, Optional
 
 
-def simple_input(title: str, value_when_empty="", use_empy_value=True) -> str:
-    if value_when_empty != "" and use_empy_value:
-        print(f'{title}: [default: {value_when_empty}]')
+def simple_input(title: str, default: str = None) -> str:
+    if default is not None:
+        print(f'{title}: [default: {default}]')
     else:
         print(f'{title}: ')
 
-    while True:
-        answer = input()
-        if answer != "":
-            return answer
-        elif use_empy_value:
-            return value_when_empty
-        else:
-            print('Please provide valid answer')
+    return input_with_possible_default(default=default)
+
+
+def answer_from_list(title: str, answer_list: List[str], default: str = None):
+    print(f'{title} Options: {answer_list}')
+    return input_with_possible_default(default=default, validation_function=in_list_validation(answer_list))
 
 
 def multi_input(title: str, empty_allowed=False):
@@ -35,12 +31,43 @@ def multi_input(title: str, empty_allowed=False):
                 print('Please provide one or more answers')
 
 
-def yes_with_question(question: str, empty_is_true=False) -> bool:
-    print(f'{question} [y/n, default:{"y" if empty_is_true else "n"}]')
-    return yes(empty_is_true)
+class MaxTriesReachedException(Exception):
+    pass
 
 
-def yes(empy_is_true=False) -> bool:
+def input_with_possible_default(default=None, validation_function=None) -> str:
+    invalid_count = 0
+    max_invalid_count = 3
+    # Bit arbitrary but avoids infinite loop and allows for better testing
+    while invalid_count < max_invalid_count:
+        answer = input()
+
+        if validation_function is not None and not validation_function(answer):
+            print('Answer was not valid, please provide a correct answer.')
+            invalid_count += 1
+            continue
+
+        if default is not None and answer == "":
+            return default
+
+        return answer
+
+    raise MaxTriesReachedException(f'Valid input could not be provided after {max_invalid_count} tries.')
+
+
+def not_empy_validation():
+    return lambda x: x != ""
+
+
+def in_list_validation(possible_values: list):
+    return lambda x: x in possible_values
+
+def yes_with_question(question: str, default=False) -> bool:
+    print(f'{question} [y/n, default:{"y" if default else "n"}]')
+    return yes(default)
+
+
+def yes(default=False) -> bool:
     while True:
         answer = input().lower()
 
@@ -49,30 +76,6 @@ def yes(empy_is_true=False) -> bool:
         elif answer in ['n', 'no']:
             return False
         else:
-            if answer == "" and empy_is_true:
+            if answer == "" and default:
                 return True
             print('Provide a valid answer. [y / yes / n / no]')
-
-
-def s3_input(default_config: Optional[S3Config] = None) -> S3Config:
-    s3_config = {}
-
-    if default_config is not None:
-        s3_config['bucket'] = simple_input(
-            'S3 bucket',
-            value_when_empty=default_config.bucket
-        )
-        s3_config['url'] = simple_input(
-            'S3 endpoint',
-            value_when_empty=default_config.url
-        )
-        s3_config['profile'] = simple_input(
-            'S3 profile',
-            value_when_empty=default_config.profile
-        )
-    else:
-        s3_config['bucket'] = simple_input('S3 bucket')
-        s3_config['url'] = simple_input('S3 endpoint')
-        s3_config['profile'] = simple_input('S3 profile')
-
-    return S3Config(**s3_config)

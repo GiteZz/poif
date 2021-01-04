@@ -1,14 +1,14 @@
 import json
-from typing import List, Dict, Tuple
-
 from dataclasses import dataclass
 from hashlib import md5
 from operator import attrgetter
 from pathlib import Path
+from typing import Dict, List, Tuple
 
 from tqdm import tqdm
 
-from poif.data.datapoint.base import LazyTagged, LazyLoadedTaggedData, TaggedData
+from poif.data.datapoint.base import (LazyLoadedTaggedData, LazyTagged,
+                                      TaggedData)
 from poif.data.versioning.file import VersionedFile
 from poif.typing import FileHash
 from poif.utils import RecursiveFileIterator, get_relative_path

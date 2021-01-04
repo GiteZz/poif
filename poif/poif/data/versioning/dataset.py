@@ -13,6 +13,7 @@ from poif.data.versioning.file import VersionedFile
 from poif.typing import ZeroOrMorePaths
 from poif.utils import convert_zero_or_more, get_file_name_from_path
 
+
 @dataclass
 class ReadmeConfig:
     enabled: bool = True
@@ -33,7 +34,6 @@ class VersionedDataCollectionConfig:
     dataset_name: str
     folders: List[str]
     files: List[str]
-    git_url: str
 
     readme_s3: S3Config = None
 

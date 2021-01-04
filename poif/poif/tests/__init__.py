@@ -4,6 +4,7 @@ from pathlib import Path
 
 import cv2
 import numpy as np
+import pytest
 
 
 def get_img():
@@ -74,3 +75,11 @@ def create_standard_folder_structure():
 
 def get_temp_path() -> Path:
     return Path(tempfile.mkdtemp())
+
+
+class MonkeyPatchSequence:
+    def __init__(self, values: list):
+        self.values = values
+
+    def __call__(self):
+        return self.values.pop(0)
