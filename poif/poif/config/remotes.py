@@ -1,37 +1,39 @@
 from copy import deepcopy
-from dataclasses import dataclass
+from pydantic import BaseModel, AnyUrl
+from enum import Enum
 
 from poif.cli.datasets.tools.cli import simple_input
 
 
-@dataclass
-class S3Config:
-    url: str = None
-    profile: str = None
-    bucket: str = None
+class S3Config(BaseModel):
+    url: AnyUrl
+    profile: str
+    bucket: str
+    type: str = 'S3'
 
     @staticmethod
     def prompt(default: 'S3Config'=None) -> 'S3Config':
-        if default is not None:
-            new_config = deepcopy(default)
-        else:
-            new_config = S3Config()
+        default_bucket = None if default is None else default.bucket
+        default_url = None if default is None else default.url
+        default_profile = None if default is None else default.profile
 
-        new_config.bucket = simple_input(
+        bucket = simple_input(
             'S3 bucket',
-            default=new_config.bucket
+            default=default_bucket
         )
-        new_config.url = simple_input(
+        url = simple_input(
             'S3 endpoint',
-            default=new_config.url
+            default=default_url
         )
-        new_config.profile = simple_input(
+        profile = simple_input(
             'S3 profile',
-            default=new_config.profile
+            default=default_profile
         )
 
-        return new_config
+        return S3Config(url=url, profile=profile, bucket=bucket)
 
+
+available_remotes = [S3Config]
 
 
 remote_types = {

@@ -6,6 +6,7 @@ import boto3
 from botocore.config import Config
 from dataclasses_json import dataclass_json
 
+from poif.config import S3Config
 from poif.data.datapoint.base import TaggedData
 from poif.data.remote.base import FileRemote, TaggedRemote
 from poif.typing import FileHash

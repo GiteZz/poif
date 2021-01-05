@@ -1,5 +1,5 @@
 from copy import deepcopy
-from dataclasses import dataclass
+from pydantic import BaseModel
 from pathlib import Path
 from typing import List, Union
 
@@ -15,17 +15,16 @@ datasets_default_config_file = poif_config_folder / 'config.json'
 img_extensions = ['bmp', 'pbm', 'pgm', 'ppm', 'sr', 'ras', 'jpeg', 'jpg', 'jpe', 'jp2', 'tiff', 'tif', 'png']
 
 
-@dataclass
-class CacheConfig:
+class CacheConfig(BaseModel):
     enable: bool
     data_storage_location: Path
     git_storage_location: Path
     cache_uploads: bool
 
 
-@dataclass
-class RemoteConfig:
+class RemoteConfig(BaseModel):
     remote_type: str = None
+    data_folder: str = None
     config: Union[S3Config] = None
 
     @staticmethod
@@ -38,11 +37,12 @@ class RemoteConfig:
         else:
             new_config.config = remote_types[new_config.remote_type].prompt()
 
+        new_config.data_folder = simple_input('Data folder on remote?', default=new_config.data_folder)
+
         return new_config
 
 
-@dataclass
-class ReadmeConfig:
+class ReadmeConfig(BaseModel):
     enable: bool = True
     enable_filetree: bool = True
     enable_image_gallery: bool = True
@@ -67,21 +67,18 @@ class ReadmeConfig:
         return new_config
 
 
-@dataclass
-class PythonPackageConfig:
+class PythonPackageConfig(BaseModel):
     enable: bool = True
 
 
-@dataclass
-class DataCollectionConfig:
+class DataCollectionConfig(BaseModel):
     dataset_name: str
     folders: List[str]
     files: List[str]
     data_remote: RemoteConfig
 
 
-@dataclass
-class DataRepoConfig:
+class DataRepoConfig(BaseModel):
     collection: DataCollectionConfig
     readme: ReadmeConfig
     python_package: PythonPackageConfig
