@@ -5,7 +5,7 @@ from typing import List
 
 from jinja2 import Template
 
-from poif.data.versioning.dataset import VersionedDatasetConfig
+from poif.config import DataCollectionConfig
 from poif.templates import get_python_package_template_dir
 from poif.utils import get_relative_path
 
@@ -16,9 +16,9 @@ def strip_jinja_extension(file_name: str):
     return file_name_without_jinja
 
 
-def render_path(path: str, dataset_config: VersionedDatasetConfig):
+def render_template_path(path: str, collection_config: DataCollectionConfig):
     without_jinja = strip_jinja_extension(path)
-    adjusted_ds_name = without_jinja.replace('_dataset_name_', dataset_config.dataset_name)
+    adjusted_ds_name = without_jinja.replace('_dataset_name_', collection_config.collection_name)
 
     return adjusted_ds_name
 
@@ -26,7 +26,7 @@ def render_path(path: str, dataset_config: VersionedDatasetConfig):
 @dataclass
 class PythonPackage:
     base_dir: Path
-    dataset_config: VersionedDatasetConfig
+    dataset_config: DataCollectionConfig
 
     _created_files: List[Path] = field(default_factory=list)
 
@@ -40,7 +40,7 @@ class PythonPackage:
 
     def get_template_destination(self, template_file: Path, template_source: Path):
         relative_file = get_relative_path(template_source, template_file)
-        rendered_path = render_path(relative_file, self.dataset_config)
+        rendered_path = render_template_path(relative_file, self.dataset_config)
 
         destination_file = self.base_dir / rendered_path
         destination_file.parent.mkdir(parents=True, exist_ok=True)
@@ -49,7 +49,7 @@ class PythonPackage:
 
     def write_template(self, template_loc: Path, destination: Path):
         template = Template(open(template_loc).read())
-        rendered_template = template.render(data={'dataset_name': self.dataset_config.dataset_name})
+        rendered_template = template.render(data={'dataset_name': self.dataset_config.collection_name})
 
         with open(destination, 'w') as f:
             f.write(rendered_template)

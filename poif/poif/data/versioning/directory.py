@@ -7,8 +7,7 @@ from typing import Dict, List, Tuple
 
 from tqdm import tqdm
 
-from poif.data.datapoint.base import (LazyLoadedTaggedData, LazyTagged,
-                                      TaggedData)
+from poif.data.datapoint.base import (LazyLoadedTaggedData, TaggedData)
 from poif.data.versioning.file import VersionedFile
 from poif.typing import FileHash
 from poif.utils import RecursiveFileIterator, get_relative_path
@@ -44,7 +43,7 @@ class Mapping(LazyLoadedTaggedData):
 
         return intermediate_hash.hexdigest()
 
-    def get_sorted_mapping(self) -> List[FileHash, TaggedData]:
+    def get_sorted_mapping(self) -> List[FileHash]:
         tags = list(self.mapping.keys())
         relative_files = [data.relative_path for data in self.mapping.values()]
 

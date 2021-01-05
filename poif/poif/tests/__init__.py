@@ -73,8 +73,13 @@ def create_standard_folder_structure():
 
     return temp_dir
 
+
 def get_temp_path() -> Path:
     return Path(tempfile.mkdtemp())
+
+
+def get_temp_file() -> Path:
+    return Path(tempfile.mkstemp()[1])
 
 
 class MonkeyPatchSequence:

@@ -6,8 +6,9 @@ from typing import List, Optional, Union
 
 from dataclasses_json import dataclass_json
 
-from poif.data.remote.base import Remote
+from poif.config import DataCollectionConfig
 from poif.data.remote.s3 import S3Config
+from poif.data.repo.base import TaggedRepo
 from poif.data.versioning.directory import VersionedDirectory
 from poif.data.versioning.file import VersionedFile
 from poif.typing import ZeroOrMorePaths
@@ -15,42 +16,9 @@ from poif.utils import convert_zero_or_more, get_file_name_from_path
 
 
 @dataclass
-class ReadmeConfig:
-    enabled: bool = True
-    enable_filetree: bool = True
-    enable_image_gallery: bool = True
-    s3_config: S3Config = None
-
-@dataclass
-class CachingConfig:
-    enabled: bool = True
-    folder: Path = field(default_factory=lambda : Path.cwd() / '.data_versioning_cache')
-
-
-@dataclass_json
-@dataclass
-class VersionedDataCollectionConfig:
-    data_s3: S3Config
-    dataset_name: str
-    folders: List[str]
-    files: List[str]
-
-    readme_s3: S3Config = None
-
-    def write(self, file: Path):
-        with open(file, 'w') as f:
-            json.dump(self.to_dict(), f, indent=4)
-
-    @staticmethod
-    def load(config_path: Path) -> Optional['VersionedDatasetConfig']:
-        with open(config_path, 'r') as f:
-            return VersionedDatasetConfig.from_dict(json.load(f))
-
-
-@dataclass
 class VersionedDataset:
     base_dir: Path
-    config: VersionedDatasetConfig
+    config: DataCollectionConfig
 
     directories: List[VersionedDirectory] = field(default_factory=list)
     files: List[VersionedFile] = field(default_factory=list)
@@ -66,24 +34,24 @@ class VersionedDataset:
             actual_file = self.base_dir / file
             self.files.append(VersionedFile(base_dir=self.base_dir, file_path=actual_file))
 
-    def upload(self, remote: Remote):
+    def upload(self, remote: TaggedRepo):
         self.upload_directories(remote)
         self.upload_files(remote)
 
-    def upload_directories(self, remote: Remote):
+    def upload_directories(self, remote: TaggedRepo):
         for directory in self.directories:
             self.upload_directory_mapping(remote, directory)
             for file in directory.files:
                 self.upload_file(remote, file)
 
-    def upload_files(self, remote: Remote):
+    def upload_files(self, remote: TaggedRepo):
         for file in self.files:
             self.upload_file(remote, file)
 
-    def upload_file(self, remote: Remote, file: VersionedFile):
+    def upload_file(self, remote: TaggedRepo, file: VersionedFile):
         remote.upload_file(file.file_path, self.get_remote_name(file))
 
-    def upload_directory_mapping(self, remote: Remote, directory: VersionedDirectory):
+    def upload_directory_mapping(self, remote: TaggedRepo, directory: VersionedDirectory):
         mapping_file = Path(tempfile.mkstemp())
         directory.write_mapping_to_file(mapping_file)
 
@@ -130,5 +98,6 @@ class VersionedDataset:
 
     def add_vfile(self, file: Path):
         # TODO
+        pass
 
 

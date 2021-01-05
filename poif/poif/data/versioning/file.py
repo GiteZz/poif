@@ -2,12 +2,12 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
-from poif.data.datapoint.base import FileData
+from poif.data.datapoint.disk import DiskData
 from poif.typing import FileHash
 from poif.utils import get_file_name_from_path, get_relative_path, hash_object
 
 
-class VersionedFile(FileData):
+class VersionedFile(DiskData):
     base_dir: Path
     file_path: Path
 

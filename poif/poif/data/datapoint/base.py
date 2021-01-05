@@ -1,11 +1,8 @@
 from abc import ABC, abstractmethod
-from pathlib import Path
 from typing import Any
 
 from poif.data.parser.base import ParseMixin
-from poif.data.remote.base import TaggedRepo
 from poif.typing import FileHash
-from poif.utils import hash_object
 
 
 class TaggedData(ABC, ParseMixin):
@@ -20,8 +17,8 @@ class TaggedData(ABC, ParseMixin):
     def tag(self):
         return self._tag
 
-    @abstractmethod
     @property
+    @abstractmethod
     def size(self) -> int:
         pass
 
@@ -52,34 +49,3 @@ class LazyLoadedTaggedData(TaggedData, ABC):
     @abstractmethod
     def set_tag(self):
         pass
-
-
-class DiskData(LazyLoadedTaggedData):
-    file_path: Path = None
-
-    def __init__(self, file_path: Path, relative_path: str, tag: FileHash = None):
-        super().__init__(relative_path, tag)
-        self.file_path = file_path
-
-    @property
-    def size(self) -> int:
-        return self.file_path.stat().st_size
-
-    def get(self) -> bytes:
-        with open(self.file_path, 'rb') as f:
-            file_bytes = f.read()
-        return file_bytes
-
-    def set_tag(self):
-        self._tag = hash_object(self.file_path)
-
-
-class RepoData(TaggedData):
-    repo: TaggedRepo
-
-    @property
-    def size(self) -> int:
-        return self.repo.get_object_size(self)
-
-    def get(self) -> bytes:
-        return self.repo.get(self)

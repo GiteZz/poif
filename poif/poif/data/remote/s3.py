@@ -1,15 +1,13 @@
-from abc import ABC
 from dataclasses import dataclass, field
 from pathlib import Path
 
 import boto3
 from botocore.config import Config
-from dataclasses_json import dataclass_json
 
 from poif.config import S3Config
 from poif.data.datapoint.base import TaggedData
-from poif.data.remote.base import FileRemote, TaggedRemote
-from poif.typing import FileHash
+from poif.data.remote.base import FileRemote
+from poif.data.repo.file_remote import FileRemoteTaggedRepo
 
 
 @dataclass
@@ -44,7 +42,7 @@ class S3Remote(FileRemote):
 
 
 @dataclass
-class TaggedS3(TaggedRemote):
+class TaggedS3(FileRemoteTaggedRepo):
     s3_config: S3Config
     s3_remote: S3Remote = field(init=False)
 

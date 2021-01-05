@@ -2,15 +2,16 @@ from abc import ABC, abstractmethod
 from io import BytesIO
 from typing import Any
 
-from poif.data.parser.csv import CsvPandasParser
-from poif.data.parser.image import ImageParser
-
 
 class Parser(ABC):
     @staticmethod
     @abstractmethod
     def parse(bytes: BytesIO) -> Any:
         pass
+
+
+from poif.data.parser.csv import CsvPandasParser
+from poif.data.parser.image import ImageParser
 
 
 class ParseMixin:

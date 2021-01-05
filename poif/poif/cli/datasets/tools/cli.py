@@ -1,4 +1,4 @@
-
+from pathlib import Path
 from typing import Callable, List, Optional
 
 
@@ -14,6 +14,17 @@ def simple_input(title: str, default: str = None) -> str:
 def answer_from_list(title: str, answer_list: List[str], default: str = None):
     print(f'{title} Options: {answer_list}')
     return input_with_possible_default(default=default, validation_function=in_list_validation(answer_list))
+
+
+def path_input(title: str, default: Path = None):
+    if default is not None:
+        print(f'{title}: [default: {str(default)}]')
+    else:
+        print(f'{title}: ')
+
+    answer = input_with_possible_default(default=None if default is None else str(default))
+
+    return Path(answer)
 
 
 def multi_input(title: str, empty_allowed=False):
@@ -61,6 +72,7 @@ def not_empy_validation():
 
 def in_list_validation(possible_values: list):
     return lambda x: x in possible_values
+
 
 def yes_with_question(question: str, default=False) -> bool:
     print(f'{question} [y/n, default:{"y" if default else "n"}]')

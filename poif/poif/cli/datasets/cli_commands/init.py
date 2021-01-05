@@ -1,49 +1,15 @@
-import subprocess
 from pathlib import Path
 from typing import List
 
-from poif.cli.datasets.tools import (folder_list_to_pathlib,
-                                     remove_empty_strings)
-from poif.cli.datasets.tools.cli import (multi_input, s3_input, simple_input,
-                                         yes_with_question)
-from poif.cli.datasets.tools.config import DefaultConfig, get_default_config
 from poif.cli.datasets.tools.interface import PythonPackage
-from poif.data.remote.s3 import S3Remote
-from poif.data.versioning.dataset import (VersionedDataset,
-                                          VersionedDatasetConfig)
+from poif.config import DataRepoConfig
+from poif.data.versioning.dataset import (VersionedDataset)
 from poif.utils.git import GitRepo
 from poif.utils.readme import DatasetReadme, ReadmeSection
 
 
-def init_collect_options(config: DefaultConfig) -> VersionedDatasetConfig:
-    dataset_name = simple_input('Dataset name', use_empy_value=False)
-
-    folders = multi_input('Data folders', empty_allowed=True)
-    files = multi_input('Individual files', empty_allowed=True)
-
-    git_url = simple_input('Remote git repo')
-
-    print('S3 bucket configuration for uploading data')
-    data_s3 = s3_input(default_config=config.data_s3)
-
-    if yes_with_question('Add images to readme? Files are displayed via http accessible S3 bucket.'):
-        print('S3 bucket configuration for uploading data')
-        readme_s3 = s3_input(default_config=config.readme_s3)
-    else:
-        readme_s3 = None
-
-    return VersionedDatasetConfig(dataset_name=dataset_name,
-                                  folders=folders,
-                                  files=files,
-                                  git_url=git_url,
-                                  data_s3=data_s3,
-                                  readme_s3=readme_s3)
-
-
 def init(args: List[str]) -> None:
-    default_config = get_default_config()
-
-    dataset_config = init_collect_options(default_config)
+    dataset_config = DataRepoConfig.prompt()
     config_file = Path.cwd() / 'dataset_config.json'
     dataset_config.write(config_file)
 
@@ -74,8 +40,4 @@ def init(args: List[str]) -> None:
 
 
 if __name__ == "__main__":
-    template_path = Path(__file__).parents[1] / 'templates' / 'project_interface'
-    p1 = list(template_path.glob('**/*.jinja2'))[1]
-
-
-    print(str(p1)[len(str(template_path)) + 1:])
+    init([])

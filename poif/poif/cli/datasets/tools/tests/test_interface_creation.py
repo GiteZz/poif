@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from poif.cli.datasets.tools.interface import (PythonPackage, render_path,
+from poif.cli.datasets.tools.interface import (PythonPackage, render_template_path,
                                                strip_jinja_extension)
 from poif.data.remote.s3 import S3Config
 from poif.data.versioning.dataset import VersionedDatasetConfig
@@ -33,7 +33,7 @@ def dummy_config():
 def test_rendered_path(dummy_config):
     jinja_file = 'test/_dataset_name_/__init__.py.jinja2'
 
-    assert render_path(jinja_file, dummy_config) == 'test/dummy/__init__.py'
+    assert render_template_path(jinja_file, dummy_config) == 'test/dummy/__init__.py'
 
 
 # TODO a bit more extensive

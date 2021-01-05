@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Optional
 
-from poif.data.versioning.dataset import VersionedDatasetConfig
+from poif.data.versioning.dataset import DataCollectionConfig
 from poif.utils import has_newline
 from poif.utils.filetree import FileTree
 
@@ -94,12 +94,12 @@ class ImageGallerySection(ReadmeSection):
 
 
 class DatasetReadme(ReadmeSection):
-    config: VersionedDatasetConfig
+    config: DataCollectionConfig
 
-    def __init__(self, base_dir: Path, config: VersionedDatasetConfig):
+    def __init__(self, base_dir: Path, config: DataCollectionConfig):
         self.base_dir = base_dir
         self.config = config
-        super().__init__(self.config.dataset_name)
+        super().__init__(self.config.collection_name)
 
         self.add_dataset_sections()
 
