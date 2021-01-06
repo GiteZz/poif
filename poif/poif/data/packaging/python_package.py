@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 from jinja2 import Template
 
 from poif.cli.datasets.tools.interface import render_template_path
-from poif.config import DataCollectionConfig
+from poif.config.collection import DataCollectionConfig
 from poif.data.packaging.base import Package
 from poif.templates import get_python_package_template_dir
 from poif.utils import get_relative_path
@@ -36,7 +36,7 @@ class PythonPackage(Package):
 
     def write_template(self, template_loc: Path, destination: Path):
         template = Template(open(template_loc).read())
-        rendered_template = template.render(data={'dataset_name': self.collection_config.collection_name})
+        rendered_template = template.render(data={'dataset_name': self.collection_config.name})
 
         with open(destination, 'w') as f:
             f.write(rendered_template)

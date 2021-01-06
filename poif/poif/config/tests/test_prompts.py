@@ -41,18 +41,3 @@ def test_remote_config(monkeypatch):
     assert config2.config.profile == 'profile'
 
 
-def test_readme(monkeypatch):
-    input_returns = MonkeyPatchSequence(['yes', 'yes', 'yes', 'S3', 'bucket', 'url', 'profile'])
-    monkeypatch.setattr('builtins.input', input_returns)
-    config1 = ReadmeConfig.prompt()
-
-    assert config1.enable
-    assert config1.enable_image_gallery
-    assert config1.enable_filetree
-
-    assert config1.image_remote.remote_type == 'S3'
-    assert config1.image_remote.config.bucket == 'bucket'
-    assert config1.image_remote.config.url == 'url'
-    assert config1.image_remote.config.profile == 'profile'
-
-

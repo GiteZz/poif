@@ -24,7 +24,7 @@ class Config(BaseModel):
 
         return None
 
-    def json(self,*args, **kwargs) -> str:
+    def json(self, *args, **kwargs) -> str:
         kwargs['exclude'] = self.get_write_exclusions()
         return super().json(*args, **kwargs)
 

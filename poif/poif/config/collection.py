@@ -2,11 +2,11 @@ from typing import List
 
 from poif.cli.datasets.tools.cli import simple_input, multi_input
 from poif.config.base import Config
-from poif.config.remote import RemoteConfig
+from poif.config.remote.base import RemoteConfig
 
 
 class DataCollectionConfig(Config):
-    collection_name: str
+    name: str
     folders: List[str]
     files: List[str]
     data_remote: RemoteConfig
@@ -27,4 +27,4 @@ class DataCollectionConfig(Config):
         print('Configuration for the data remote.')
         remote_config = RemoteConfig.prompt(data_default)
 
-        return DataCollectionConfig(collection_name=collection_name, folders=folders, files=files, data_remote=remote_config)
+        return DataCollectionConfig(name=collection_name, folders=folders, files=files, data_remote=remote_config)

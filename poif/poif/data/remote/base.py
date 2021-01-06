@@ -3,7 +3,6 @@ from dataclasses import dataclass
 from pathlib import Path
 
 
-@dataclass
 class FileRemote(ABC):
     """
     This is meant for remotes where data is stored as files (e.g. object stores)

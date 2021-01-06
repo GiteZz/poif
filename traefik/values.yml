@@ -1,9 +1,0 @@
-serviceType: NodePort
-
-dashboard:
-  enabled: true
-  domain: traefik.jhub.be
-kubernetes:
-  namespaces:
-    - default
-    - traefik

@@ -19,7 +19,7 @@ for index in range(5, len(rows)):
     width = int(current_row[2])
     height = int(current_row[3])
 
-    ds_name = '_'.join(file_name.split('_')[:2])
+    ds_name = 'data'
 
     ds_folder = supervisely_project_folder / ds_name
     ds_folder.mkdir(exist_ok=True)

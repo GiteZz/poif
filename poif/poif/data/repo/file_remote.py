@@ -1,20 +1,33 @@
-from poif.data.datapoint.base import TaggedData
-from poif.data.remote.base import FileRemote
+from dataclasses import dataclass
+import typing
+
+
 from poif.data.repo.base import TaggedRepo
 
+if typing.TYPE_CHECKING:
+    from poif.data.datapoint.base import TaggedData
+    from poif.data.remote.base import FileRemote
+    from poif.config.remote.base import RemoteConfig
 
+@dataclass
 class FileRemoteTaggedRepo(TaggedRepo):
-    remote: FileRemote
+    remote: 'FileRemote'
     data_folder: str
 
-    def get_remote_name(self, data: TaggedData):
+    def get_remote_name(self, data: 'TaggedData'):
         return f'{self.data_folder}/{data.tag[:2]}/{data.tag[2:]}'
 
-    def get(self, data: TaggedData) -> bytes:
+    def get(self, data: 'TaggedData') -> bytes:
         return self.remote.download(self.get_remote_name(data))
 
-    def get_object_size(self, data: TaggedData):
+    def get_object_size(self, data: 'TaggedData'):
         return self.remote.get_object_size(self.get_remote_name(data))
 
-    def upload(self, data: TaggedData):
+    def upload(self, data: 'TaggedData'):
         self.remote.upload(data.get(), self.get_remote_name(data))
+
+
+def get_remote_repo_from_config(remote_config: 'RemoteConfig'):
+    remote = remote_config.config.get_configured_remote()
+
+    return FileRemoteTaggedRepo(remote=remote, data_folder=remote_config.data_folder)
