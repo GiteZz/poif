@@ -4,15 +4,13 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Optional, Union
 
-from dataclasses_json import dataclass_json
 
-from poif.config import DataCollectionConfig, S3Config
+from poif.config.collection import DataCollectionConfig
 from poif.data.git.file import FileCreatorMixin
 from poif.data.repo.base import TaggedRepo
 from poif.data.versioning.directory import VersionedDirectory
 from poif.data.versioning.file import VersionedFile
-from poif.typing import ZeroOrMorePaths
-from poif.utils import convert_zero_or_more, get_file_name_from_path
+from poif.utils import get_file_name_from_path
 
 
 @dataclass

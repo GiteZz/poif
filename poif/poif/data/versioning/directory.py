@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Dict, List, Tuple
 
 from tqdm import tqdm
+from abc import ABC, abstractmethod
 
 from poif.data.datapoint.base import (LazyLoadedTaggedData, TaggedData)
 from poif.data.versioning.file import VersionedFile
@@ -13,11 +14,10 @@ from poif.typing import FileHash
 from poif.utils import RecursiveFileIterator, get_relative_path
 
 
-class Mapping(LazyLoadedTaggedData):
-    mapping: Dict[FileHash, TaggedData]
-
+class Mapping(LazyLoadedTaggedData, ABC):
     def __init__(self):
         super().__init__(relative_path="")
+        self._mapping = None
 
     @property
     def size(self) -> int:
@@ -29,6 +29,12 @@ class Mapping(LazyLoadedTaggedData):
 
     def get(self) -> bytes:
         return json.dumps(self.mapping).encode('utf-8')
+
+    @property
+    def mapping(self):
+        if self._mapping is None:
+            self.set_mapping()
+        return self._mapping
 
     def set_tag(self):
         self._tag = self.get_mapping_hash()
@@ -45,9 +51,13 @@ class Mapping(LazyLoadedTaggedData):
 
     def get_sorted_mapping(self) -> List[FileHash]:
         tags = list(self.mapping.keys())
-        relative_files = [data.relative_path for data in self.mapping.values()]
+        relative_files = list(self.mapping.values())
 
         return [tag for _, tag in sorted(zip(relative_files, tags), key=lambda pair: pair[0])]
+
+    @abstractmethod
+    def set_mapping(self):
+        pass
 
 
 class VersionedDirectory(Mapping):
@@ -68,6 +78,11 @@ class VersionedDirectory(Mapping):
             self.set_files()
         return self._files
 
+    def set_mapping(self):
+        self._mapping = {}
+        for file in self.files:
+            self._mapping[file.tag] = file.relative_path
+
     def set_files(self):
         self._files = []
         for file in tqdm(RecursiveFileIterator(self.data_dir)):
@@ -75,7 +90,7 @@ class VersionedDirectory(Mapping):
             self._files.append(versioned_file)
 
     def write_vdir_to_folder(self, directory: Path) -> Path:
-        vdir_file= directory /self.get_vdir_name()
+        vdir_file= directory / self.get_vdir_name()
         with open(vdir_file, 'w') as f:
             json.dump({
                 'data_folder': get_relative_path(self.base_dir, self.data_dir),

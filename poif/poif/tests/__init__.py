@@ -1,10 +1,15 @@
 import random
 import tempfile
 from pathlib import Path
+from typing import List
 
 import cv2
 import numpy as np
 import pytest
+
+from poif.data.git.file import FileCreatorMixin
+from poif.data.remote.base import FileRemote
+from poif.data.repo.file_remote import FileRemoteTaggedRepo
 
 
 def get_img():
@@ -36,6 +41,13 @@ def get_img_file() -> Path:
 def write_image_in_file(file: Path):
     img = get_img()
     cv2.imwrite(str(file), img)
+
+
+def create_data_folder(folder: Path):
+    folder.mkdir(exist_ok=True, parents=True)
+
+    for i in range(10):
+        write_image_in_file(folder / (str(i) + '.png'))
 
 
 def assert_image_nearly_equal(original_img: np.ndarray, new_img: np.ndarray):
@@ -88,3 +100,46 @@ class MonkeyPatchSequence:
 
     def __call__(self):
         return self.values.pop(0)
+
+
+class MockFileRemote(FileRemote):
+    def __init__(self):
+        self.uploaded_files = []
+        self.downloaded_files = []
+
+    def download(self, remote_source: str) -> bytes:
+        self.downloaded_files.append(remote_source)
+        return bytes('Hello')
+
+    def get_object_size(self, file_name: str):
+        return 0
+
+    def upload(self, source: bytes, remote_dest: str):
+        self.uploaded_files.append(remote_dest)
+
+
+class MockTaggedRepo(FileRemoteTaggedRepo):
+    def __init__(self):
+        self.remote = MockFileRemote()
+        self.data_folder = 'data'
+
+
+class MockGitRepo:
+    def __init__(self, base_dir: str, init=True):
+        self.tracked_files = []
+
+    def add_files(self, files: List[Path]):
+        for file in files:
+            self.tracked_files.append(file)
+
+    def add_remote(self, remote: str):
+        pass
+
+    def commit(self, message: str):
+        pass
+
+    def push(self):
+        pass
+
+    def add_file_creator(self, creator: FileCreatorMixin):
+        pass

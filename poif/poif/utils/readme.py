@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import List, Optional
 
 from poif.data.git.file import FileCreatorMixin
-from poif.config import DataCollectionConfig
+from poif.config.collection import DataCollectionConfig
 from poif.utils import has_newline
 from poif.utils.filetree import FileTree
 
@@ -94,7 +94,7 @@ class DatasetReadme(ReadmeSection, FileCreatorMixin):
     def __init__(self, base_dir: Path, config: DataCollectionConfig):
         self.base_dir = base_dir
         self.config = config
-        super().__init__(self.config.collection_name)
+        super().__init__(self.config.name)
 
         self.add_dataset_sections()
 

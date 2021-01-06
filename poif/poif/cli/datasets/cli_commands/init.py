@@ -16,14 +16,14 @@ def init(args: List[str]) -> None:
     resource_dir = packages[repo_config.package.type].get_resource_directory(base_dir=Path.cwd())
     repo_config.write_to_package(base_dir=Path.cwd())
 
-    versioned_dataset = VersionedDataset(base_dir=Path.cwd(), config=repo_config)
+    versioned_dataset = VersionedDataset(base_dir=Path.cwd(), config=repo_config.collection)
 
     package = PythonPackage(base_dir=Path.cwd(), collection_config=repo_config.collection)
     package.init()
 
     versioned_dataset.write_versioning_files(resource_dir)
 
-    readme = DatasetReadme(Path.cwd(), config=repo_config)
+    readme = DatasetReadme(Path.cwd(), config=repo_config.collection)
     readme.write_to_folder(Path.cwd())
 
     tagged_repo = get_remote_repo_from_config(repo_config.collection.data_remote)

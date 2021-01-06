@@ -3,8 +3,7 @@ from typing import List
 
 
 class FileCreatorMixin:
-    def __init__(self):
-        self._created_files = []
+    _created_files = []
 
     def add_created_file(self, file: Path):
         self._created_files.append(file)
