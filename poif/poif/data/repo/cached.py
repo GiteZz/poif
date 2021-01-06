@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from poif.config import CacheConfig
+from poif.config.cache import CacheConfig
 from poif.data.datapoint.base import TaggedData
 from poif.data.repo.base import TaggedRepo
 

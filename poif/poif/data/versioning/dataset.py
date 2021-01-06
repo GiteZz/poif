@@ -6,8 +6,8 @@ from typing import List, Optional, Union
 
 from dataclasses_json import dataclass_json
 
-from poif.config import DataCollectionConfig
-from poif.data.remote.s3 import S3Config
+from poif.config import DataCollectionConfig, S3Config
+from poif.data.git.file import FileCreatorMixin
 from poif.data.repo.base import TaggedRepo
 from poif.data.versioning.directory import VersionedDirectory
 from poif.data.versioning.file import VersionedFile
@@ -16,14 +16,12 @@ from poif.utils import convert_zero_or_more, get_file_name_from_path
 
 
 @dataclass
-class VersionedDataset:
+class VersionedDataset(FileCreatorMixin):
     base_dir: Path
     config: DataCollectionConfig
 
     directories: List[VersionedDirectory] = field(default_factory=list)
     files: List[VersionedFile] = field(default_factory=list)
-
-    _created_files: List[str] = field(default_factory=list)
 
     def __post_init__(self):
         for directory in self.config.folders:
@@ -40,7 +38,7 @@ class VersionedDataset:
 
     def upload_directories(self, remote: TaggedRepo):
         for directory in self.directories:
-            self.upload_directory_mapping(remote, directory)
+            remote.upload(directory)
             for file in directory.files:
                 self.upload_file(remote, file)
 
@@ -49,39 +47,23 @@ class VersionedDataset:
             self.upload_file(remote, file)
 
     def upload_file(self, remote: TaggedRepo, file: VersionedFile):
-        remote.upload_file(file.file_path, self.get_remote_name(file))
-
-    def upload_directory_mapping(self, remote: TaggedRepo, directory: VersionedDirectory):
-        mapping_file = Path(tempfile.mkstemp())
-        directory.write_mapping_to_file(mapping_file)
-
-        remote.upload_file(mapping_file, self.get_remote_name(directory))
-
-    def get_remote_name(self, tag_object: Union[VersionedFile, VersionedDirectory]):
-        return f'{self.name}/{tag_object.remote_file_name()}'
-
-    def write_directories(self, save_directory: Path):
-        for directory in self.directories:
-            created_file = directory.write_vdir_to_folder(save_directory)
-
-            self._created_files.append(created_file)
-
-    def write_files(self, save_directory: Path):
-        for directory in self.files:
-            created_file = directory.write_vfile_to_folder(save_directory)
-
-            self._created_files.append(created_file)
+        remote.upload(file)
 
     def write_versioning_files(self, save_directory: Path):
         self.write_directories(save_directory)
         self.write_files(save_directory)
 
-    def write_mappings(self, save_directory: Path):
+    def write_directories(self, save_directory: Path):
         for directory in self.directories:
-            directory.write_mapping_to_folder(save_directory)
+            created_file = directory.write_vdir_to_folder(save_directory)
 
-    def get_created_files(self):
-        return self._created_files
+            self.add_created_file(created_file)
+
+    def write_files(self, save_directory: Path):
+        for directory in self.files:
+            created_file = directory.write_vfile_to_folder(save_directory)
+
+            self.add_created_file(created_file)
 
     def add_vdir_file(self, file: Path):
         filename = get_file_name_from_path(file)

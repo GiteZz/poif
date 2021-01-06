@@ -84,23 +84,10 @@ class VersionedDirectory(Mapping):
 
         return vdir_file
 
-    def write_mapping_to_folder(self, directory: Path) -> Path:
-        mapping_dict = {file.tag: file.relative_path for file in self.files}
-        mapping_file = directory / self.get_mapping_name()
-        with open(mapping_file, 'w') as f:
-            json.dump(mapping_dict, f)
-
-        return mapping_file
-
     def get_vdir_name(self):
         file_name = self._get_file_name()
 
         return f'{file_name}.vdir'
-
-    def get_mapping_name(self):
-        file_name = self._get_file_name()
-
-        return f'{file_name}.mapping'
 
     def _get_file_name(self):
         relative_path = get_relative_path(self.base_dir, self.data_dir)
@@ -108,24 +95,12 @@ class VersionedDirectory(Mapping):
 
         return path_snake_case
 
-    def from_vdir_file(self, vdir_file: Path, base_dir: Path) -> 'VersionedDirectory':
+    @staticmethod
+    def from_vdir_file(vdir_file: Path, base_dir: Path) -> 'VersionedDirectory':
         with open(vdir_file, 'r') as f:
             vdir_contents = json.load(f)
 
-        self._tag = vdir_contents['tag']
-        self.data_dir = self.base_dir / vdir_contents['data_folder']
+        tag = vdir_contents['tag']
+        data_dir = base_dir / vdir_contents['data_folder']
 
-    def load_mapping_file(self, file: Path):
-        with open(file, 'r') as f:
-            mapping = json.load(f)
-
-        for tag, relative_file in mapping.items():
-            versioned_file_path = self.base_dir / relative_file
-            VersionedFile(base_dir=self.base_dir, file_path=versioned_file_path, _tag=tag)
-
-    @property
-    def size(self) -> int:
-        return 0
-
-    def get(self) -> bytes:
-        self.m
+        return VersionedDirectory(base_dir=base_dir, data_dir=data_dir, tag=tag)

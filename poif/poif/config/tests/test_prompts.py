@@ -1,5 +1,4 @@
-from poif.config import ReadmeConfig, RemoteConfig
-from poif.config.remotes import S3Config
+from poif.config import ReadmeConfig, RemoteConfig, S3Config
 from poif.tests import MonkeyPatchSequence
 
 

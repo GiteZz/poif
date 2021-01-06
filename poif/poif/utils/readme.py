@@ -2,7 +2,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Optional
 
-from poif.data.versioning.dataset import DataCollectionConfig
+from poif.data.git.file import FileCreatorMixin
+from poif.config import DataCollectionConfig
 from poif.utils import has_newline
 from poif.utils.filetree import FileTree
 
@@ -66,12 +67,6 @@ class ReadmeSection:
 
         return combination
 
-    def write_to_file(self, file: Path):
-        rendered = self.render()
-
-        with open(file, 'w') as f:
-            f.write(rendered)
-
 
 class FileTreeSection(ReadmeSection):
     def __init__(self, base_dir: Path):
@@ -93,7 +88,7 @@ class ImageGallerySection(ReadmeSection):
         super().__init__(title)
 
 
-class DatasetReadme(ReadmeSection):
+class DatasetReadme(ReadmeSection, FileCreatorMixin):
     config: DataCollectionConfig
 
     def __init__(self, base_dir: Path, config: DataCollectionConfig):
@@ -111,3 +106,15 @@ class DatasetReadme(ReadmeSection):
             base_dir = self.base_dir / data_folder
             single_file_tree = FileTreeSection(base_dir)
             file_trees_section.add_section(single_file_tree)
+
+    @classmethod
+    def get_default_name(cls) -> str:
+        return 'README.md'
+
+    def write_to_folder(self, folder: Path):
+        rendered = self.render()
+        file_name = folder / self.get_default_name()
+        with open(file_name, 'w') as f:
+            f.write(rendered)
+
+        self.add_created_file(file_name)
