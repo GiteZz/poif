@@ -55,7 +55,7 @@ class File:
         return dict(
             st_mode=(S_IFREG | 0o644),  # Contains file type and mode
             st_nlink=1,  # Number of hard links to file
-            st_size=size,  # Size of file in bytes
+            st_size=self.data.size,  # Size of file in bytes
             st_ctime=change_status_time,  # Time of last status change
             st_mtime=modification_time,  # Time of last modification
             st_atime=access_time,  # Time of last access

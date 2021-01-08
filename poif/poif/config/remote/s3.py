@@ -46,5 +46,5 @@ class S3Config(Config, CreateRemoteMixin):
 
         return base_excludes
 
-    def get_configured_remote(self) -> FileRemote:
+    def get_configured_remote(self) -> S3Remote:
         return S3Remote(self)

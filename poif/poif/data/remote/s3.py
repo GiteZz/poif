@@ -42,7 +42,7 @@ class S3Remote(FileRemote):
         return self.get_session().Bucket(f'{self.config.bucket}')
 
     def get_object_size(self, file_name: str) -> int:
-        size = self.get_bucket().lookup(file_name).size
+        size = self.get_bucket().Object(file_name).content_length
 
         return size
 

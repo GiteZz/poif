@@ -2,6 +2,7 @@ from typing import Tuple
 
 from poif.config.remote.base import RemoteConfig, RemoteType
 from poif.config.remote.s3 import S3Config
+from poif.data.remote.s3 import S3Remote
 from poif.tests.integration.docker import docker_run
 from poif.tests.integration.gitlab.wait import wait_on_url
 from poif.tests.integration.minio.config import MinioConfig
@@ -17,7 +18,7 @@ def minio_setup(config: MinioConfig):
     set_public(config, [config.readme_bucket])
 
 
-def get_remotes_from_config(config: MinioConfig) -> Tuple[RemoteConfig, RemoteConfig]:
+def get_repo_remotes_from_config(config: MinioConfig) -> Tuple[RemoteConfig, RemoteConfig]:
     data_config = S3Config(url=f'http://localhost:{config.port}', bucket='datasets', profile='datasets')
     readme_config = S3Config(url=f'http://localhost:{config.port}', bucket='readme-images', profile='datasets')
 
@@ -25,3 +26,9 @@ def get_remotes_from_config(config: MinioConfig) -> Tuple[RemoteConfig, RemoteCo
     readme_remote = RemoteConfig(remote_type=RemoteType.S3, data_folder='data', config=readme_config)
 
     return data_remote, readme_remote
+
+
+def get_remote_from_config(config: MinioConfig) -> S3Remote:
+    data_config = S3Config(url=f'http://localhost:{config.port}', bucket='datasets', profile='datasets')
+
+    return data_config.get_configured_remote()

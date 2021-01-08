@@ -11,7 +11,7 @@ from poif.config.repo import DataRepoConfig
 from poif.data.packaging.base import PackageOptions
 from poif.tests import get_temp_path, write_image_in_file, write_json_in_file
 from poif.tests.integration.minio.config import MinioConfig
-from poif.tests.integration.minio.setup import get_remotes_from_config
+from poif.tests.integration.minio.setup import get_repo_remotes_from_config
 
 
 def create_realistic_folder_structure() -> Tuple[Path, List[str], List[str]]:
@@ -48,7 +48,7 @@ def create_data_collection(remote: RemoteConfig):
 
 
 def create_data_repo(minio_config: MinioConfig) -> Tuple[Path, DataRepoConfig]:
-    data_remote, readme_remote = get_remotes_from_config(minio_config)
+    data_remote, readme_remote = get_repo_remotes_from_config(minio_config)
     readme_config = ReadmeConfig(enable=True, enable_filetree=True, enable_image_gallery=True, image_remote=readme_remote)
     base_dir, collection_config = create_data_collection(data_remote)
     package_config = PackageConfig(type=PackageOptions.python_package)
