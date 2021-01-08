@@ -4,8 +4,8 @@ import pytest
 
 from poif.cli.datasets.tools.interface import (render_template_path,
                                                strip_jinja_extension)
-from poif.data.packaging.python_package import PythonPackage
 from poif.config import S3Config
+from poif.data.packaging.python_package import PythonPackage
 from poif.data.versioning.dataset import VersionedDatasetConfig
 from poif.tests import get_temp_path
 

@@ -1,7 +1,5 @@
-from abc import abstractmethod
-
 import typing
-
+from abc import abstractmethod
 
 if typing.TYPE_CHECKING:
     from poif.data.datapoint.base import TaggedData

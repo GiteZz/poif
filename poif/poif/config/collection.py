@@ -1,6 +1,6 @@
 from typing import List
 
-from poif.cli.datasets.tools.cli import simple_input, multi_input
+from poif.cli.datasets.tools.cli import multi_input, simple_input
 from poif.config.base import Config
 from poif.config.remote.base import RemoteConfig
 

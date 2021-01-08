@@ -1,4 +1,5 @@
 import json
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from hashlib import md5
 from operator import attrgetter
@@ -6,9 +7,8 @@ from pathlib import Path
 from typing import Dict, List, Tuple
 
 from tqdm import tqdm
-from abc import ABC, abstractmethod
 
-from poif.data.datapoint.base import (LazyLoadedTaggedData, TaggedData)
+from poif.data.datapoint.base import LazyLoadedTaggedData, TaggedData
 from poif.data.versioning.file import VersionedFile
 from poif.typing import FileHash
 from poif.utils import RecursiveFileIterator, get_relative_path

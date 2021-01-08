@@ -1,13 +1,12 @@
-from dataclasses import dataclass
 import typing
-
+from dataclasses import dataclass
 
 from poif.data.repo.base import TaggedRepo
 
 if typing.TYPE_CHECKING:
+    from poif.config.remote.base import RemoteConfig
     from poif.data.datapoint.base import TaggedData
     from poif.data.remote.base import FileRemote
-    from poif.config.remote.base import RemoteConfig
 
 @dataclass
 class FileRemoteTaggedRepo(TaggedRepo):

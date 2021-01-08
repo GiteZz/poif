@@ -2,8 +2,8 @@ from pathlib import Path
 
 from poif.config.base import Config
 from poif.config.collection import DataCollectionConfig
-from poif.config.readme import ReadmeConfig
 from poif.config.package import PackageConfig
+from poif.config.readme import ReadmeConfig
 from poif.data.packaging.base import packages
 
 

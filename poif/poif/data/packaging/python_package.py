@@ -1,7 +1,7 @@
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List
 
-from dataclasses import dataclass, field
 from jinja2 import Template
 
 from poif.cli.datasets.tools.interface import render_template_path

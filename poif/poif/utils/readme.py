@@ -2,8 +2,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Optional
 
-from poif.data.git.file import FileCreatorMixin
 from poif.config.collection import DataCollectionConfig
+from poif.data.git.file import FileCreatorMixin
 from poif.utils import has_newline
 from poif.utils.filetree import FileTree
 

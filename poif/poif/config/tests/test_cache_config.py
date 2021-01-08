@@ -1,6 +1,6 @@
-from poif.config.cache import CacheConfig
 from pathlib import Path
 
+from poif.config.cache import CacheConfig
 from poif.tests import get_temp_file
 
 

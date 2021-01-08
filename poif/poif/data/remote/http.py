@@ -3,9 +3,7 @@ from dataclasses import dataclass
 import requests
 
 from poif.data.cache.disk_over_http import GET_FILE_PATH, GET_FILES_PATH
-
 from poif.typing import FileHash
-
 
 # @dataclass
 # class HttpRemote(Remote):

@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from poif.cli.datasets.tools.cli import yes_with_question, path_input
+from poif.cli.datasets.tools.cli import path_input, yes_with_question
 from poif.config.base import Config
 
 
