@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Optional, Union
 
+from tqdm import tqdm
 
 from poif.config.collection import DataCollectionConfig
 from poif.data.git.file import FileCreatorMixin
@@ -37,7 +38,7 @@ class VersionedDataset(FileCreatorMixin):
     def upload_directories(self, remote: TaggedRepo):
         for directory in self.directories:
             remote.upload(directory)
-            for file in directory.files:
+            for file in tqdm(directory.files, desc=f'Uploading directory {directory.relative_path}'):
                 self.upload_file(remote, file)
 
     def upload_files(self, remote: TaggedRepo):

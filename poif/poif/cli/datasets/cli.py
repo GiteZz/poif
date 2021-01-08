@@ -1,7 +1,8 @@
 import sys
 
 from poif.cli.datasets.cli_commands.cleanup import cleanup
-# from poif.cli.datasets.cli_commands.config import config
+from poif.cli.datasets.cli_commands.config import config
+from poif.cli.datasets.cli_commands.default import default
 from poif.cli.datasets.cli_commands.init import init
 from poif.cli.datasets.cli_commands.update import update
 
@@ -14,9 +15,10 @@ def main():
     command = args[1]
     valid_commands = {
         'init': init,
-        # 'config': config,
+        'config': config,
         'update': update,
-        'cleanup': cleanup
+        'cleanup': cleanup,
+        'default': default
     }
     if command in valid_commands.keys():
         valid_commands[command](args[2:])

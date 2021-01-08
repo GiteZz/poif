@@ -1,3 +1,4 @@
+import json
 import random
 import tempfile
 from pathlib import Path
@@ -41,6 +42,15 @@ def get_img_file() -> Path:
 def write_image_in_file(file: Path):
     img = get_img()
     cv2.imwrite(str(file), img)
+
+
+def write_json_in_file(file: Path):
+    json_content = {
+        'test': 'test'
+    }
+
+    with open(file, 'w') as f:
+        json.dump(json_content, f)
 
 
 def create_data_folder(folder: Path):

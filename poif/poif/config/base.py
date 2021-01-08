@@ -28,6 +28,9 @@ class Config(BaseModel):
         kwargs['exclude'] = self.get_write_exclusions()
         return super().json(*args, **kwargs)
 
+    def save_default(self):
+        self.write(self.default_location())
+
     @classmethod
     def default_location(cls) -> Path:
         return poif_config_folder / cls.get_default_name()

@@ -1,10 +1,10 @@
 
+import typing
 from dataclasses import dataclass, field
 from pathlib import Path
 
 import boto3
 from botocore.config import Config
-import typing
 
 from poif.data.remote.base import FileRemote
 from poif.data.repo.file_remote import FileRemoteTaggedRepo
@@ -32,7 +32,7 @@ class S3Remote(FileRemote):
 
     def upload(self, source: bytes, remote_dest: str):
         # TODO probably doesn't work
-        self.get_bucket().put(body=source, key=remote_dest)
+        self.get_bucket().put_object(Body=source, Key=remote_dest)
 
     def get_bucket(self):
         return self.get_session().Bucket(f'{self.config.bucket}')

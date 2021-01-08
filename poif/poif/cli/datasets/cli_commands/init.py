@@ -1,18 +1,19 @@
 from pathlib import Path
 from typing import List
 
+from poif.cli.datasets.tools.cli import simple_input
+from poif.config.repo import DataRepoConfig
+from poif.data.git.repo import GitRepo
 from poif.data.packaging.base import packages
 from poif.data.packaging.python_package import PythonPackage
-from poif.config.repo import DataRepoConfig
 from poif.data.repo.file_remote import get_remote_repo_from_config
-
-from poif.data.versioning.dataset import (VersionedDataset)
-from poif.data.git.repo import GitRepo
+from poif.data.versioning.dataset import VersionedDataset
 from poif.utils.readme import DatasetReadme, ReadmeSection
 
 
 def init(args: List[str]) -> None:
     repo_config = DataRepoConfig.prompt()
+    git_remote = simple_input(title='Git remote?')
     resource_dir = packages[repo_config.package.type].get_resource_directory(base_dir=Path.cwd())
     repo_config.write_to_package(base_dir=Path.cwd())
 
@@ -29,7 +30,9 @@ def init(args: List[str]) -> None:
     tagged_repo = get_remote_repo_from_config(repo_config.collection.data_remote)
     versioned_dataset.upload(tagged_repo)
 
+
     git_repo = GitRepo(base_dir=Path.cwd(), init=True)
+    git_repo.add_remote(git_remote)
     git_repo.add_file_creator(package)
     git_repo.add_file_creator(versioned_dataset)
     git_repo.add_file_creator(readme)

@@ -1,7 +1,7 @@
+from dataclasses import dataclass
 from pathlib import Path
 from typing import List
 
-from dataclasses import dataclass
 from git import Repo
 
 from poif.data.git.file import FileCreatorMixin
@@ -15,7 +15,7 @@ class GitRepo:
 
     def __post_init__(self):
         if self.init:
-            self.repo = Repo.init()
+            self.repo = Repo.init(path=str(self.base_dir))
         else:
             self.repo = Repo(str(self.base_dir))
 
@@ -30,7 +30,7 @@ class GitRepo:
         self.repo.index.commit(message)
 
     def push(self):
-        self.repo.remotes.origin.push()
+        self.repo.remotes.origin.push(refspec='master:master')
 
     def add_file_creator(self, creator: FileCreatorMixin):
         self.add_files(creator.get_created_files())
