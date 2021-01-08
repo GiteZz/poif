@@ -3,27 +3,34 @@ from dataclasses import dataclass
 
 from poif.data.repo.base import TaggedRepo
 
+
 if typing.TYPE_CHECKING:
     from poif.config.remote.base import RemoteConfig
     from poif.data.datapoint.base import TaggedData
     from poif.data.remote.base import FileRemote
+    from poif.data.versioning.dataset import VersionedCollection
+
 
 @dataclass
 class FileRemoteTaggedRepo(TaggedRepo):
     remote: 'FileRemote'
     data_folder: str
 
-    def get_remote_name(self, data: 'TaggedData'):
-        return f'{self.data_folder}/{data.tag[:2]}/{data.tag[2:]}'
+    def get_remote_name(self, tag: str):
+        return f'{self.data_folder}/{tag[:2]}/{tag[2:]}'
 
-    def get(self, data: 'TaggedData') -> bytes:
-        return self.remote.download(self.get_remote_name(data))
+    def get_from_tag(self, tag: str):
+        return self.remote.download(self.get_remote_name(tag))
 
-    def get_object_size(self, data: 'TaggedData'):
-        return self.remote.get_object_size(self.get_remote_name(data))
+    def get_object_size_from_tag(self, tag: str):
+        self.remote.get_object_size(self.get_remote_name(tag))
 
     def upload(self, data: 'TaggedData'):
-        self.remote.upload(data.get(), self.get_remote_name(data))
+        self.remote.upload(data.get(), self.get_remote_name(data.tag))
+
+    def upload_collection(self, collection: 'VersionedCollection'):
+        for tagged_data in collection.get_tagged_data():
+            self.upload(tagged_data)
 
 
 def get_remote_repo_from_config(remote_config: 'RemoteConfig'):

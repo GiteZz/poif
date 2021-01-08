@@ -4,10 +4,11 @@ from poif.config.base import Config
 from poif.config.collection import DataCollectionConfig
 from poif.config.package import PackageConfig
 from poif.config.readme import ReadmeConfig
+from poif.data.git.file import FileCreatorMixin
 from poif.data.packaging.base import packages
 
 
-class DataRepoConfig(Config):
+class DataRepoConfig(Config, FileCreatorMixin):
     @classmethod
     def get_default_name(cls) -> str:
         return 'repo_config.json'
@@ -31,10 +32,16 @@ class DataRepoConfig(Config):
         write_in_config_dir = [self.collection]
 
         for item in write_in_base_dir:
-            item.write(base_dir / item.get_default_name())
+            new_file = base_dir / item.get_default_name()
+            item.write(new_file)
+
+            self.add_created_file(new_file)
 
         for item in write_in_config_dir:
-            item.write(resource_dir / item.get_default_name())
+            new_file = resource_dir / item.get_default_name()
+            item.write(new_file)
+
+            self.add_created_file(new_file)
 
     @classmethod
     def read_from_package(cls, base_dir: Path):

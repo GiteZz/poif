@@ -7,7 +7,7 @@ from poif.data.git.repo import GitRepo
 from poif.data.packaging.base import packages
 from poif.data.packaging.python_package import PythonPackage
 from poif.data.repo.file_remote import get_remote_repo_from_config
-from poif.data.versioning.dataset import VersionedDataset
+from poif.data.versioning.dataset import FromDiskVersionedCollection
 from poif.utils.readme import DatasetReadme, ReadmeSection
 
 
@@ -17,7 +17,7 @@ def init(args: List[str]) -> None:
     resource_dir = packages[repo_config.package.type].get_resource_directory(base_dir=Path.cwd())
     repo_config.write_to_package(base_dir=Path.cwd())
 
-    versioned_dataset = VersionedDataset(base_dir=Path.cwd(), config=repo_config.collection)
+    versioned_dataset = FromDiskVersionedCollection(base_dir=Path.cwd(), config=repo_config.collection)
 
     package = PythonPackage(base_dir=Path.cwd(), collection_config=repo_config.collection)
     package.init()
@@ -28,11 +28,12 @@ def init(args: List[str]) -> None:
     readme.write_to_folder(Path.cwd())
 
     tagged_repo = get_remote_repo_from_config(repo_config.collection.data_remote)
-    versioned_dataset.upload(tagged_repo)
+    tagged_repo.upload_collection(versioned_dataset)
 
 
     git_repo = GitRepo(base_dir=Path.cwd(), init=True)
     git_repo.add_remote(git_remote)
+    git_repo.add_file_creator(repo_config)
     git_repo.add_file_creator(package)
     git_repo.add_file_creator(versioned_dataset)
     git_repo.add_file_creator(readme)

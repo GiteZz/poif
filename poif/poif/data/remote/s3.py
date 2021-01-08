@@ -2,6 +2,7 @@
 import typing
 from dataclasses import dataclass, field
 from pathlib import Path
+from io import BytesIO
 
 import boto3
 from botocore.config import Config
@@ -27,8 +28,11 @@ class S3Remote(FileRemote):
                                      )
 
     def download(self, file_name: str) -> bytes:
-        response = self.get_bucket().get_object(file_name)
-        return response['body'].read()
+        fileobj = BytesIO()
+
+        self.get_bucket().download_fileobj(file_name, fileobj)
+        fileobj.seek(0)
+        return fileobj.read()
 
     def upload(self, source: bytes, remote_dest: str):
         # TODO probably doesn't work

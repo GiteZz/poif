@@ -12,10 +12,11 @@ class Parser(ABC):
 
 from poif.data.parser.csv import CsvPandasParser
 from poif.data.parser.image import ImageParser
+from poif.data.parser.json import JsonParser
 
 
 class ParseMixin:
-    parsers = [ImageParser, CsvPandasParser]
+    parsers = [ImageParser, CsvPandasParser, JsonParser]
     parser_by_extension = {}
 
     for parser in parsers:

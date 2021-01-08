@@ -1,21 +1,12 @@
 from abc import ABC, abstractmethod
-from typing import Any, Dict
+from typing import Any, Dict, List
 
+from poif.data.datapoint.base import TaggedData
 from poif.typing import FileHash, RelFilePath
 
 
-class Origin(ABC):
-    @property
+class VersioningCollectionOrigin(ABC):
     @abstractmethod
-    def dataset_tag(self) -> str:
+    def get_files(self) -> List[TaggedData]:
         pass
 
-    @property
-    @abstractmethod
-    def origin_tag(self) -> str:
-        pass
-
-    @property
-    @abstractmethod
-    def tag_to_original_file(self) -> Dict[FileHash, RelFilePath]:
-        pass
