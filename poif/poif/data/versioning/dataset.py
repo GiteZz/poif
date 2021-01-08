@@ -175,6 +175,18 @@ class RepoVersionedCollection(VersionedCollection):
         return self._mappings
 
 
+class HttpVersionedCollection(VersionedCollection):
+    # TODO
+    def __init__(self, datacache_url: str, git_url: str, git_commit: str):
+        pass
+
+    def get_files(self) -> List[TaggedData]:
+        pass
+
+    def get_mappings(self) -> List[TaggedData]:
+        pass
+
+
 if __name__ == "__main__":
     repo = RepoVersionedCollection(git_url='http://localhost:360/root/datasets-5729607b-372d-4422-bd2b-1db968099ef9.git', git_commit='fa2aa394f3a69654ecdf2e6e2c8b6a244ff482cb')
 

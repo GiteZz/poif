@@ -4,6 +4,7 @@ from typing import Union
 from fuse import FUSE, Operations
 
 from poif.data.file_system.io import Directory, File
+from poif.data.versioning.dataset import VersionedCollection, RepoVersionedCollection
 
 
 class DataSetFileSystem(Operations):
@@ -11,13 +12,18 @@ class DataSetFileSystem(Operations):
     A read only http/https/ftp filesystem.
     """
 
-    def __init__(self, root_dir: Directory):
+    def __init__(self, root_dir: Directory, collection: VersionedCollection):
         f = open("/home/gilles/datasets/pneunomia/test/NORMAL/IM-0001-0001.jpeg", "rb")
         num = bytearray(f.read())
 
         self.file = num
 
         self.root_dir = root_dir
+
+        data_points = collection.get_files()
+
+        for data_point in data_points:
+            self.root_dir.add_tagged_data(data_point)
 
     def path_to_object(self, path: str) -> Union[Directory, File]:
         path_parts = path.split('/')
@@ -70,16 +76,22 @@ class DataSetFileSystem(Operations):
 
 
 if __name__ == "__main__":
-    img_dir = Directory({'01.jpg': File(), '02.jpg': File()})
-    mask_dir = Directory({'03.jpg': File(), '04.jpg': File()})
+    # img_dir = Directory({'01.jpg': File(), '02.jpg': File()})
+    # mask_dir = Directory({'03.jpg': File(), '04.jpg': File()})
+    #
+    # train_dir = Directory({'mask': mask_dir, 'image': img_dir})
+    #
+    # root_dir = Directory({'train': train_dir, 'val': copy.deepcopy(train_dir)})
 
-    train_dir = Directory({'mask': mask_dir, 'image': img_dir})
+    root_dir = Directory()
 
-    root_dir = Directory({'train': train_dir, 'val': copy.deepcopy(train_dir)})
+    git_url = 'https://github.ugent.be/gballege/minimal_pneumonia'
+    git_commit = '59384bc93c29feaf775c051d6421ead9d76388f7'
 
     fuse = FUSE(
         DataSetFileSystem(
-            root_dir=root_dir
+            root_dir=root_dir,
+            collection=RepoVersionedCollection(git_url, git_commit)
         ),
         '/home/gilles/fuse_test',
         foreground=True,

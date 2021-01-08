@@ -1,6 +1,5 @@
 from typing import Any, Dict, List, Union
 
-from poif.data.access.dataquery import DataQuery
 from poif.data.access.input import Input
 from poif.data.access.transform import (DataPointSplitter,
                                         DataPointTransformation,
@@ -34,19 +33,19 @@ class BaseDataset:
 class Dataset(BaseDataset):
     def __init__(self,
                  inputs: List[Input],
-                 data_query: DataQuery,
-                 dataset_splits: Dict[str, List[Input]] = None
+                 dataset_splits: Dict[str, List[Input]] = None,
+                 output_filter=None
                  ):
 
         # Make sure self.metadata_processors is always a list.
-        super().__init__(inputs, data_query.output_filter)
-        self.data_query = data_query
+        super().__init__(inputs, output_filter)
         self.dataset_splits = dataset_splits
+        self.output_filter = output_filter
 
     def __getattr__(self, item):
         try:
             if item in self.dataset_splits:
-                return BaseDataset(self.dataset_splits[item], output_filter=self.data_query.output_filter)
+                return BaseDataset(self.dataset_splits[item], output_filter=self.output_filter)
             else:
                 raise AttributeError()
         except:

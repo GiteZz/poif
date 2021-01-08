@@ -24,7 +24,7 @@ add_label_transformation = DataPointTransformation(add_label)
 
 
 def filter_output(ds_item: Input) -> Tuple[np.ndarray, str]:
-    return ds_item.data.get(), ds_item.label
+    return ds_item.data.get_parsed(), ds_item.label
 
 
 output_filter = OutputFilter(filter_output)
