@@ -49,6 +49,9 @@ class S3Remote(FileRemote):
     def upload_file(self, source: Path, dest: str):
         self.get_bucket().upload_file(str(source), dest)
 
+    def __repr__(self):
+        return f'<S3Remote url: {self.config.url}, bucket: {self.config.bucket}, profile: {self.config.profile} >'
+
 
 @dataclass
 class TaggedS3(FileRemoteTaggedRepo):

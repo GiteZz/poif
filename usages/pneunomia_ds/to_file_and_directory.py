@@ -13,7 +13,8 @@ data_points = collection.get_files()
 root_dir = Directory()
 
 for data_point in data_points:
-    root_dir.add_tagged_data(data_point)
+    # self.root_dir.add_tagged_data(data_point)
+    print(data_point.size)
 
 a = 5
 

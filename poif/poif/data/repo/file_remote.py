@@ -17,13 +17,14 @@ class FileRemoteTaggedRepo(TaggedRepo):
     data_folder: str
 
     def get_remote_name(self, tag: str):
-        return f'{self.data_folder}/{tag[:2]}/{tag[2:]}'
+        remote_name = f'{self.data_folder}/{tag[:2]}/{tag[2:]}'
+        return remote_name
 
     def get_from_tag(self, tag: str):
         return self.remote.download(self.get_remote_name(tag))
 
     def get_object_size_from_tag(self, tag: str):
-        self.remote.get_object_size(self.get_remote_name(tag))
+        return self.remote.get_object_size(self.get_remote_name(tag))
 
     def upload(self, data: 'TaggedData'):
         self.remote.upload(data.get(), self.get_remote_name(data.tag))
