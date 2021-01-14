@@ -16,18 +16,21 @@ class DockerConfig:
     commands: List[str] = field(default_factory=list)
     envs: Dict[str, str] = None
     ports: Dict[Union[str, int], Union[str, int]] = None
+    volumes: Dict[str, Dict[str, str]] = None
 
 
 def docker_run(config: DockerConfig):
     if not is_alive(config.readiness_url):
         client = docker.from_env()
+        client.containers.prune() # TODO dangerous
 
         client.containers.run(image=config.image,
                               environment=config.envs,
                               ports=config.ports,
                               name=config.name,
                               detach=True,
-                              command=config.command
+                              command=config.command,
+                              volumes=config.volumes
                               )
 
         wait_on_url(config.readiness_url)

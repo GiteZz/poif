@@ -49,3 +49,16 @@ class LazyLoadedTaggedData(TaggedData, ABC):
     @abstractmethod
     def set_tag(self):
         pass
+
+
+class TaggedPassthrough(TaggedData):
+    def __init__(self, tagged_data: TaggedData):
+        self.tagged_data = tagged_data
+        super().__init__(self.tagged_data.relative_path)
+
+    @property
+    def size(self) -> int:
+        return self.tagged_data.size
+
+    def get(self) -> bytes:
+        return self.tagged_data.get()

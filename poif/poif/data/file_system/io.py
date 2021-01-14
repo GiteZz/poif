@@ -4,6 +4,7 @@ from time import time
 from typing import Dict, Union, List
 
 from poif.data.datapoint.base import TaggedData
+from poif.data.file_system.partial import PartialGetWrapper
 
 
 class Directory:
@@ -34,7 +35,7 @@ class Directory:
 
         self.contents[new_folder_name].add_file(folders[1:], file_name, data)
 
-    def add_tagged_data(self, data: TaggedData):
+    def add_tagged_data(self, data: PartialGetWrapper):
         levels = data.relative_path.split('/')
         file_name = levels[-1]
         folders = levels[:-1]
@@ -46,7 +47,7 @@ class Directory:
 
 
 class File:
-    def __init__(self, name: str, data: TaggedData):
+    def __init__(self, name: str, data: PartialGetWrapper):
         self.name = name
         self.data = data
 
@@ -60,3 +61,6 @@ class File:
             st_mtime=modification_time,  # Time of last modification
             st_atime=access_time,  # Time of last access
         )
+
+    def partial_read(self, offset: int, length: int):
+        return self.data.get_partial(offset, length)

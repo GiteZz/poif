@@ -1,10 +1,13 @@
 import copy
 from typing import Union
 
-from fuse import FUSE, Operations
+from fuse import FUSE, Operations, FuseOSError
 
 from poif.data.file_system.io import Directory, File
+from poif.data.file_system.partial import PartialGetWrapper
 from poif.data.versioning.dataset import VersionedCollection, RepoVersionedCollection
+
+import errno
 
 
 class DataSetFileSystem(Operations):
@@ -23,7 +26,7 @@ class DataSetFileSystem(Operations):
         data_points = collection.get_files()
 
         for data_point in data_points:
-            self.root_dir.add_tagged_data(data_point)
+            self.root_dir.add_tagged_data(PartialGetWrapper(data_point))
 
     def path_to_object(self, path: str) -> Union[Directory, File]:
         path_parts = path.split('/')
@@ -34,9 +37,12 @@ class DataSetFileSystem(Operations):
             # root dir
             return self.root_dir
 
-        current_object = self.root_dir
-        for access_name in path_parts:
-            current_object = current_object.contents[access_name]
+        try:
+            current_object = self.root_dir
+            for access_name in path_parts:
+                current_object = current_object.contents[access_name]
+        except:
+            raise FuseOSError(errno.ENOENT)
 
         return current_object
 
@@ -56,9 +62,11 @@ class DataSetFileSystem(Operations):
         return 0
 
     def create(self, path, mode, fi=None):
+        print("creating")
         return 0
 
     def write(self, path, buf, size, offset, fip):
+        print("writing")
         return 0
 
     def read(self, path, size, offset, fh):
@@ -68,8 +76,9 @@ class DataSetFileSystem(Operations):
             return
         if '.' == path[1]:
             return
-        if path == '/Hello':
-            return bytes(self.file[offset: offset + size])
+
+        object_pointer = self.path_to_object(path)
+        return object_pointer.partial_read(offset, size)
 
     def destroy(self, path):
         return 0
@@ -85,8 +94,8 @@ if __name__ == "__main__":
 
     root_dir = Directory()
 
-    git_url = 'https://github.ugent.be/gballege/minimal_pneumonia'
-    git_commit = '59384bc93c29feaf775c051d6421ead9d76388f7'
+    git_url = 'https://github.ugent.be/gballege/minimal_pneumonia.git'
+    git_commit = '85d749fd6422af1a178013c45c304576939d3b4c'
 
     fuse = FUSE(
         DataSetFileSystem(

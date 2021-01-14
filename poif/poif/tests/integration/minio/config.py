@@ -10,6 +10,7 @@ class MinioConfig:
     profile = 'datasets'
     data_bucket = 'datasets'
     readme_bucket = 'readme-images'
+    mount_dir = '/mnt/datasets_minio'
 
     def get_docker_config(self) -> DockerConfig:
         image: str = 'minio/minio'
@@ -26,12 +27,20 @@ class MinioConfig:
         }
         readiness_url = f'http://localhost:{self.port}'
 
+        volumes = {
+            self.mount_dir: {
+                'bind': '/data',
+                'mode': 'rw'
+            }
+        }
+
         return DockerConfig(image=image,
                             name=name,
                             restart_if_active=restart_if_active,
                             readiness_url=readiness_url,
                             envs=envs,
                             ports=ports,
-                            command=command
+                            command=command,
+                            volumes=volumes
                             )
 

@@ -8,7 +8,7 @@ def cleanup(args):
         if file_path.exists():
             file_path.unlink()
 
-    possible_directories = ['datasets', '.cache']
+    possible_directories = ['datasets', '.cache', '.git']
     for directory in possible_directories:
         directory_path = Path.cwd() / directory
         if directory_path.exists():
