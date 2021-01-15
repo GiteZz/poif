@@ -11,3 +11,8 @@ def gitlab_setup(config: GitlabConfig):
     wait_on_url(config.get_docker_config().readiness_url)
 
     add_git_credential(username=config.user, password=config.password, url=config.url)
+
+
+if __name__ == "__main__":
+    config = GitlabConfig()
+    gitlab_setup(config)

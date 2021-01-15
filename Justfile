@@ -1,6 +1,9 @@
-setup-environment:
-    python ./poif/poif/tests/gitlab/start.py
-    python ./poif/poif/tests/minio/start.py
+setup-test-environment:
+    python ./poif/poif/tests/gitlab/setup.py
+    python ./poif/poif/tests/minio/setup.py
+
+setup-test-minio:
+    python ./poif/poif/tests/integration/minio/setup.py
 
 get-repo:
     python ./poif/poif/tests/gitlab/get_repo.py

@@ -1,15 +1,14 @@
 from collections import defaultdict
 
 from dataclasses import dataclass
-from enum import Enum
 from typing import List, Union, Dict
 
 from poif.data.access.dataset import SplitterType, TransformationType, Dataset
 from poif.data.access.input import Input
-from poif.data.access.transform import (DataPointSplitter,
-                                        DataPointTransformation,
-                                        DataSetSplitter, DataSetTransformation,
-                                        OutputFilter)
+from poif.data.transform.transform import (DataPointSplitter,
+                                           DataPointTransformation,
+                                           DataSetSplitter, DataSetTransformation,
+                                           OutputFilter)
 from poif.data.versioning.dataset import VersionedCollection, RepoVersionedCollection
 
 
@@ -60,6 +59,8 @@ class DataQuery:
         data_splits = self.split_inputs(inputs)
 
         return Dataset(inputs=inputs, dataset_splits=data_splits, output_filter=self.output_filter)
+
+    def from_dataset_template(self, template):
 
     def get_inputs(self) -> List[Input]:
         files = self._data_collection.get_files()

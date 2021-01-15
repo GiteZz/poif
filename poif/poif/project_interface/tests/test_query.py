@@ -6,9 +6,9 @@ import pytest
 
 from poif.data.access.dataquery import DataQuery
 from poif.data.access.input import Input
-from poif.data.access.transform import (DataPointSplitter,
-                                        DataPointTransformation,
-                                        DataSetTransformation)
+from poif.data.transform.transform import (DataPointSplitter,
+                                           DataPointTransformation,
+                                           DataSetTransformation)
 from poif.data.datapoint.base import StringLocation
 from poif.project_interface.ops.data_query import (split_inputs,
                                                    transform_inputs)

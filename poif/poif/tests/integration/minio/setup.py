@@ -32,3 +32,8 @@ def get_remote_from_config(config: MinioConfig) -> S3Remote:
     data_config = S3Config(url=f'http://localhost:{config.port}', bucket='datasets', profile='datasets')
 
     return data_config.get_configured_remote()
+
+
+if __name__ == "__main__":
+    config = MinioConfig()
+    minio_setup(config)

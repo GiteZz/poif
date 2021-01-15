@@ -1,10 +1,10 @@
 from typing import Any, Dict, List, Union
 
 from poif.data.access.input import Input
-from poif.data.access.transform import (DataPointSplitter,
-                                        DataPointTransformation,
-                                        DataSetSplitter, DataSetTransformation,
-                                        OutputFilter)
+from poif.data.transform.transform import (DataPointSplitter,
+                                           DataPointTransformation,
+                                           DataSetSplitter, DataSetTransformation,
+                                           OutputFilter)
 
 SplitterType = Union[DataPointSplitter, DataSetSplitter]
 TransformationType = Union[DataPointTransformation, DataSetTransformation]
