@@ -62,11 +62,21 @@ def mask_dataset(imgs_per_set=10, sub_datasets=None) -> List[TaggedData]:
 
 def test_combining_mask_img(mask_dataset):
     operation_list = [
-        CombineByTemplate({'image': '*/mask*', 'mask': '*/mask*.jpg'})
+        CombineByTemplate({'image': '*/image*.jpg', 'mask': '*/mask*.jpg'})
     ]
 
     ds = TaggedDataDataset(operations=operation_list)
     ds.form(mask_dataset)
 
-    assert len(mask_dataset) // 2 == len(ds)
+    collected_images = [ds_input.image for ds_input in ds.inputs]
+    collected_masks = [ds_input.mask for ds_input in ds.inputs]
+
+    for image, mask in zip(collected_images, collected_masks):
+        assert collected_images.count(image) == 1
+        assert collected_masks.count(mask) == 1
+
+    for ds_input in ds:
+        img_data = ds_input.image.relative_path.replace('image', '')
+        mask_data = ds_input.mask.relative_path.replace('mask', '')
+        assert img_data == mask_data
 

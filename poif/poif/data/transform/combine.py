@@ -19,6 +19,8 @@ class CombineByTemplate(DataSetTransformation):
         value_bins = defaultdict(dict)
         for ds_input in dataset:
             for template_name, template in value_templates.items():
+                if not is_path_match(template, ds_input[self.input_item]):
+                    continue
                 values = extract_values(template=template, path=ds_input[self.input_item])
                 hashable_values = tuple(sorted(values.items()))
                 value_bins[hashable_values][template_name] = ds_input

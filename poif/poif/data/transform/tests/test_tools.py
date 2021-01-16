@@ -96,6 +96,8 @@ def test_pair_collecter(mask_inputs):
     for new_input in collected_inputs:
         assert new_input.image.data == new_input.mask.data
 
+    assert len(mask_inputs) == 2 * len(collected_inputs)
+
 
 def test_split_by_template(mask_inputs):
     dataset_type_splitter = SplitByTemplate('{{ dataset_type }}/{{ data_type }}/*', subset_tag='dataset_type')
