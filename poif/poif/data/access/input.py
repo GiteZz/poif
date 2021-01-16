@@ -2,26 +2,24 @@ from dataclasses import dataclass
 from typing import Any, Dict, List, Union
 
 
-class Input:
+class Input(dict):
     meta_data = None
     future_transforms = None
 
-    def __init__(self, meta_data: Dict, future_transforms: List[Any]=None):
-        self.meta_data = meta_data
-        self.future_transforms = future_transforms
+    def __init__(self, meta_data: dict = None):
+        super().__init__()
+        if meta_data is not None:
+            for key, value in meta_data.items():
+                self[key] = value
 
     def __getattr__(self, item):
         try:
-            return self.meta_data[item]
+            return self[item]
         except:
             raise AttributeError()
 
     def __setattr__(self, key, value):
-        if hasattr(self, key):
-            super(Input, self).__setattr__(key, value)
-            return
-        else:
-            self.meta_data[key] = value
+        self[key] = value
 
 
 @dataclass

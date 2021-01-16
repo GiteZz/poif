@@ -5,7 +5,7 @@ from poif.data.datapoint.base import StringLocation
 def test_setting_data():
     meta_data = {
         'file_name': '01.jpg',
-        'rel_file_path': 'test/img_rgb'
+        'relative_path': 'test/img_rgb'
     }
     new_input = Input(meta_data)
 

@@ -19,27 +19,27 @@ def meta_input_list():
     meta_data_list = [
         {
             'file_name': '00.jpg',
-            'rel_file_path': 'train/img_rgb'
+            'relative_path': 'train/img_rgb'
         },
         {
             'file_name': '00.jpg',
-            'rel_file_path': 'train/img_bw'
+            'relative_path': 'train/img_bw'
         },
         {
             'file_name': '00.jpg',
-            'rel_file_path': 'train/mask'
+            'relative_path': 'train/mask'
         },
         {
             'file_name': '01.jpg',
-            'rel_file_path': 'test/img_rgb'
+            'relative_path': 'test/img_rgb'
         },
         {
             'file_name': '01.jpg',
-            'rel_file_path': 'test/img_bw'
+            'relative_path': 'test/img_bw'
         },
         {
             'file_name': '01.jpg',
-            'rel_file_path': 'test/mask'
+            'relative_path': 'test/mask'
         }
     ]
     return [Input(
@@ -70,7 +70,7 @@ def combine_mask_and_img(meta_inputs: List[Input]) -> List[Input]:
             print('WARNING: no two meta inputs as expected')
             continue
         new_input = Input({})
-        if 'mask' in input_list[0].rel_file_path:
+        if 'mask' in input_list[0].relative_path:
             new_input.data.mask = input_list[0].data
             new_input.data.img = input_list[1].data
         else:

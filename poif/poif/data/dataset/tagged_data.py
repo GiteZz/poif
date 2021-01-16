@@ -56,7 +56,7 @@ class TaggedDataBaseDataset(BaseDataset):
         input_list = []
         for file in data:
             meta_data = {
-                'rel_file_path': file.relative_path,
+                'relative_path': file.relative_path,
                 'data': file
             }
 
