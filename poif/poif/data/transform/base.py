@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 from typing import Any, Callable, Dict, List, Optional, Union
 
 from poif.data.access.input import Input
@@ -15,6 +16,12 @@ CallableOutputFilter = Callable[[Input], Any]
 
 
 class DataSetSplitter:
+    @abstractmethod
+    def __call__(self, dataset: List[Input]) -> Dict[str, List[Input]]:
+        pass
+
+
+class MethodDataSetSplitter(DataSetSplitter):
     def __init__(self, split_function: CallableDataSetSplitter):
         self.function = split_function
 
@@ -22,7 +29,13 @@ class DataSetSplitter:
         return self.function(dataset)
 
 
-class DataPointSplitter:
+class DataPointSplitter(ABC):
+    @abstractmethod
+    def __call__(self, datapoint: Input) -> str:
+        pass
+
+
+class MethodDataPointSplitter(DataPointSplitter):
     def __init__(self, split_function: CallableDataPointSplitter):
         self.function = split_function
 
@@ -31,6 +44,12 @@ class DataPointSplitter:
 
 
 class DataPointTransformation:
+    @abstractmethod
+    def __call__(self, datapoint: Input) -> Union[Input, List[Input]]:
+        pass
+
+
+class MethodDataPointTransformation(DataPointTransformation):
     def __init__(self, transformation: CallableDataPointTransformation):
         self.function = transformation
 
@@ -38,10 +57,17 @@ class DataPointTransformation:
         return self.function(datapoint)
 
 
-class DataSetTransformation:
+class DataSetTransformation(ABC):
+    @abstractmethod
+    def __call__(self, dataset: List[Input]) -> List[Input]:
+        pass
+
+
+class MethodDataSetTransformation(DataSetTransformation):
     def __init__(self, transformation: CallableDataSetTransformation):
         self.function = transformation
 
+    @abstractmethod
     def __call__(self, dataset: List[Input]) -> List[Input]:
         return self.function(dataset)
 

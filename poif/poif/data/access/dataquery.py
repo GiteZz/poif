@@ -5,10 +5,10 @@ from typing import List, Union, Dict
 
 
 from poif.data.access.input import Input
-from poif.data.transform.transform import (DataPointSplitter,
-                                           DataPointTransformation,
-                                           DataSetSplitter, DataSetTransformation,
-                                           OutputFilter)
+from poif.data.transform.base import (DataPointSplitter,
+                                      DataPointTransformation,
+                                      DataSetSplitter, DataSetTransformation,
+                                      OutputFilter)
 from poif.data.versioning.dataset import VersionedCollection, RepoVersionedCollection
 
 

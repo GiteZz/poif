@@ -1,4 +1,4 @@
-from poif.data.transform.transform import (
+from poif.data.transform.base import (
     DataPointSplitter,
     DataPointTransformation,
     OutputFilter

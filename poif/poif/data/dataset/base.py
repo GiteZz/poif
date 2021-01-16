@@ -3,10 +3,10 @@ from abc import ABC, abstractmethod
 
 from poif.data.access.input import Input
 from poif.data.datapoint.base import TaggedData
-from poif.data.transform.transform import (DataPointSplitter,
-                                           DataPointTransformation,
-                                           DataSetSplitter, DataSetTransformation,
-                                           OutputFilter)
+from poif.data.transform.base import (DataPointSplitter,
+                                      DataPointTransformation,
+                                      DataSetSplitter, DataSetTransformation,
+                                      OutputFilter)
 
 SplitterType = Union[DataPointSplitter, DataSetSplitter]
 TransformationType = Union[DataPointTransformation, DataSetTransformation]
