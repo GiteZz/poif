@@ -1,7 +1,11 @@
-from typing import List
+from typing import List, Callable, Optional, Union
 
 from poif.input.base import Input
-from poif.transform.base import Transformation, CallableDataPointTransformation, CallableDataSetTransformation
+from poif.input.transform.base import Transformation
+
+ZeroOrMoreMetaInput = Optional[Union[Input, List[Input]]]
+CallableDataPointTransformation = Callable[[Input], ZeroOrMoreMetaInput]
+CallableDataSetTransformation = Callable[[List[Input]], List[Input]]
 
 
 class MethodTransformation(Transformation):
@@ -17,7 +21,7 @@ class MethodTransformation(Transformation):
         self.single_transform = single_transform
         self.multi_transform = multi_transform
 
-    def single_input_transform(self, ds_input: Input) -> List[Input]:
+    def transform_single_input(self, ds_input: Input) -> List[Input]:
         if self.single_transform is not None:
             transformed_sample = self.single_transform(ds_input)
             if transformed_sample is None:
@@ -26,10 +30,10 @@ class MethodTransformation(Transformation):
                 return [transformed_sample]
             return transformed_sample
         else:
-            return super().single_input_transform(ds_input)
+            return super().transform_single_input(ds_input)
 
-    def list_input_transform(self, inputs: List[Input]) -> List[Input]:
+    def transform_input_list(self, inputs: List[Input]) -> List[Input]:
         if self.multi_transform is not None:
             return self.multi_transform(inputs)
         else:
-            return super().list_input_transform(inputs)
+            return super().transform_input_list(inputs)

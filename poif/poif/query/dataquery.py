@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from typing import List
 
-from poif.transform.base import (DataPointSplitter,
-                                 DataPointTransformation,
-                                 DataSetSplitter, DataSetTransformation)
+from poif.input.transform.base import (DataPointSplitter,
+                                       DataPointTransformation,
+                                       DataSetSplitter, DataSetTransformation)
 from poif.versioning.dataset import VersionedCollection, RepoVersionedCollection
 
 

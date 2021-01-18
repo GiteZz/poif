@@ -1,14 +1,18 @@
-from poif.access import Input
-from poif.transform.combine import CombineByTemplate, SplitByTemplate, DropByTemplate
-from poif.transform.tools import is_path_match, extract_values, is_template_part, catch_all_to_value, \
-    replace_template_with_group
+from poif.dataset.tests.test_tagged_data import MockTaggedData
+from poif.input.base import Input
+from poif.input.tagged_data import TaggedDataInput
+from poif.input.transform.template import DropByTemplate, MaskByTemplate, MaskTemplate
+from poif.input.transform.tools import is_path_match, extract_values, is_template_part, catch_all_to_value, \
+    replace_template_with_regex_group
 import pytest
+
 
 def test_matching():
     assert is_path_match('*/mask_*.jpg', 'train/mask_01.jpg')
     assert is_path_match('train/mask_*.jpg', 'train/mask_01.jpg')
     assert not is_path_match('test/mask_*.jpg', 'train/mask_01.jpg')
     assert is_path_match('{{dataset_type}}/mask_{{img_id}}', 'train/mask_01.jpg')
+
 
 def test_extracting():
     assert extract_values('{{ dataset_type }}/*/*.jpg', 'train/image/01.jpg') == {'dataset_type': 'train'}
@@ -56,19 +60,29 @@ def test_catch_all_to_value():
 
 def test_replace_template_with_group():
     template = '{{ dataset_type }}/{{ data_type }}/*'
-    new_template, groups = replace_template_with_group(template)
+    new_template, groups = replace_template_with_regex_group(template)
     assert groups == ['dataset_type', 'data_type']
     assert new_template == '(.*)/(.*)/*'
 
     template = '{{ dataset_type }}/mask_{{ data_type }}/*'
-    new_template, groups = replace_template_with_group(template)
+    new_template, groups = replace_template_with_regex_group(template)
     assert groups == ['dataset_type', 'data_type']
     assert new_template == '(.*)/mask_(.*)/*'
 
     template = '{{ dataset_type }}/mask_01.jpg'
-    new_template, groups = replace_template_with_group(template)
+    new_template, groups = replace_template_with_regex_group(template)
     assert groups == ['dataset_type']
     assert new_template == '(.*)/mask_01.jpg'
+
+    template = '{{ dataset_type }}/mask_{{}}'
+    new_template, groups = replace_template_with_regex_group(template)
+    assert groups == ['dataset_type', '_0']
+    assert new_template == '(.*)/mask_(.*)'
+
+    template = '{{}}/mask_{{}}'
+    new_template, groups = replace_template_with_regex_group(template)
+    assert groups == ['_0', '_1']
+    assert new_template == '(.*)/mask_(.*)'
 
 @pytest.fixture
 def mask_inputs():
@@ -76,25 +90,21 @@ def mask_inputs():
     for subset_name in ['train', 'test', 'val']:
         for img_type in ['mask', 'image']:
             for img_index in range(10):
-                metadata = {
-                    'data': f'{subset_name}{img_index}',
-                    'relative_path': f'{subset_name}/{img_type}/{img_index}.jpg'
-                }
-                inputs.append(Input(metadata))
+                tagged_data = MockTaggedData(
+                    relative_path=f'{subset_name}/{img_type}/{img_index}.jpg',
+                    data='{subset_name}{img_index}'
+                )
+                inputs.append(TaggedDataInput(tagged_data))
 
     return inputs
 
 
 def test_pair_collecter(mask_inputs):
-    match_template = {
-        'mask': '*/mask/*.jpg',
-        'image': '*/image/*.jpg'
-    }
-
-    collected_inputs = CombineByTemplate(match_template)(mask_inputs)
+    collected_inputs = MaskByTemplate(MaskTemplate(image='{{}}/image/{{}}.jpg', mask='{{}}/mask/{{}}.jpg'))(mask_inputs)
 
     for new_input in collected_inputs:
-        assert new_input.image.data == new_input.mask.data
+        image, mask = new_input.output()
+        assert image == mask
 
     assert len(mask_inputs) == 2 * len(collected_inputs)
 

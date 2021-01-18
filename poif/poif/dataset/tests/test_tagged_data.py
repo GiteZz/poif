@@ -2,7 +2,7 @@ from poif.tagged_data.base import TaggedData
 from typing import Any
 
 from poif.dataset.tagged_data import TaggedDataDataset
-from poif.transform.combine import CombineByTemplate, DropByTemplate, SplitByTemplate
+from poif.input.transform.template import DropByTemplate
 from poif.tests import get_img
 
 

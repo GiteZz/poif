@@ -9,7 +9,7 @@ import numpy as np
 
 from poif.git.file import FileCreatorMixin
 from poif.remote.base import FileRemote
-from poif.repo import FileRemoteTaggedRepo
+from poif.repo.file_remote import FileRemoteTaggedRepo
 
 
 def get_img():

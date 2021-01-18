@@ -12,10 +12,11 @@ def get_template_str(part: str):
 
 def template_to_regex(template: str):
     new_template = template.replace('.', '[.]').replace('*', '.*')
-    new_template, groupes = replace_template_with_group(new_template)
+    new_template, groupes = replace_template_with_regex_group(new_template)
     return new_template, groupes
 
-def replace_template_with_group(template: str):
+
+def replace_template_with_regex_group(template: str):
     groups = []
     group_indices = []
     start_index = None
@@ -25,8 +26,7 @@ def replace_template_with_group(template: str):
             start_index = index
         if template[index] == '}' and template[index + 1] == '}':
             stop_index = index + 2
-            raw_group_name = template[start_index: stop_index]
-            group_name = raw_group_name.replace('{', '').replace('}', '').replace(' ', '')
+            group_name = get_template_str(template[start_index: stop_index])
             groups.append(group_name)
             group_indices.append((start_index, stop_index))
             start_index = None
@@ -36,6 +36,12 @@ def replace_template_with_group(template: str):
         prefix = new_template[:start_index]
         suffix = new_template[stop_index:]
         new_template = prefix + '(.*)' + suffix
+
+    empty_count = 0
+    for index, group_name in enumerate(groups):
+        if group_name == '':
+            groups[index] = f'_{empty_count}'
+            empty_count += 1
 
     return new_template, groups
 

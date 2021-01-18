@@ -2,17 +2,11 @@ from typing import List, Union
 from abc import ABC, abstractmethod
 
 from poif.tagged_data.base import TaggedData
-from poif.transform.base import (DataPointSplitter,
-                                 DataPointTransformation,
-                                 DataSetSplitter, DataSetTransformation)
-
-SplitterType = Union[DataPointSplitter, DataSetSplitter]
-TransformationType = Union[DataPointTransformation, DataSetTransformation]
 
 
 class BaseDataset(ABC):
     def create_file_system(self, data_format: str):
-        raise NotImplementedError
+        raise Exception('File system not supported for this dataset')
 
     @abstractmethod
     def form(self, data: List[TaggedData]):
