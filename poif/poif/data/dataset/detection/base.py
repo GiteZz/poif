@@ -9,28 +9,7 @@ from poif.data.datapoint.base import TaggedData
 from poif.typing import RelFilePath, DatasetType
 
 
-@dataclass
-class DetectionAnnotation:
-    category_id: int
-    x: float
-    y: float
-    w: float
-    h: float
 
-    def coco_bbox(self, img_width, img_height):
-        return f'{int(self.x * img_width)} {int(self.y * img_height)} ' \
-               f'{int(self.w * img_width)} {int(self.h * img_height)}'
-
-
-@dataclass
-class DetectionInput:
-    image: TaggedData
-    img_width: int = None
-    img_height: int = None
-    annotations: List[DetectionAnnotation] = field(default_factory=list)
-
-    def add_annotation(self, annotation: DetectionAnnotation):
-        self.annotations.append(annotation)
 
 
 class DetectionFileOutputFormat(str, Enum):

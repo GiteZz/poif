@@ -36,6 +36,7 @@ setuptools.setup(
         'dataclasses_json',
         'opencv-python',
         'awscli',
-        'flask'
+        'flask',
+        'pandas'
     ]
 )

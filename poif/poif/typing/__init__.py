@@ -4,7 +4,8 @@ from typing import Dict, List, Optional, Union
 FileHash = str
 RelFilePath = str
 DatasetType = str  # train, test, val, ...
-path_template = str
+PathTemplate = str
+SubSetName = str
 
 URL = str
 UrlParams = Dict[str, str]

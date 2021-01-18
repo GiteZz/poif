@@ -37,7 +37,7 @@ class TaggedDataDataset(MultiDataset):
     def next_operation(self):
         if self.operations is None or len(self.operations) == 0:
             return
-        current_operation = self.operations[0]
+        current_operation = self.operations.pop(0)
         self.apply_operation(current_operation)
 
     def apply_operation(self, operation: Operation):
@@ -47,7 +47,6 @@ class TaggedDataDataset(MultiDataset):
             self.apply_transformation(operation)
         else:
             raise Exception('Unknown type of operation')
-        self.operations = self.operations[1:]
         self.next_operation()
 
     def is_splitter(self, operation: Operation) -> bool:
@@ -70,7 +69,7 @@ class TaggedDataDataset(MultiDataset):
 
     def add_splitter_dict(self, splitter_dict):
         for subset_name, inputs in splitter_dict.items():
-            new_dataset = TaggedDataDataset()
+            new_dataset = TaggedDataDataset(operations=self.operations)
             new_dataset.form_from_inputs(inputs)
 
             self.splits[subset_name] = new_dataset

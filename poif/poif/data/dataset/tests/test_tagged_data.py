@@ -2,7 +2,7 @@ from poif.data.datapoint.base import TaggedData
 from typing import Any, List, Dict
 
 from poif.data.dataset.tagged_data import TaggedDataDataset
-from poif.data.transform.combine import CombineByTemplate
+from poif.data.transform.combine import CombineByTemplate, DropByTemplate, SplitByTemplate
 from poif.tests import get_img
 
 
@@ -80,3 +80,40 @@ def test_combining_mask_img(mask_dataset):
         mask_data = ds_input.mask.relative_path.replace('mask', '')
         assert img_data == mask_data
 
+
+def test_dropping(mask_dataset):
+    operation_list = [
+        DropByTemplate('*/mask*.jpg')
+    ]
+
+    ds = TaggedDataDataset(operations=operation_list)
+    ds.form(mask_dataset)
+
+    assert len(ds) * 2 == len(mask_dataset)
+
+    for ds_input in ds:
+        assert 'mask' not in ds_input.relative_path
+
+
+def test_splitting(mask_dataset):
+    operation_list = [
+        SplitByTemplate('{{ subset }}/*')
+    ]
+
+    ds = TaggedDataDataset(operations=operation_list)
+    ds.form(mask_dataset)
+
+    assert len(ds.train) + len(ds.test) + len(ds.val) == len(ds)
+    assert len(ds) == len(mask_dataset)
+
+
+def test_splitting_and_combining(mask_dataset):
+    operation_list = [
+        SplitByTemplate('{{ subset }}/*'),
+        CombineByTemplate({'image': '*/image*.jpg', 'mask': '*/mask*.jpg'})
+    ]
+
+    ds = TaggedDataDataset(operations=operation_list)
+    ds.form(mask_dataset)
+
+    assert (len(ds.train) + len(ds.test) + len(ds.val)) * 2 == len(ds)

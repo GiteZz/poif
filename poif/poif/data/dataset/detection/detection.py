@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 from poif.data.dataset.base import MultiDataset, BaseDataset
 
 from poif.data.datapoint.base import TaggedData
-from poif.data.dataset.detection.base import DetectionInput, DetectionAnnotation
+from poif.data.input.detection import DetectionInput, DetectionAnnotation
 from poif.typing import RelFilePath, DatasetType
 
 
@@ -71,6 +71,9 @@ class CocoDetectionTemplate(MultiDataset):
         pass
 
     def __getitem__(self, idx: int):
+        pass
+
+    def create_file_system(self, data_format: str):
         pass
 
 

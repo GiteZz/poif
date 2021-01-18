@@ -1,14 +1,15 @@
 from collections import defaultdict
 from typing import Dict, List, Union
 
-from poif.data.access.input import Input
+from poif.data.input.base import Input
+from poif.data.input.tagged_data import TaggedDataInput
 from poif.data.transform.tools import extract_values, catch_all_to_value, is_path_match
 from poif.data.transform.base import DataSetTransformation, DataPointSplitter, DataPointTransformation
-from poif.typing import path_template
+from poif.typing import PathTemplate, SubSetName
 
 
 class CombineByTemplate(DataSetTransformation):
-    def __init__(self, match_templates: Dict[str, path_template], input_item='relative_path'):
+    def __init__(self, match_templates: Dict[SubSetName, PathTemplate], input_item='relative_path'):
         self.match_templates = match_templates
         self.input_item = input_item
 
@@ -36,10 +37,8 @@ class CombineByTemplate(DataSetTransformation):
 
 
 class SplitByTemplate(DataPointSplitter):
-    def __init__(self, template: str, input_item='relative_path', subset_tag='subset'):
+    def __init__(self, template: str):
         self.template = template
-        self.input_item = input_item
-        self.subset_tag = subset_tag
 
     def __call__(self, datapoint: Input) -> str:
         values = extract_values(self.template, datapoint[self.input_item])
@@ -51,8 +50,8 @@ class DropByTemplate(DataPointTransformation):
         self.template = template
         self.input_item = input_item
 
-    def __call__(self, datapoint: Input) -> Union[Input, List[Input]]:
-        if is_path_match(self.template, datapoint[self.input_item]):
+    def __call__(self, datapoint: TaggedDataInput) -> Union[Input, List[Input]]:
+        if is_path_match(self.template, datapoint.relative_path):
             return []
         else:
             return datapoint
