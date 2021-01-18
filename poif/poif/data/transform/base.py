@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Any, Callable, Dict, List, Optional, Union
 
+from poif.typing import SubSetName
+
 from poif.data.access.input import Input
 
 ZeroOrMoreMetaInput = Optional[Union[Input, List[Input]]]
@@ -72,9 +74,31 @@ class MethodDataSetTransformation(DataSetTransformation):
         return self.function(dataset)
 
 
-class OutputFilter:
-    def __init__(self, filter: CallableOutputFilter):
-        self.function = filter
+class Transformation:
+    def single_input_transform(self, ds_input: Input) -> List[Input]:
+        raise Exception('Single input transform was not defined.')
 
-    def __call__(self, datapoint: Input) -> Any:
-        return self.function(datapoint)
+    def list_input_transform(self, inputs: List[Input]) -> List[Input]:
+        new_list = []
+        for ds_input in inputs:
+            new_list.extend(self.single_input_transform(ds_input))
+
+        return new_list
+
+    def __call__(self, inputs: List[Input]) -> List[Input]:
+        return self.list_input_transform(inputs)
+
+
+class Splitter:
+    def single_input_split(self, ds_input: Input) -> SubSetName:
+        raise Exception('Single input transform was not defined.')
+
+    def list_input_split(self, inputs: List[Input]) -> Dict[SubSetName, List[Input]]
+        new_list = []
+        for ds_input in inputs:
+            new_list.extend(self.single_input_transform(ds_input))
+
+        return new_list
+
+    def __call__(self, inputs: List[Input]) -> List[Input]:
+        return self.list_input_transform(inputs)
