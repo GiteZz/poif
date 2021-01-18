@@ -1,4 +1,4 @@
-from poif.cli.datasets.tools.cli import yes_with_question
+from poif.cli.tools.cli import yes_with_question
 from poif.config.base import Config
 from poif.config.remote.base import RemoteConfig
 

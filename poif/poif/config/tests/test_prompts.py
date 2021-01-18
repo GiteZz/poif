@@ -7,7 +7,7 @@ from poif.config.readme import ReadmeConfig
 from poif.config.remote.base import RemoteConfig, RemoteType
 from poif.config.remote.s3 import S3Config
 from poif.config.repo import DataRepoConfig
-from poif.data.packaging.base import PackageOptions
+from poif.packaging import PackageOptions
 from poif.tests import MonkeyPatchSequence, get_temp_file, get_temp_path
 
 

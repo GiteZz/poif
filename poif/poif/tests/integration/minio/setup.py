@@ -2,7 +2,7 @@ from typing import Tuple
 
 from poif.config.remote.base import RemoteConfig, RemoteType
 from poif.config.remote.s3 import S3Config
-from poif.data.remote.s3 import S3Remote
+from poif.remote.s3 import S3Remote
 from poif.tests.integration.docker import docker_run
 from poif.tests.integration.gitlab.wait import wait_on_url
 from poif.tests.integration.minio.config import MinioConfig

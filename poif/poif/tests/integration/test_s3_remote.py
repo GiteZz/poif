@@ -1,4 +1,3 @@
-from poif.data.remote.s3 import S3Remote
 from poif.tests import get_img_file
 from poif.tests.integration.minio.config import MinioConfig
 from poif.tests.integration.minio.setup import minio_setup, get_remote_from_config

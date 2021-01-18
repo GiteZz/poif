@@ -4,8 +4,8 @@ from poif.config.base import Config
 from poif.config.collection import DataCollectionConfig
 from poif.config.package import PackageConfig
 from poif.config.readme import ReadmeConfig
-from poif.data.git.file import FileCreatorMixin
-from poif.data.packaging.base import packages
+from poif.git.file import FileCreatorMixin
+from poif.packaging.base import packages
 
 
 class DataRepoConfig(Config, FileCreatorMixin):

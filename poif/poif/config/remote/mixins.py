@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from poif.data.remote.base import FileRemote
+from poif.remote.base import FileRemote
 
 
 class CreateRemoteMixin(ABC):

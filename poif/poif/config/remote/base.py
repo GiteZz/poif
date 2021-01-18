@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Union
 
-from poif.cli.datasets.tools.cli import answer_from_list, simple_input
+from poif.cli.datasets import answer_from_list, simple_input
 from poif.config.base import Config
 from poif.config.remote.s3 import S3Config
 

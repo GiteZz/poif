@@ -1,12 +1,8 @@
 import uuid
 from pathlib import Path
 
-import poif.data.repo.file_remote
 from poif.config.tests.test_prompts import get_repo_sequence
-from poif.data.repo.file_remote import (FileRemoteTaggedRepo,
-                                        get_remote_repo_from_config)
-from poif.tests import (MockGitRepo, MockTaggedRepo, MonkeyPatchSequence,
-                        create_data_folder, get_temp_path, write_image_in_file)
+from poif.tests import (MonkeyPatchSequence)
 from poif.tests.integration.gitlab.tools import create_repo
 from poif.tests.integration.setup import setup
 from poif.tests.repo import create_data_repo
@@ -25,7 +21,7 @@ def test_init(monkeypatch):
 
     monkeypatch.setattr(Path, 'cwd', lambda: base_dir)
 
-    from poif.cli.datasets.cli_commands.init import init
+    from poif.cli.commands import init
     init([])
 
 

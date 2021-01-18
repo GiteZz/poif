@@ -6,11 +6,10 @@ from typing import List
 
 import cv2
 import numpy as np
-import pytest
 
-from poif.data.git.file import FileCreatorMixin
-from poif.data.remote.base import FileRemote
-from poif.data.repo.file_remote import FileRemoteTaggedRepo
+from poif.git.file import FileCreatorMixin
+from poif.remote.base import FileRemote
+from poif.repo import FileRemoteTaggedRepo
 
 
 def get_img():

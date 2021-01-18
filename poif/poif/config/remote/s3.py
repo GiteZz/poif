@@ -1,12 +1,9 @@
 from typing import Set
 
-from pydantic import AnyUrl
-
-from poif.cli.datasets.tools.cli import simple_input
+from poif.cli.datasets import simple_input
 from poif.config.base import Config
 from poif.config.remote.mixins import CreateRemoteMixin
-from poif.data.remote.base import FileRemote
-from poif.data.remote.s3 import S3Remote
+from poif.remote.s3 import S3Remote
 
 
 class S3Config(Config, CreateRemoteMixin):

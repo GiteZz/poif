@@ -1,9 +1,9 @@
-from poif.data.transform.base import (
+from poif.transform.base import (
     DataPointSplitter,
     DataPointTransformation,
     OutputFilter
 )
-from poif.data.access.input import Input
+from poif.access import Input
 from typing import Tuple
 import numpy as np
 

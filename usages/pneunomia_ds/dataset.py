@@ -1,4 +1,4 @@
-from poif.data.access.dataquery import DataQuery
+from poif.access import DataQuery
 
 from filters import output_filter, add_label_transformation, data_splitter
 
