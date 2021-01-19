@@ -26,17 +26,18 @@ class CocoDetectionTemplate(MultiDataset):
 
         annotation_data = mapping[self.annotation_files[dataset_type]].get_parsed()
 
+        new_inputs = []
         img_id_to_index = {}
         for image_info in annotation_data['images']:
             img_id = image_info['id']
             img_id_to_index[img_id] = len(self.inputs)
 
             original_filename = self.data_folders[dataset_type] + f'/{image_info["file_name"]}'
-            self.inputs.append(DetectionInput(image=mapping[original_filename]))
+            new_inputs.append(DetectionInput(image=mapping[original_filename]))
 
         for annotation in annotation_data['annotations']:
             img_id = annotation['image_id']
-            current_input = self.inputs[img_id_to_index[img_id]]
+            current_input = new_inputs[img_id_to_index[img_id]]
             x, y, width, height = annotation['bbox']
 
             img_width = annotation_data['images'][img_id_to_index[img_id]]['width']
@@ -51,24 +52,15 @@ class CocoDetectionTemplate(MultiDataset):
                                                              h=height / img_height)
                                          )
 
-    def get_sub_dataset(self, key: str) -> BaseDataset:
-        pass
-
-    @property
-    def available_sub_datasets(self):
-        pass
+        return new_inputs
 
     def form(self, data: List[TaggedData]):
-        self.tagged_data = data
-
         sub_dataset_names = list(self.annotation_files.keys())
 
-
-    def __len__(self):
-        pass
-
-    def __getitem__(self, idx: int):
-        pass
+        for subset in sub_dataset_names:
+            new_inputs = self.parse_annotation_file(subset, data)
+            self.inputs.extend(new_inputs)
+            self.split_dict[subset] = new_inputs
 
     def create_file_system(self, data_format: str):
         pass

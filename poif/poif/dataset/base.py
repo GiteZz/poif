@@ -5,6 +5,9 @@ from poif.tagged_data.base import TaggedData
 
 
 class BaseDataset(ABC):
+    def __init__(self):
+        self.inputs = []
+
     def create_file_system(self, data_format: str):
         raise Exception('File system not supported for this dataset')
 
@@ -12,16 +15,18 @@ class BaseDataset(ABC):
     def form(self, data: List[TaggedData]):
         pass
 
-    @abstractmethod
     def __len__(self):
-        pass
+        len(self.inputs)
 
-    @abstractmethod
     def __getitem__(self, idx: int):
-        pass
+        return self.inputs[idx].output()
 
 
 class MultiDataset(BaseDataset, ABC):
+    def __init__(self):
+        super().__init__()
+        self.split_dict = {}
+
     def __getattr__(self, item) -> Union[BaseDataset, 'MultiDataset']:
         try:
             if item in self.available_sub_datasets:
@@ -31,11 +36,9 @@ class MultiDataset(BaseDataset, ABC):
         except:
             raise AttributeError
 
-    @abstractmethod
     def get_sub_dataset(self, key: str) -> BaseDataset:
-        pass
+        return self.split_dict[key]
 
     @property
-    @abstractmethod
     def available_sub_datasets(self):
-        pass
+        return list(self.split_dict.keys())
