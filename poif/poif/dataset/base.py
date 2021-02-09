@@ -1,5 +1,6 @@
 from typing import List, Union
 from abc import ABC, abstractmethod
+from pathlib import Path
 
 from poif.tagged_data.base import TaggedData
 
@@ -8,7 +9,7 @@ class BaseDataset(ABC):
     def __init__(self):
         self.inputs = []
 
-    def create_file_system(self, data_format: str):
+    def create_file_system(self, data_format: str, base_folder: Path):
         raise Exception('File system not supported for this dataset')
 
     @abstractmethod

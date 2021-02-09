@@ -1,17 +1,23 @@
 import threading
 
-from poif.tagged_data.base import TaggedPassthrough, TaggedData
+from poif.tagged_data.base import BinaryData
 
 
-class PartialGetWrapper(TaggedPassthrough):
-    def __init__(self, tagged_data: TaggedData, grace_period=1):
-        self.tagged_data = tagged_data
-        super().__init__(self.tagged_data)
+class PartialGetWrapper(BinaryData):
+    def __init__(self, data: BinaryData, grace_period=1):
+        self.data = data
 
         self.get_lock = threading.Lock()
         self.timer = None
         self.cached_data = None
         self.grace_period = grace_period
+
+    @property
+    def size(self) -> int:
+        return self.data.size
+
+    def get(self) -> bytes:
+        return self.data.get()
 
     def clear_data(self):
         print('Clearing data')

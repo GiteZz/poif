@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 
 from poif.tagged_data.base import TaggedData
-from poif.input.base import Input
+from poif.input.base import DataSetObject
 
 
 @dataclass
-class MaskInput(Input):
+class MaskInput(TaggedData):
     image: TaggedData
     mask: TaggedData
 

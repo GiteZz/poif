@@ -1,16 +1,15 @@
 from dataclasses import dataclass
 
 from poif.tagged_data.base import TaggedData
-from poif.input.base import Input
+from poif.input.base import DataSetObject
 
 
 @dataclass
-class TaggedDataInput(Input):
-    tagged_data: TaggedData
+class TaggedDataInput(DataSetObject):
     relative_path: str = None
 
     def __post_init__(self):
-        self.relative_path = self.tagged_data.relative_path
+        self.relative_path = self.data.relative_path
 
     def output(self):
-        return self.tagged_data.get_parsed()
+        return self.data.get_parsed()

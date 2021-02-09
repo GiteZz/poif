@@ -1,34 +1,29 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 
+from poif.input.meta_info import MetaInfoMixin
+from poif.input.annotations import DataSetAnnotation
 from poif.tagged_data.base import TaggedData
-from typing import List
+from typing import List, Dict
 
 
 @dataclass
-class DataSetObject:
+class DataSetObject(MetaInfoMixin, ABC):
     data: TaggedData = None
-    objects: List['DataSetObject'] = field(default_factory=list)
+    annotations: List[DataSetAnnotation] = field(default_factory=list)
+    named_annotations: Dict[str, DataSetAnnotation] = field(default_factory=dict)
+
+    @abstractmethod
+    def output(self):
+        pass
 
 
-class Image(DataSetObject):
+@dataclass
+class Image(DataSetObject, ABC):
     width: int = None
     height: int = None
 
 
-class Point(DataSetObject):
-    x: float = None
-    y: float = None
-
-
-class Rectangle(DataSetObject):
-    x: float
-    y: float
-    w: float
-    h: float
-
-
-class Input(DataSetObject, ABC):
-    @abstractmethod
+class ClassificationInput(DataSetObject):
     def output(self):
-        pass
+        return self.data.get_parsed(), self.label

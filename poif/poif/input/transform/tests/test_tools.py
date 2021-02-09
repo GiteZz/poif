@@ -1,5 +1,5 @@
 from poif.dataset.tests.test_tagged_data import MockTaggedData
-from poif.input.base import Input
+from poif.input.base import DataSetObject
 from poif.input.tagged_data import TaggedDataInput
 from poif.input.transform.template import DropByTemplate, MaskByTemplate, MaskTemplate
 from poif.input.transform.tools import is_path_match, extract_values, is_template_part, catch_all_to_value, \
@@ -94,7 +94,7 @@ def mask_inputs():
                     relative_path=f'{subset_name}/{img_type}/{img_index}.jpg',
                     data='{subset_name}{img_index}'
                 )
-                inputs.append(TaggedDataInput(tagged_data))
+                inputs.append(TaggedDataInput(data=tagged_data))
 
     return inputs
 

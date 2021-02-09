@@ -5,7 +5,30 @@ from poif.parser.base import ParseMixin
 from poif.typing import FileHash
 
 
-class TaggedData(ABC, ParseMixin):
+class BinaryData(ABC):
+    @property
+    @abstractmethod
+    def size(self) -> int:
+        pass
+
+    @abstractmethod
+    def get(self) -> bytes:
+        pass
+
+
+class StringBinaryData(BinaryData):
+    def __init__(self, data_str: str):
+        self.data = data_str
+
+    @property
+    def size(self) -> int:
+        return len(self.data)
+
+    def get(self) -> bytes:
+        return bytes(self.data.encode('utf-8'))
+
+
+class TaggedData(BinaryData, ParseMixin, ABC):
     _tag: FileHash = None
     _relative_path: str = None
 
@@ -18,11 +41,6 @@ class TaggedData(ABC, ParseMixin):
         return self._tag
 
     @property
-    @abstractmethod
-    def size(self) -> int:
-        pass
-
-    @property
     def extension(self) -> str:
         # TODO check better
         return self.relative_path.split('/')[-1].split('.')[-1]
@@ -30,10 +48,6 @@ class TaggedData(ABC, ParseMixin):
     @property
     def relative_path(self):
         return self._relative_path
-
-    @abstractmethod
-    def get(self) -> bytes:
-        pass
 
     def get_parsed(self) -> Any:
         return self.parse_file(self.get(), self.extension)

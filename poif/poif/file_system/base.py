@@ -1,10 +1,11 @@
-from typing import Union
+from typing import Union, TYPE_CHECKING
 
 from fuse import FUSE, Operations, FuseOSError
 
-from poif.file_system import Directory, File
-from poif.file_system import PartialGetWrapper
-from poif.versioning.dataset import VersionedCollection, RepoVersionedCollection
+if TYPE_CHECKING:
+    from poif.file_system.directory import Directory
+    from poif.file_system.file import File
+
 
 import errno
 
@@ -14,20 +15,10 @@ class DataSetFileSystem(Operations):
     A read only http/https/ftp filesystem.
     """
 
-    def __init__(self, root_dir: Directory, collection: VersionedCollection):
-        f = open("/home/gilles/datasets/pneunomia/test/NORMAL/IM-0001-0001.jpeg", "rb")
-        num = bytearray(f.read())
-
-        self.file = num
-
+    def __init__(self, root_dir: 'Directory'):
         self.root_dir = root_dir
 
-        data_points = collection.get_files()
-
-        for data_point in data_points:
-            self.root_dir.add_tagged_data(PartialGetWrapper(data_point))
-
-    def path_to_object(self, path: str) -> Union[Directory, File]:
+    def path_to_object(self, path: str) -> Union['Directory', 'File']:
         path_parts = path.split('/')
         while len(path_parts) > 0 and len(path_parts[0]) == 0:
             path_parts.pop(0)
@@ -81,27 +72,3 @@ class DataSetFileSystem(Operations):
 
     def destroy(self, path):
         return 0
-
-
-if __name__ == "__main__":
-    # img_dir = Directory({'01.jpg': File(), '02.jpg': File()})
-    # mask_dir = Directory({'03.jpg': File(), '04.jpg': File()})
-    #
-    # train_dir = Directory({'mask': mask_dir, 'image': img_dir})
-    #
-    # root_dir = Directory({'train': train_dir, 'val': copy.deepcopy(train_dir)})
-
-    root_dir = Directory()
-
-    git_url = 'https://github.ugent.be/gballege/minimal_pneumonia.git'
-    git_commit = '85d749fd6422af1a178013c45c304576939d3b4c'
-
-    fuse = FUSE(
-        DataSetFileSystem(
-            root_dir=root_dir,
-            collection=RepoVersionedCollection(git_url, git_commit)
-        ),
-        '/home/gilles/fuse_test',
-        foreground=True,
-        allow_other=False
-    )

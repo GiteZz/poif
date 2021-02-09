@@ -3,7 +3,7 @@ from collections import defaultdict
 
 from typing import List, Union
 
-from poif.input.base import Input
+from poif.input.base import DataSetObject
 from poif.input.tagged_data import TaggedDataInput
 from poif.tagged_data.base import TaggedData
 
@@ -26,7 +26,7 @@ class TaggedDataDataset(MultiDataset):
         inputs = self.get_inputs(data)
         self.form_from_inputs(inputs)
 
-    def form_from_inputs(self, inputs: List[Input]):
+    def form_from_inputs(self, inputs: List[DataSetObject]):
         self.inputs = inputs
         self.next_operation()
 
@@ -66,7 +66,7 @@ class TaggedDataDataset(MultiDataset):
     def apply_transformation(self, transformation: Transformation):
         self.inputs = transformation(self.inputs)
 
-    def get_inputs(self, data: List[TaggedData]) -> List[Input]:
+    def get_inputs(self, data: List[TaggedData]) -> List[DataSetObject]:
         return [TaggedDataInput(tagged_data) for tagged_data in data]
 
     def get_sub_dataset(self, key: str) -> BaseDataset:

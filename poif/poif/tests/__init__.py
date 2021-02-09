@@ -10,6 +10,7 @@ import numpy as np
 from poif.git.file import FileCreatorMixin
 from poif.remote.base import FileRemote
 from poif.repo.file_remote import FileRemoteTaggedRepo
+from poif.typing import RelFilePath
 
 
 def get_img():
@@ -67,13 +68,12 @@ def assert_image_nearly_equal(original_img: np.ndarray, new_img: np.ndarray):
     assert av_pixel_diff < 5
 
 
-def create_standard_folder_structure():
-    t = tempfile.mkdtemp()
-    temp_dir = Path(t)
-
+def get_standard_folder_template() -> List[RelFilePath]:
     files = [f'0{i}.jpg' for i in range(10)]
     base_folders = ['train', 'val', 'test']
     sub_folders = ['image', 'mask']
+
+    files_to_create = []
 
     additional_files = [
         'meta.json',
@@ -85,11 +85,20 @@ def create_standard_folder_structure():
     for base_folder in base_folders:
         for sub_folder in sub_folders:
             for file in files:
-                file_path = temp_dir / base_folder / sub_folder / file
-                file_path.parent.mkdir(parents=True, exist_ok=True)
-                file_path.touch()
+                files_to_create.append(f'{base_folder}/{sub_folder}/{file}')
 
     for file in additional_files:
+        files_to_create.append(file)
+
+    return files_to_create
+
+
+def create_standard_folder_structure():
+    t = tempfile.mkdtemp()
+    temp_dir = Path(t)
+
+    template = get_standard_folder_template()
+    for file in template:
         (temp_dir / file).touch()
 
     return temp_dir
