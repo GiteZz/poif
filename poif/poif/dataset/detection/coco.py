@@ -11,7 +11,7 @@ from poif.typing import RelFilePath, DatasetType
 
 
 class CocoDetectionDataset(DetectionDataset):
-    def __init__(self, annotation_files: Dict[DatasetType, RelFilePath], data_folders: Dict[DatasetType, RelFilePath]):
+    def __init__(self, annotation_files: Dict[DatasetType, RelFilePath] = None, data_folders: Dict[DatasetType, RelFilePath] = None):
         super().__init__()
 
         self.annotation_files = annotation_files
@@ -70,6 +70,11 @@ class CocoDetectionDataset(DetectionDataset):
                                                        w=int(w) / current_input.width,
                                                        h=int(h) / current_input.height)
                                            )
+
+        # class 'dict'>: {'supercategory': 'person', 'id': 1, 'name': 'person'}
+
+        for category in annotation_data['categories']:
+            self.category_mapping[category['id']] = category['name']
 
         return new_inputs
 

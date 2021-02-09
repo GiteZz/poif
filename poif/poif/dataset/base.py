@@ -38,7 +38,11 @@ class MultiDataset(BaseDataset, ABC):
             raise AttributeError
 
     def get_sub_dataset(self, key: str) -> BaseDataset:
-        return self.split_dict[key]
+        return self.create_sub_dataset_from_objects(self.split_dict[key])
+
+    @abstractmethod
+    def create_sub_dataset_from_objects(self, new_objects: List):
+        pass
 
     @property
     def available_sub_datasets(self):

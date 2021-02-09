@@ -52,3 +52,9 @@ class BoundingBox(DataSetAnnotation):
 
         int_bbox = self.int_bbox(img_width, img_height)
         return ' '.join(str(value) for value in int_bbox)
+
+    def yolo_label(self):
+        yolo_x = self.x + self.w / 2
+        yolo_y = self.y + self.h / 2
+
+        return f'{self.label} {yolo_x} {yolo_y} {self.w} {self.h}'
