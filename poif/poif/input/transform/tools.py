@@ -48,15 +48,15 @@ def replace_template_with_regex_group(template: str):
 
 def is_path_match(template: str, path: str) -> bool:
     regex_template, _ = template_to_regex(template)
-    return re.match(regex_template, path)
+    return re.match(regex_template, path) is not None
 
 
 def extract_values(template: str, path: str) -> Dict[str, str]:
-    if not is_path_match(template, path):
-        return {}
-
     template, groups = template_to_regex(template)
     matches = re.match(template, path)
+
+    if matches is None:
+        return {}
 
     if len(matches.groups()) != len(groups):
         return {}

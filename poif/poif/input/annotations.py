@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Optional
 
 from attr import dataclass
 
@@ -15,15 +15,15 @@ class DataSetAnnotation(MetaInfoMixin, ABC):
 
 @dataclass
 class Mask(DataSetAnnotation):
-    data: TaggedData = None
+    data: Optional[TaggedData] = None
 
     def output(self):
         return self.label, self.data.get_parsed()
 
 
 class Point(DataSetAnnotation):
-    x: float = None
-    y: float = None
+    x: Optional[float] = None
+    y: Optional[float] = None
 
     def output(self):
         return self.label, self.x, self.y

@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Dict, List, Union
+from typing import Dict, List, Optional, Union
 
 import docker
 
@@ -12,11 +12,11 @@ class DockerConfig:
     name: str
     restart_if_active: bool
     readiness_url: str
-    command: str = None
     commands: List[str] = field(default_factory=list)
-    envs: Dict[str, str] = None
-    ports: Dict[Union[str, int], Union[str, int]] = None
-    volumes: Dict[str, Dict[str, str]] = None
+    command: Optional[str] = None
+    envs: Optional[Dict[str, str]] = None
+    ports: Optional[Dict[Union[str, int], Union[str, int]]] = None
+    volumes: Optional[Dict[str, Dict[str, str]]] = None
 
 
 def docker_run(config: DockerConfig):

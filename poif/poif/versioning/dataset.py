@@ -8,10 +8,11 @@ from poif.config.collection import DataCollectionConfig
 from poif.config.repo import DataRepoConfig
 from poif.git.file import FileCreatorMixin
 from poif.git.repo import GitRepo
-from poif.packaging import packages
-from poif.repo import get_remote_repo_from_config
+from poif.packaging.base import packages
 from poif.repo.base import TaggedRepo
-from poif.tagged_data import RepoData, TaggedData
+from poif.repo.file_remote import get_remote_repo_from_config
+from poif.tagged_data.base import TaggedData
+from poif.tagged_data.repo import RepoData
 from poif.utils import get_file_name_from_path
 from poif.versioning.directory import VersionedDirectory
 from poif.versioning.file import VersionedFile

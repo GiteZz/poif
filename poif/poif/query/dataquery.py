@@ -1,17 +1,17 @@
 from dataclasses import dataclass
-from typing import List
+from typing import List, Optional
 
 from poif.versioning.dataset import RepoVersionedCollection, VersionedCollection
 
 
 @dataclass
 class DataQuery:
-    data_cache_url: str = None
-    git_url: str = None
-    git_commit: str = None
-    query_type: int = None
-    dataset_type: str = None  # by_regexes, poif, coco, ?
-    regexes: List[str] = None
+    data_cache_url: Optional[str] = None
+    git_url: Optional[str] = None
+    git_commit: Optional[str] = None
+    query_type: Optional[int] = None
+    dataset_type: Optional[str] = None  # by_regexes, poif, coco, ?
+    regexes: Optional[List[str]] = None
 
     _data_collection: VersionedCollection = None
 
