@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import Any, Optional
 
 from poif.parser.base import ParseMixin
 from poif.typing import FileHash
@@ -29,8 +29,8 @@ class StringBinaryData(BinaryData):
 
 
 class TaggedData(BinaryData, ParseMixin, ABC):
-    _tag: FileHash = None
-    _relative_path: str = None
+    _tag: Optional[FileHash] = None
+    _relative_path: Optional[str] = None
 
     def __init__(self, relative_path: str, tag: FileHash = None):
         self._tag = tag

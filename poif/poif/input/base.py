@@ -7,7 +7,6 @@ from poif.input.meta_info import MetaInfoMixin
 from poif.tagged_data.base import TaggedData
 
 
-# TODO change to BinaryData and try to capture the original name if available
 @dataclass
 class DataSetObject(MetaInfoMixin, ABC):
     data: TaggedData = None
