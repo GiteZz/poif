@@ -2,12 +2,10 @@ from abc import ABC, abstractmethod
 from collections import defaultdict
 from dataclasses import dataclass, field
 from hashlib import md5
-from itertools import islice
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, Generator, List
 
 from poif.config import img_extensions
-from poif.typing import FileHash
 
 
 def get_relative_path(base_dir: Path, file: Path):
@@ -106,7 +104,7 @@ class RecursiveDirectoryExpand(DirectoryExpander):
 @dataclass
 class PathOperator(Iterator, IteratorValidator, DirectoryExpander):
     dir: Path
-    dir_contents: Path.rglob = field(init=False)
+    dir_contents: Generator[Path, None, None] = field(init=False)
 
     def __post_init__(self):
         self.dir_contents = self.expand_directory(self.dir)
@@ -194,10 +192,9 @@ class CombinedIterator(Iterator):
 @dataclass
 class InOrderPathIterator(Iterator):
     dir: Path
-    stack: List[Path] = None
+    stack: List[Path] = field(default_factory=list)
 
     def __post_init__(self):
-        self.stack = []
         self.add_dir_to_stack(self.dir)
 
     def __next__(self):
@@ -230,8 +227,8 @@ def sorted_directories_from_directory(directory: Path):
     return sorted(list(DirectoryIterator(directory)))
 
 
-def files_by_extension(directory: Path, limit=None):
-    extension_bins = defaultdict(list)
+def files_by_extension(directory: Path, limit: int = None):
+    extension_bins: Dict[str, List[Path]] = defaultdict(list)
 
     for file in FileIterator(directory):
         extension = get_extension_from_path(file)

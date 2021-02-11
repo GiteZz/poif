@@ -33,16 +33,10 @@ def classification_dataset(imgs_per_set=10, amount_categories=5) -> List[TaggedD
     for sub_dataset in sub_datasets:
         for label in labels:
             data_points.extend(
-                [
-                    MockTaggedData(f"{sub_dataset}/{label}/rgb_{i}.jpg", get_img())
-                    for i in range(imgs_per_set)
-                ]
+                [MockTaggedData(f"{sub_dataset}/{label}/rgb_{i}.jpg", get_img()) for i in range(imgs_per_set)]
             )
             data_points.extend(
-                [
-                    MockTaggedData(f"{sub_dataset}/{label}/bw_{i}.jpg", get_img())
-                    for i in range(imgs_per_set)
-                ]
+                [MockTaggedData(f"{sub_dataset}/{label}/bw_{i}.jpg", get_img()) for i in range(imgs_per_set)]
             )
 
     return data_points
@@ -55,26 +49,14 @@ def mask_dataset(imgs_per_set=10, sub_datasets=None) -> List[TaggedData]:
     data_points = []
 
     for sub_dataset in sub_datasets:
-        data_points.extend(
-            [
-                MockTaggedData(f"{sub_dataset}/mask_{i}.jpg", get_img())
-                for i in range(imgs_per_set)
-            ]
-        )
-        data_points.extend(
-            [
-                MockTaggedData(f"{sub_dataset}/image_{i}.jpg", get_img())
-                for i in range(imgs_per_set)
-            ]
-        )
+        data_points.extend([MockTaggedData(f"{sub_dataset}/mask_{i}.jpg", get_img()) for i in range(imgs_per_set)])
+        data_points.extend([MockTaggedData(f"{sub_dataset}/image_{i}.jpg", get_img()) for i in range(imgs_per_set)])
 
     return data_points
 
 
 def test_combining_mask_img(mask_dataset):
-    operation_list = [
-        CombineByTemplate({"image": "*/image*.jpg", "mask": "*/mask*.jpg"})
-    ]
+    operation_list = [CombineByTemplate({"image": "*/image*.jpg", "mask": "*/mask*.jpg"})]
 
     ds = TaggedDataDataset(operations=operation_list)
     ds.form(mask_dataset)

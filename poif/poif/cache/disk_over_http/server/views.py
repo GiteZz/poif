@@ -16,13 +16,9 @@ def get_files_from_request(request_args):
 
 def get_dataclass_from_cache(request_args, class_def):
     data_class_params = get_params_for_dataclass(request_args, class_def)
-    extracted_params = {
-        key: value for key, value in request_args if key in data_class_params
-    }
+    extracted_params = {key: value for key, value in request_args if key in data_class_params}
 
-    cache_key = tuple(
-        [extracted_params[key] for key in sorted(extracted_params.keys())]
-    )
+    cache_key = tuple([extracted_params[key] for key in sorted(extracted_params.keys())])
 
     if cache_key not in cached_objects:
         cached_objects[cache_key] = class_def(**extracted_params)
@@ -31,8 +27,7 @@ def get_dataclass_from_cache(request_args, class_def):
 
 
 def get_file_from_datapoint(request_args):
-    dvc_origin = get_dataclass_from_cache(request_args, DvcOrigin)
-    cache_key = dvc_origin
+    get_dataclass_from_cache(request_args, DvcOrigin)
 
 
 def get_params_for_dataclass(request, class_type):
@@ -46,16 +41,14 @@ def get_params_for_dataclass(request, class_type):
 
 def request_to_dataclass(request, class_type):
     required_params = {field.name for field in fields(class_type) if field.init}
-    url_params = set(request.args.keys())
+    set(request.args.keys())
 
     missing_params = get_params_for_dataclass()
 
     if len(missing_params) > 0:
         raise Exception(f"Missing parameters: {list(missing_params)}")
 
-    needed_params = {
-        key: value for key, value in request.args if key in required_params
-    }
+    needed_params = {key: value for key, value in request.args if key in required_params}
 
     return class_type(**needed_params)
 

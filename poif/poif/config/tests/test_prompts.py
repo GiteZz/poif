@@ -13,9 +13,7 @@ from poif.tests import MonkeyPatchSequence, get_temp_file, get_temp_path
 
 def get_s3_sequence(expected_result: S3Config = None):
     if expected_result is None:
-        expected_result = S3Config(
-            bucket="bucket", url="http://url.be", profile="profile"
-        )
+        expected_result = S3Config(bucket="bucket", url="http://url.be", profile="profile")
     sequence = [expected_result.bucket, expected_result.url, expected_result.profile]
 
     return sequence, expected_result
@@ -24,15 +22,11 @@ def get_s3_sequence(expected_result: S3Config = None):
 def get_remote_config_sequence(expected_result: RemoteConfig = None):
     if expected_result is None:
         s3_sequence, s3_config = get_s3_sequence()
-        expected_result = RemoteConfig(
-            remote_type=RemoteType.S3, data_folder="data", config=s3_config
-        )
+        expected_result = RemoteConfig(remote_type=RemoteType.S3, data_folder="data", config=s3_config)
     else:
         s3_sequence, s3_config = get_s3_sequence(expected_result.config)
 
-    remote_config_sequence = (
-        [expected_result.remote_type] + s3_sequence + [expected_result.data_folder]
-    )
+    remote_config_sequence = [expected_result.remote_type] + s3_sequence + [expected_result.data_folder]
     return remote_config_sequence, expected_result
 
 
@@ -54,9 +48,7 @@ def get_readme_sequence(expected_result: ReadmeConfig = None):
             image_remote=remote_config,
         )
     else:
-        remote_sequence, remote_config = get_remote_config_sequence(
-            expected_result.image_remote
-        )
+        remote_sequence, remote_config = get_remote_config_sequence(expected_result.image_remote)
 
     readme_sequence = [
         bool_to_yes_no(expected_result.enable),
@@ -96,18 +88,9 @@ def get_collection_sequence(expected_result: DataCollectionConfig = None):
             data_remote=remote_config,
         )
     else:
-        remote_sequence, remote_config = get_remote_config_sequence(
-            expected_result.data_remote
-        )
+        remote_sequence, remote_config = get_remote_config_sequence(expected_result.data_remote)
 
-    sequence = (
-        [expected_result.name]
-        + expected_result.folders
-        + [""]
-        + expected_result.files
-        + [""]
-        + remote_sequence
-    )
+    sequence = [expected_result.name] + expected_result.folders + [""] + expected_result.files + [""] + remote_sequence
 
     return sequence, expected_result
 
@@ -127,16 +110,12 @@ def get_repo_sequence(expected_result: DataRepoConfig = None):
         readme_sequence, readme_config = get_readme_sequence()
         package_sequence, package_config = get_package_sequence()
     else:
-        collection_sequence, collection_config = get_collection_sequence(
-            expected_result.collection
-        )
+        collection_sequence, collection_config = get_collection_sequence(expected_result.collection)
         readme_sequence, readme_config = get_readme_sequence(expected_result.readme)
         package_sequence, package_config = get_package_sequence(expected_result.package)
 
     repo_sequence = collection_sequence + readme_sequence + package_sequence
-    repo_config = DataRepoConfig(
-        collection=collection_config, readme=readme_config, package=package_config
-    )
+    repo_config = DataRepoConfig(collection=collection_config, readme=readme_config, package=package_config)
 
     return repo_sequence, repo_config
 

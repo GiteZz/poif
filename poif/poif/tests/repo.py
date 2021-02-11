@@ -42,9 +42,7 @@ def create_realistic_folder_structure() -> Tuple[Path, List[str], List[str]]:
 def create_data_collection(remote: RemoteConfig):
     base_dir, dirs, files = create_realistic_folder_structure()
 
-    return base_dir, DataCollectionConfig(
-        name="test", folders=dirs, files=files, data_remote=remote
-    )
+    return base_dir, DataCollectionConfig(name="test", folders=dirs, files=files, data_remote=remote)
 
 
 def create_data_repo(minio_config: MinioConfig) -> Tuple[Path, DataRepoConfig]:
@@ -58,6 +56,4 @@ def create_data_repo(minio_config: MinioConfig) -> Tuple[Path, DataRepoConfig]:
     base_dir, collection_config = create_data_collection(data_remote)
     package_config = PackageConfig(type=PackageOptions.python_package)
 
-    return base_dir, DataRepoConfig(
-        collection=collection_config, readme=readme_config, package=package_config
-    )
+    return base_dir, DataRepoConfig(collection=collection_config, readme=readme_config, package=package_config)

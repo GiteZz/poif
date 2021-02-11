@@ -1,7 +1,6 @@
 from typing import Dict, List
 
-from poif.dataset.base import BaseDataset, MultiDataset
-from poif.dataset.detection.base import DetectionDataset, DetectionFileOutputFormat
+from poif.dataset.detection.base import DetectionDataset
 from poif.input.annotations import BoundingBox
 from poif.input.detection import DetectionInput
 from poif.tagged_data.base import TaggedData
@@ -28,9 +27,7 @@ class CocoDetectionDataset(DetectionDataset):
         self.annotation_files = annotation_files
         self.data_folders = data_folders
 
-    def get_rel_file_mapping(
-        self, inputs: List[TaggedData]
-    ) -> Dict[RelFilePath, TaggedData]:
+    def get_rel_file_mapping(self, inputs: List[TaggedData]) -> Dict[RelFilePath, TaggedData]:
         mapping = {}
         for tagged_data in inputs:
             mapping[tagged_data.relative_path] = tagged_data
@@ -103,9 +100,7 @@ class CocoDetectionDataset(DetectionDataset):
         sub_dataset_names = list(self.annotation_files.keys())
 
         for subset in sub_dataset_names:
-            new_inputs = self.parse_annotation_file(
-                subset, data, self.data_folders[subset]
-            )
+            new_inputs = self.parse_annotation_file(subset, data, self.data_folders[subset])
             self.inputs.extend(new_inputs)
             self.split_dict[subset] = new_inputs
 
@@ -127,9 +122,7 @@ def detection_collection_to_coco_dict(inputs: List[DetectionInput]) -> Dict:
             coco_dict["annotations"].append(
                 {
                     "image_id": index,
-                    "bbox": bbox.coco_bbox(
-                        detection_input.width, detection_input.height
-                    ),
+                    "bbox": bbox.coco_bbox(detection_input.width, detection_input.height),
                     "category_id": bbox.label,
                 }
             )

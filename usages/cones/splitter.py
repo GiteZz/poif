@@ -2,8 +2,7 @@ from pathlib import Path
 from collections import defaultdict
 import random
 
-from general_loading import rows, orig_img_dir
-from utils import parse_bbs, get_label, to_supervisely_json
+from general_loading import rows
 
 
 yolo_ds_folder = Path('/home/gilles/datasets/cones/yolo')

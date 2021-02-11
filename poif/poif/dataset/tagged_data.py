@@ -1,4 +1,3 @@
-from collections import defaultdict
 from typing import List, Union
 
 from poif.dataset.base import BaseDataset, MultiDataset

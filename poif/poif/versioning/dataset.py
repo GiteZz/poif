@@ -41,15 +41,11 @@ class FromDiskVersionedCollection(VersionedCollection, FileCreatorMixin):
     def __post_init__(self):
         for directory in self.config.folders:
             actual_directory = self.base_dir / directory
-            self.directories.append(
-                VersionedDirectory(base_dir=self.base_dir, data_dir=actual_directory)
-            )
+            self.directories.append(VersionedDirectory(base_dir=self.base_dir, data_dir=actual_directory))
 
         for file in self.config.files:
             actual_file = self.base_dir / file
-            self.files.append(
-                VersionedFile(base_dir=self.base_dir, file_path=actual_file)
-            )
+            self.files.append(VersionedFile(base_dir=self.base_dir, file_path=actual_file))
 
     def get_files(self) -> List[TaggedData]:
         return self.files + self.files_from_directory()
@@ -81,7 +77,7 @@ class FromDiskVersionedCollection(VersionedCollection, FileCreatorMixin):
 
     def add_vdir_file(self, file: Path):
         filename = get_file_name_from_path(file)
-        directory = self.get_dir_with_filename(filename)
+        self.get_dir_with_filename(filename)
         # TODO
 
     def get_dir_with_filename(self, filename: str) -> VersionedDirectory:
@@ -109,9 +105,7 @@ class RepoVersionedCollection(VersionedCollection):
         tagged_repo = get_remote_repo_from_config(config.collection.data_remote)
         self._tagged_repo = tagged_repo
 
-        self._resource_dir = packages[config.package.type].get_resource_directory(
-            base_dir=repo.base_dir
-        )
+        self._resource_dir = packages[config.package.type].get_resource_directory(base_dir=repo.base_dir)
 
         self.retrieve_mappings()
 

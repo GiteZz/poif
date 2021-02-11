@@ -23,14 +23,10 @@ class GitRepo:
             self.base_dir = self.get_clone_location()
 
             if self.git_commit is not None:
-                self.repo = Repo.clone_from(
-                    self.git_url, str(self.base_dir), no_checkout=True
-                )
+                self.repo = Repo.clone_from(self.git_url, str(self.base_dir), no_checkout=True)
                 self.repo.git.checkout(self.git_commit)
             else:
-                self.repo = Repo.clone_from(
-                    self.git_url, str(self.base_dir), no_checkout=False
-                )
+                self.repo = Repo.clone_from(self.git_url, str(self.base_dir), no_checkout=False)
         else:
             self.repo = Repo(str(self.base_dir))
 
@@ -44,7 +40,7 @@ class GitRepo:
     def get_files(self):
         t = self.repo.head.object.hexsha
         commit = self.repo.commit(t)
-        files = commit.tree
+        commit.tree
         self.repo.tree()
 
     def add_remote(self, remote: str):
@@ -61,8 +57,6 @@ class GitRepo:
 
 
 if __name__ == "__main__":
-    repo = GitRepo(
-        git_url="http://localhost:360/root/datasets-991bd55b-2c97-4848-8b44-8387dbaa8295.git"
-    )
+    repo = GitRepo(git_url="http://localhost:360/root/datasets-991bd55b-2c97-4848-8b44-8387dbaa8295.git")
     files = repo.get_files()
     a = "a"

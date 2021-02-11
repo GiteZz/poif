@@ -19,6 +19,4 @@ def main():
     if command in valid_commands.keys():
         valid_commands[command](args[2:])
     else:
-        print(
-            f"Please provide a valid command. Valid commands are: {valid_commands.keys()}"
-        )
+        print(f"Please provide a valid command. Valid commands are: {valid_commands.keys()}")

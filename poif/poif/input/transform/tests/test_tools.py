@@ -1,7 +1,6 @@
 import pytest
 
 from poif.dataset.tests.test_tagged_data import MockTaggedData
-from poif.input.base import DataSetObject
 from poif.input.tagged_data import TaggedDataInput
 from poif.input.transform.template import DropByTemplate, MaskByTemplate, MaskTemplate
 from poif.input.transform.tools import (
@@ -21,28 +20,21 @@ def test_matching():
 
 
 def test_extracting():
-    assert extract_values("{{ dataset_type }}/*/*.jpg", "train/image/01.jpg") == {
-        "dataset_type": "train"
-    }
-    assert extract_values("{{dataset_type }}/*/*.jpg", "train/image/01.jpg") == {
-        "dataset_type": "train"
-    }
-    assert extract_values("{{dataset_type}}/*/*.jpg", "train/image/01.jpg") == {
-        "dataset_type": "train"
+    assert extract_values("{{ dataset_type }}/*/*.jpg", "train/image/01.jpg") == {"dataset_type": "train"}
+    assert extract_values("{{dataset_type }}/*/*.jpg", "train/image/01.jpg") == {"dataset_type": "train"}
+    assert extract_values("{{dataset_type}}/*/*.jpg", "train/image/01.jpg") == {"dataset_type": "train"}
+
+    assert extract_values("{{ dataset_type }}/{{image_type}}/*.jpg", "train/image/01.jpg") == {
+        "dataset_type": "train",
+        "image_type": "image",
     }
 
-    assert extract_values(
-        "{{ dataset_type }}/{{image_type}}/*.jpg", "train/image/01.jpg"
-    ) == {"dataset_type": "train", "image_type": "image"}
+    assert extract_values("{{ dataset_type }}/{{image_type}}/*.jpg", "test/mask/01.jpg") == {
+        "dataset_type": "test",
+        "image_type": "mask",
+    }
 
-    assert extract_values(
-        "{{ dataset_type }}/{{image_type}}/*.jpg", "test/mask/01.jpg"
-    ) == {"dataset_type": "test", "image_type": "mask"}
-
-    assert (
-        extract_values("{{ dataset_type }}/{{image_type}}/*.png", "test/mask/01.jpg")
-        == {}
-    )
+    assert extract_values("{{ dataset_type }}/{{image_type}}/*.png", "test/mask/01.jpg") == {}
 
     assert extract_values("{{dataset_type}}/mask_{{img_id}}", "train/mask_01.jpg") == {
         "dataset_type": "train",
@@ -106,9 +98,9 @@ def mask_inputs():
 
 
 def test_pair_collecter(mask_inputs):
-    collected_inputs = MaskByTemplate(
-        MaskTemplate(image="{{}}/image/{{}}.jpg", mask="{{}}/mask/{{}}.jpg")
-    )(mask_inputs)
+    collected_inputs = MaskByTemplate(MaskTemplate(image="{{}}/image/{{}}.jpg", mask="{{}}/mask/{{}}.jpg"))(
+        mask_inputs
+    )
 
     for new_input in collected_inputs:
         image, mask = new_input.output()
@@ -118,12 +110,8 @@ def test_pair_collecter(mask_inputs):
 
 
 def test_split_by_template(mask_inputs):
-    dataset_type_splitter = SplitByTemplate(
-        "{{ dataset_type }}/{{ data_type }}/*", subset_tag="dataset_type"
-    )
-    data_type_splitter = SplitByTemplate(
-        "{{ dataset_type }}/{{ data_type }}/*", subset_tag="data_type"
-    )
+    dataset_type_splitter = SplitByTemplate("{{ dataset_type }}/{{ data_type }}/*", subset_tag="dataset_type")
+    data_type_splitter = SplitByTemplate("{{ dataset_type }}/{{ data_type }}/*", subset_tag="data_type")
 
     for input in mask_inputs:
         assert input.relative_path.split("/")[0] == dataset_type_splitter(input)

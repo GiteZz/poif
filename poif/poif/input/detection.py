@@ -1,9 +1,7 @@
-from dataclasses import dataclass, field
-from typing import List
+from dataclasses import dataclass
 
 from poif.input.annotations import BoundingBox
 from poif.input.base import Image
-from poif.tagged_data.base import TaggedData
 
 
 @dataclass
@@ -12,6 +10,4 @@ class DetectionInput(Image):
         self.annotations.append(bbox)
 
     def output(self):
-        return self.data.get_parsed(), [
-            annotation.output() for annotation in self.annotations
-        ]
+        return self.data.get_parsed(), [annotation.output() for annotation in self.annotations]

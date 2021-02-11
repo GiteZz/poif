@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, Union
 
-from fuse import FUSE, FuseOSError, Operations
+from fuse import FuseOSError, Operations
 
 if TYPE_CHECKING:
     from poif.file_system.directory import Directory

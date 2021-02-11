@@ -21,9 +21,7 @@ class S3Remote(FileRemote):
 
     def get_session(self):
         dataset_sess = boto3.session.Session(profile_name=self.config.profile)
-        return dataset_sess.resource(
-            "s3", endpoint_url=self.config.url, config=Config(signature_version="s3v4")
-        )
+        return dataset_sess.resource("s3", endpoint_url=self.config.url, config=Config(signature_version="s3v4"))
 
     def download(self, file_name: str) -> bytes:
         fileobj = BytesIO()

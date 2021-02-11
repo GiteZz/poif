@@ -55,9 +55,7 @@ class Directory:
     def setup_as_filesystem(self, system_path: Path, daemon=False):
         file_system = DataSetFileSystem(root_dir=self)
 
-        p = Process(
-            target=setup_filesystem, args=(file_system, system_path), daemon=daemon
-        )
+        p = Process(target=setup_filesystem, args=(file_system, system_path), daemon=daemon)
         p.start()
 
         while not (system_path / "__test_file").exists():

@@ -2,11 +2,8 @@ import json
 from typing import List
 
 import boto3
-import botocore.exceptions
-import docker
 from botocore.config import Config
 
-from poif.tests.integration.gitlab.wait import is_alive, wait_on_url
 from poif.tests.integration.minio.config import MinioConfig
 
 

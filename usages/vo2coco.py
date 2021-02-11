@@ -2,7 +2,6 @@
 
 # pip install lxml
 
-import sys
 import os
 import json
 import xml.etree.ElementTree as ET

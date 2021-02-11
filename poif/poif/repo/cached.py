@@ -10,9 +10,7 @@ class CachedTaggedRepo(TaggedRepo):
     cache_config: CacheConfig
 
     def get_cache_location(self, data: TaggedData):
-        data_location = (
-            self.cache_config.data_storage_location / data.tag[:2] / data.tag[2:]
-        )
+        data_location = self.cache_config.data_storage_location / data.tag[:2] / data.tag[2:]
         data_location.parent.mkdir(exist_ok=True, parents=True)
 
         return data_location

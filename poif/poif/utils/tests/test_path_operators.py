@@ -1,12 +1,7 @@
 from pathlib import Path
 
 from poif.tests import get_temp_path
-from poif.utils import (
-    files_by_extension,
-    get_extension_from_path,
-    get_file_name_from_path,
-    is_more_populated,
-)
+from poif.utils import files_by_extension, get_extension_from_path, get_file_name_from_path, is_more_populated
 
 
 def test_get_extension():
@@ -43,9 +38,7 @@ def test_extension_bins():
     assert len(extension_bins["png"]) == 10
     assert len(extension_bins["exif"]) == 10
 
-    assert set(extension_bins["jpg"]) == {
-        temp_path / jpg_file for jpg_file in jpg_files
-    }
+    assert set(extension_bins["jpg"]) == {temp_path / jpg_file for jpg_file in jpg_files}
 
     extension_bins = files_by_extension(temp_path, limit=20)
 

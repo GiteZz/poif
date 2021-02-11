@@ -17,9 +17,7 @@ class CacheConfig(Config):
     @staticmethod
     def prompt():
         enable = yes_with_question("Enable caching on disk?")
-        data_storage = path_input(
-            "Data storage location?", default=Path.cwd() / "data_cache" / "data"
-        )
+        data_storage = path_input("Data storage location?", default=Path.cwd() / "data_cache" / "data")
         git_storage = path_input(
             "Git storage location? Used to avoid duplicated cloning.",
             default=Path.cwd() / "data_cache" / "git",

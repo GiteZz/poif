@@ -14,18 +14,12 @@ from poif.versioning.dataset import FromDiskVersionedCollection
 def init(args: List[str]) -> None:
     repo_config = DataRepoConfig.prompt()
     git_remote = simple_input(title="Git remote?")
-    resource_dir = packages[repo_config.package.type].get_resource_directory(
-        base_dir=Path.cwd()
-    )
+    resource_dir = packages[repo_config.package.type].get_resource_directory(base_dir=Path.cwd())
     repo_config.write_to_package(base_dir=Path.cwd())
 
-    versioned_dataset = FromDiskVersionedCollection(
-        base_dir=Path.cwd(), config=repo_config.collection
-    )
+    versioned_dataset = FromDiskVersionedCollection(base_dir=Path.cwd(), config=repo_config.collection)
 
-    package = PythonPackage(
-        base_dir=Path.cwd(), collection_config=repo_config.collection
-    )
+    package = PythonPackage(base_dir=Path.cwd(), collection_config=repo_config.collection)
     package.init()
 
     versioned_dataset.write_versioning_files(resource_dir)

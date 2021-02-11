@@ -1,12 +1,6 @@
 import pytest
 
-from poif.cli.tools import (
-    MaxTriesReachedException,
-    in_list_validation,
-    input_with_possible_default,
-    multi_input,
-    yes,
-)
+from poif.cli.tools import MaxTriesReachedException, in_list_validation, input_with_possible_default, multi_input, yes
 from poif.tests import MonkeyPatchSequence
 
 
@@ -30,23 +24,14 @@ def test_input_with_possible_default(monkeypatch):
 
     input_with_possible_default(validation_function=lambda x: x == "desk")
 
-    input_with_possible_default(
-        validation_function=in_list_validation(["desk", "fridge"])
-    )
+    input_with_possible_default(validation_function=in_list_validation(["desk", "fridge"]))
 
     with pytest.raises(MaxTriesReachedException):
-        input_with_possible_default(
-            validation_function=in_list_validation(["tree", "fridge"])
-        )
+        input_with_possible_default(validation_function=in_list_validation(["tree", "fridge"]))
 
     input_returns = MonkeyPatchSequence(["lamp", "tree"])
     monkeypatch.setattr("builtins.input", input_returns)
-    assert (
-        input_with_possible_default(
-            validation_function=in_list_validation(["tree", "fridge"])
-        )
-        == "tree"
-    )
+    assert input_with_possible_default(validation_function=in_list_validation(["tree", "fridge"])) == "tree"
 
 
 def test_multi_input(monkeypatch):

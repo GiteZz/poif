@@ -3,7 +3,7 @@ import random
 import time
 
 from poif.file_system.partial import PartialGetWrapper
-from poif.tagged_data.base import BinaryData, StringBinaryData
+from poif.tagged_data.base import StringBinaryData
 
 
 class MockBinary(StringBinaryData):

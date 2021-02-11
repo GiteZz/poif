@@ -22,9 +22,7 @@ class GitlabConfig:
         restart_if_active: bool = True
 
         readiness_url = f"http://localhost:{self.port}/readiness"
-        envs = {
-            "GITLAB_OMNIBUS_CONFIG": f'gitlab_rails["initial_root_password"] = "{self.password}"'
-        }
+        envs = {"GITLAB_OMNIBUS_CONFIG": f'gitlab_rails["initial_root_password"] = "{self.password}"'}
         ports = {"80": self.port}
         commands = [
             f"gitlab-rails runner \"token = User.find_by_username('root').personal_access_tokens.create(scopes: [:api], name: 'Automation token');token.set_token('{self.api_key}');token.save!\""

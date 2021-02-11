@@ -1,8 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from poif.config import ReadmeConfig, RemoteConfig, S3Config
-from poif.tests import MonkeyPatchSequence
+from poif.config import S3Config
 
 
 def test_s3():

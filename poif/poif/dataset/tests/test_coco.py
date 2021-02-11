@@ -4,10 +4,7 @@ from pathlib import Path
 import pytest
 
 from poif.dataset.detection.base import DetectionFileOutputFormat
-from poif.dataset.detection.coco import (
-    CocoDetectionDataset,
-    detection_collection_to_coco_dict,
-)
+from poif.dataset.detection.coco import CocoDetectionDataset, detection_collection_to_coco_dict
 from poif.dataset.tests.test_tagged_data import MockTaggedData
 from poif.input.annotations import BoundingBox
 from poif.input.detection import DetectionInput
@@ -68,12 +65,8 @@ def test_coco(detection_collection):
     coco_dict = detection_collection_to_coco_dict(detection_collection)
     annotation_file = MockTaggedData(relative_path="train.json", data=coco_dict)
 
-    tagged_data = [annotation_file] + [
-        detection_input.data for detection_input in detection_collection
-    ]
-    ds = CocoDetectionDataset(
-        annotation_files={"train": "train.json"}, data_folders={"train": ""}
-    )
+    tagged_data = [annotation_file] + [detection_input.data for detection_input in detection_collection]
+    ds = CocoDetectionDataset(annotation_files={"train": "train.json"}, data_folders={"train": ""})
 
     ds.form(tagged_data)
 
@@ -85,9 +78,7 @@ def test_real_coco():
     disk_path = Path("/home/gilles/datasets/mask/")
 
     tagged_data = DiskData.from_folder(disk_path)
-    ds = CocoDetectionDataset(
-        annotation_files={"main": "ann.json"}, data_folders={"main": "images"}
-    )
+    ds = CocoDetectionDataset(annotation_files={"main": "ann.json"}, data_folders={"main": "images"})
     ds.form(tagged_data)
 
     ds.random_split({"train": 0.7, "val": 0.3})

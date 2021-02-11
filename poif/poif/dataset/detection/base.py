@@ -64,9 +64,7 @@ class DetectionDataset(MultiDataset, ABC):
 
         return sub_dataset
 
-    def create_file_system(
-        self, data_format: DetectionFileOutputFormat, base_folder: Path
-    ):
+    def create_file_system(self, data_format: DetectionFileOutputFormat, base_folder: Path):
         dataset_dir = Directory()
 
         if data_format == DetectionFileOutputFormat.yolov5:
@@ -84,9 +82,7 @@ class DetectionDataset(MultiDataset, ABC):
                 "val_folder": str(val_data_folder),
             }
 
-            yolov5_template = (
-                get_datasets_template_dir() / "detection" / "yolov5.yaml.jinja2"
-            )
+            yolov5_template = get_datasets_template_dir() / "detection" / "yolov5.yaml.jinja2"
 
             template = Template(open(yolov5_template).read())
             rendered_template = template.render(data=needed_information)
@@ -96,12 +92,8 @@ class DetectionDataset(MultiDataset, ABC):
             # TODO fix this duplication
             for object_index, ds_object in enumerate(self.val):
                 # TODO fix this hacky stuff, extension needs to be known but this is not clean
-                original_extension = ds_object.data.relative_path.split("/")[-1].split(
-                    "."
-                )[-1]
-                file_name = str(
-                    val_data_folder / f"{object_index}.{original_extension}"
-                )
+                original_extension = ds_object.data.relative_path.split("/")[-1].split(".")[-1]
+                file_name = str(val_data_folder / f"{object_index}.{original_extension}")
 
                 dataset_dir.add_data(file_name, StringBinaryData(rendered_template))
 
@@ -111,12 +103,8 @@ class DetectionDataset(MultiDataset, ABC):
 
             for object_index, ds_object in enumerate(self.train):
                 # TODO fix this hacky stuff, extension needs to be known but this is not clean
-                original_extension = ds_object.data.relative_path.split("/")[-1].split(
-                    "."
-                )[-1]
-                file_name = str(
-                    train_data_folder / f"{object_index}.{original_extension}"
-                )
+                original_extension = ds_object.data.relative_path.split("/")[-1].split(".")[-1]
+                file_name = str(train_data_folder / f"{object_index}.{original_extension}")
 
                 dataset_dir.add_data(file_name, StringBinaryData(rendered_template))
 

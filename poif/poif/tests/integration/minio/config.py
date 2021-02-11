@@ -1,5 +1,3 @@
-from dataclasses import dataclass
-
 from poif.tests.integration.docker import DockerConfig
 
 

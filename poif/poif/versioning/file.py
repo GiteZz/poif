@@ -31,6 +31,4 @@ class VersionedFile(DiskData):
         with open(vfile) as f:
             file_content = json.load(f)
         file_path = base_dir / file_content["path"]
-        return VersionedFile(
-            base_dir=base_dir, file_path=file_path, tag=file_content["tag"]
-        )
+        return VersionedFile(base_dir=base_dir, file_path=file_path, tag=file_content["tag"])

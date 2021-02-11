@@ -20,9 +20,7 @@ class RemoteOrigin(DvcOrigin):
         return {**self.url_params, "data_tag": tag}
 
     def get_tag_file_mapping(self):
-        r = requests.get(
-            f"{self.datacache_url}{GET_FILES_PATH}", params=self.url_params
-        )
+        r = requests.get(f"{self.datacache_url}{GET_FILES_PATH}", params=self.url_params)
 
         return r.json()
 

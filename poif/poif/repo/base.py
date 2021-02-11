@@ -2,7 +2,7 @@ import typing
 from abc import abstractmethod
 
 if typing.TYPE_CHECKING:
-    from poif.tagged_data import TaggedData
+    from poif.tagged_data.base import TaggedData
 
 
 class TaggedRepo:

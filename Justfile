@@ -1,3 +1,12 @@
+check:
+    autoflake --remove-all-unused-imports --recursive --remove-unused-variables --in-place .
+    cd ./poif && isort .
+    cd ./poif && black --line-length 119 .
+    cd ./poif && mypy .
+
+pre-commit check:
+    cd ./poif && pytest .
+
 setup-test-environment:
     python ./poif/poif/tests/gitlab/setup.py
     python ./poif/poif/tests/minio/setup.py

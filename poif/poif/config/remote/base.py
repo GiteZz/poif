@@ -35,9 +35,7 @@ class RemoteConfig(Config):
         )
         remote_enum = RemoteType[remote_type]
 
-        if default_remote is not None and isinstance(
-            default_remote.config, remote_types[remote_enum]
-        ):
+        if default_remote is not None and isinstance(default_remote.config, remote_types[remote_enum]):
             config = remote_types[remote_type].prompt(default=default_remote.config)
         else:
             config = remote_types[remote_type].prompt()
@@ -47,6 +45,4 @@ class RemoteConfig(Config):
             default=None if default_remote is None else default_remote.data_folder,
         )
 
-        return RemoteConfig(
-            remote_type=remote_enum, data_folder=data_folder, config=config
-        )
+        return RemoteConfig(remote_type=remote_enum, data_folder=data_folder, config=config)

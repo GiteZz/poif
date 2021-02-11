@@ -51,10 +51,7 @@ class Mapping(LazyLoadedTaggedData, ABC):
         tags = list(self.mapping.keys())
         relative_files = list(self.mapping.values())
 
-        return [
-            tag
-            for _, tag in sorted(zip(relative_files, tags), key=lambda pair: pair[0])
-        ]
+        return [tag for _, tag in sorted(zip(relative_files, tags), key=lambda pair: pair[0])]
 
     @abstractmethod
     def set_mapping(self):

@@ -1,9 +1,8 @@
 from pathlib import Path
 import shutil
-import json
 
 from general_loading import rows, orig_img_dir
-from utils import parse_bbs, get_label, to_supervisely_json
+from utils import get_label, parse_bbs
 
 
 yolo_ds_folder = Path('/home/gilles/datasets/cones/yolo')

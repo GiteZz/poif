@@ -13,11 +13,9 @@ def create_repo(config: GitlabConfig, name) -> str:
     git_api_headers = headers_from_config(config)
     create_repo_param = {"name": name, "path": f"datasets-{name}"}
 
-    create_repo_response = requests.post(
-        create_repo_git_api, params=create_repo_param, headers=git_api_headers
-    )
+    create_repo_response = requests.post(create_repo_git_api, params=create_repo_param, headers=git_api_headers)
     check_if_ok(create_repo_response)
-    repo_url = create_repo_response.json()["http_url_to_repo"]
+    create_repo_response.json()["http_url_to_repo"]
 
     return config.url + "/root/" + create_repo_param["path"] + ".git"
 
@@ -59,9 +57,7 @@ def delete_all_projects(config: GitlabConfig):
 
     for project in all_projects:
         project_id = project["id"]
-        execute_gitlab_api_call(
-            f"projects/{project_id}", config, method=RequestType.DELETE
-        )
+        execute_gitlab_api_call(f"projects/{project_id}", config, method=RequestType.DELETE)
 
 
 def get_existing_credentials():

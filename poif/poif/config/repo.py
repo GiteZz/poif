@@ -26,9 +26,7 @@ class DataRepoConfig(Config, FileCreatorMixin):
         return DataRepoConfig(collection=collection, readme=readme, package=package)
 
     def write_to_package(self, base_dir: Path):
-        resource_dir = packages[self.package.type].get_resource_directory(
-            base_dir=base_dir
-        )
+        resource_dir = packages[self.package.type].get_resource_directory(base_dir=base_dir)
 
         write_in_base_dir = [self.package, self.readme]
         write_in_config_dir = [self.collection]
@@ -53,13 +51,9 @@ class DataRepoConfig(Config, FileCreatorMixin):
         package_file = base_dir / PackageConfig.get_default_name()
         package_config = PackageConfig.read(package_file)
 
-        resource_dir = packages[package_config.type].get_resource_directory(
-            base_dir=base_dir
-        )
+        resource_dir = packages[package_config.type].get_resource_directory(base_dir=base_dir)
 
         collection_file = resource_dir / DataCollectionConfig.get_default_name()
         collection_config = DataCollectionConfig.read(collection_file)
 
-        return DataRepoConfig(
-            collection=collection_config, readme=readme_config, package=package_config
-        )
+        return DataRepoConfig(collection=collection_config, readme=readme_config, package=package_config)

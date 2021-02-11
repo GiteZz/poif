@@ -34,9 +34,7 @@ class PythonPackage(Package):
 
     def write_template(self, template_loc: Path, destination: Path):
         template = Template(open(template_loc).read())
-        rendered_template = template.render(
-            data={"dataset_name": self.collection_config.name}
-        )
+        rendered_template = template.render(data={"dataset_name": self.collection_config.name})
 
         with open(destination, "w") as f:
             f.write(rendered_template)

@@ -6,7 +6,7 @@ import requests
 def is_alive(url):
     # TODO bit crude
     try:
-        r = requests.get(url)
+        requests.get(url)
         return True
     except:
         print("Not ready")

@@ -1,6 +1,5 @@
 from typing import Tuple
 
-from poif.config.remote.base import RemoteConfig
 from poif.tests.integration.gitlab.config import GitlabConfig
 from poif.tests.integration.gitlab.setup import gitlab_setup
 from poif.tests.integration.minio.config import MinioConfig
