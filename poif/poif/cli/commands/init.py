@@ -4,7 +4,7 @@ from typing import List
 from poif.cli.tools.cli import simple_input
 from poif.config.repo import DataRepoConfig
 from poif.git.repo import GitRepo
-from poif.packaging.base import packages
+from poif.packaging import packages
 from poif.packaging.python_package import PythonPackage
 from poif.repo.file_remote import get_remote_repo_from_config
 from poif.utils.readme import DatasetReadme

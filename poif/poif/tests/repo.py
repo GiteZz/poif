@@ -6,7 +6,7 @@ from poif.config.package import PackageConfig
 from poif.config.readme import ReadmeConfig
 from poif.config.remote.base import RemoteConfig
 from poif.config.repo import DataRepoConfig
-from poif.packaging.base import PackageOptions
+from poif.packaging import PackageOptions
 from poif.tests import get_temp_path, write_image_in_file, write_json_in_file
 from poif.tests.integration.minio.config import MinioConfig
 from poif.tests.integration.minio.setup import get_repo_remotes_from_config

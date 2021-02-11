@@ -1,10 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional
 
-from attr import dataclass
-
 from poif.input.meta_info import MetaInfoMixin
-from poif.tagged_data.base import TaggedData
+from poif.tagged_data.base import TaggedData, TaggedPassthrough
 
 
 class DataSetAnnotation(MetaInfoMixin, ABC):
@@ -13,12 +11,12 @@ class DataSetAnnotation(MetaInfoMixin, ABC):
         pass
 
 
-@dataclass
-class Mask(DataSetAnnotation):
-    data: Optional[TaggedData] = None
+class Mask(TaggedPassthrough, DataSetAnnotation):
+    def __init__(self, tagged_data: TaggedData):
+        super().__init__(tagged_data)
 
     def output(self):
-        return self.label, self.data.get_parsed()
+        return self.label, self.get_parsed()
 
 
 class Point(DataSetAnnotation):

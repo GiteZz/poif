@@ -1,6 +1,12 @@
 import pytest
 
-from poif.cli.tools import MaxTriesReachedException, in_list_validation, input_with_possible_default, multi_input, yes
+from poif.cli.tools.cli import (
+    MaxTriesReachedException,
+    in_list_validation,
+    input_with_possible_default,
+    multi_input,
+    yes,
+)
 from poif.tests import MonkeyPatchSequence
 
 

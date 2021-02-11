@@ -1,20 +1,23 @@
-from typing import Set
+from typing import Set, Optional
 
-from poif.cli.datasets import simple_input
+from poif.cli.tools.cli import simple_input
 from poif.config.base import Config
 from poif.config.remote.mixins import CreateRemoteMixin
 from poif.remote.s3 import S3Remote
 
 
 class S3Config(Config, CreateRemoteMixin):
-    @classmethod
-    def get_default_name(cls) -> str:
-        pass
-
     url: str
     profile: str
     bucket: str
-    type: str = "S3"
+    type: Optional[str] = "S3"
+
+    def __init__(self, url: str, profile: str, bucket: str):
+        super().__init__()
+
+        self.url = url
+        self.profile = profile
+        self.bucket = bucket
 
     @staticmethod
     def prompt(default: "S3Config" = None) -> "S3Config":
@@ -36,3 +39,7 @@ class S3Config(Config, CreateRemoteMixin):
 
     def get_configured_remote(self) -> S3Remote:
         return S3Remote(self)
+
+    @classmethod
+    def get_default_name(cls) -> str:
+        pass

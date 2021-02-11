@@ -1,6 +1,6 @@
 from poif.cli.tools.cli import enum_input
 from poif.config.base import Config
-from poif.packaging.base import PackageOptions
+from poif.packaging import PackageOptions
 
 
 class PackageConfig(Config):
