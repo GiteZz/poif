@@ -13,14 +13,14 @@ def test_correct_loading():
     h, w, c = original_img.shape
 
     for extension in ImageParser.approved_extensions:
-        img_file = tempfile.mkstemp(suffix=f'.{extension}')[1]
+        img_file = tempfile.mkstemp(suffix=f".{extension}")[1]
 
         cv2.imwrite(img_file, img_bgr)
 
-        with open(img_file, 'rb') as f:
+        with open(img_file, "rb") as f:
             img_bytes = f.read()
 
         loaded_img = ImageParser.parse(img_bytes)
 
-        file_by_extension[extension] = tempfile.mkstemp(suffix=f'.{extension}')[1]
+        file_by_extension[extension] = tempfile.mkstemp(suffix=f".{extension}")[1]
         assert_image_nearly_equal(original_img, loaded_img)

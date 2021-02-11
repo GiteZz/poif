@@ -2,9 +2,7 @@ from dataclasses import fields
 
 from flask import jsonify, make_response, request, send_file
 
-from poif.cache.disk_over_http import (GET_FILE_PATH, GET_FILES_PATH,
-                                       GET_SIZE_PATH)
-from poif.cache.disk_over_http import app
+from poif.cache.disk_over_http import GET_FILE_PATH, GET_FILES_PATH, GET_SIZE_PATH, app
 from poif.origin.git import DvcOrigin
 
 cached_objects = {}
@@ -18,14 +16,19 @@ def get_files_from_request(request_args):
 
 def get_dataclass_from_cache(request_args, class_def):
     data_class_params = get_params_for_dataclass(request_args, class_def)
-    extracted_params = {key: value for key, value in request_args if key in data_class_params}
+    extracted_params = {
+        key: value for key, value in request_args if key in data_class_params
+    }
 
-    cache_key = tuple([extracted_params[key] for key in sorted(extracted_params.keys())])
+    cache_key = tuple(
+        [extracted_params[key] for key in sorted(extracted_params.keys())]
+    )
 
     if cache_key not in cached_objects:
         cached_objects[cache_key] = class_def(**extracted_params)
 
     return cached_objects[cache_key]
+
 
 def get_file_from_datapoint(request_args):
     dvc_origin = get_dataclass_from_cache(request_args, DvcOrigin)
@@ -48,9 +51,11 @@ def request_to_dataclass(request, class_type):
     missing_params = get_params_for_dataclass()
 
     if len(missing_params) > 0:
-        raise Exception(f'Missing parameters: {list(missing_params)}')
+        raise Exception(f"Missing parameters: {list(missing_params)}")
 
-    needed_params = {key: value for key, value in request.args if key in required_params}
+    needed_params = {
+        key: value for key, value in request.args if key in required_params
+    }
 
     return class_type(**needed_params)
 
@@ -71,7 +76,7 @@ def route_get_file_contents():
     extension = file_cache.get_extension(dvc_datapoint)
 
     response = make_response(send_file(data_file_path))
-    response.headers['extension'] = extension
+    response.headers["extension"] = extension
     return response
 
 
@@ -86,8 +91,8 @@ def route_get_file_contents():
     extension = file_cache.get_extension(dvc_datapoint)
 
     response = make_response(send_file(data_file_path))
-    response.headers['extension'] = extension
+    response.headers["extension"] = extension
     return response
 
 
-print('Views loaded')
+print("Views loaded")

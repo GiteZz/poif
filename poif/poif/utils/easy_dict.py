@@ -1,5 +1,3 @@
-
-
 class EasyDict(dict):
     def __init__(self, base_dict: dict = None):
         super().__init__()

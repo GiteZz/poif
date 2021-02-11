@@ -15,15 +15,15 @@ from poif.tests.integration.minio.setup import get_repo_remotes_from_config
 def create_realistic_folder_structure() -> Tuple[Path, List[str], List[str]]:
     base_dir = get_temp_path()
 
-    files = [f'0{i}.jpg' for i in range(10)]
-    base_folders = ['train', 'val', 'test']
-    sub_folders = ['image', 'mask']
+    files = [f"0{i}.jpg" for i in range(10)]
+    base_folders = ["train", "val", "test"]
+    sub_folders = ["image", "mask"]
 
     additional_files = [
-        'meta.json',
-        'train/train_meta.json',
-        'val/val_meta.json',
-        'test/test_meta.json',
+        "meta.json",
+        "train/train_meta.json",
+        "val/val_meta.json",
+        "test/test_meta.json",
     ]
 
     for base_folder in base_folders:
@@ -42,13 +42,22 @@ def create_realistic_folder_structure() -> Tuple[Path, List[str], List[str]]:
 def create_data_collection(remote: RemoteConfig):
     base_dir, dirs, files = create_realistic_folder_structure()
 
-    return base_dir, DataCollectionConfig(name='test', folders=dirs, files=files, data_remote=remote)
+    return base_dir, DataCollectionConfig(
+        name="test", folders=dirs, files=files, data_remote=remote
+    )
 
 
 def create_data_repo(minio_config: MinioConfig) -> Tuple[Path, DataRepoConfig]:
     data_remote, readme_remote = get_repo_remotes_from_config(minio_config)
-    readme_config = ReadmeConfig(enable=True, enable_filetree=True, enable_image_gallery=True, image_remote=readme_remote)
+    readme_config = ReadmeConfig(
+        enable=True,
+        enable_filetree=True,
+        enable_image_gallery=True,
+        image_remote=readme_remote,
+    )
     base_dir, collection_config = create_data_collection(data_remote)
     package_config = PackageConfig(type=PackageOptions.python_package)
 
-    return base_dir, DataRepoConfig(collection=collection_config, readme=readme_config, package=package_config)
+    return base_dir, DataRepoConfig(
+        collection=collection_config, readme=readme_config, package=package_config
+    )

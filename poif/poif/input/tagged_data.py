@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from poif.tagged_data.base import TaggedData
 from poif.input.base import DataSetObject
+from poif.tagged_data.base import TaggedData
 
 
 @dataclass

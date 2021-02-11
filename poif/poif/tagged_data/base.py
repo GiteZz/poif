@@ -25,7 +25,7 @@ class StringBinaryData(BinaryData):
         return len(self.data)
 
     def get(self) -> bytes:
-        return bytes(self.data.encode('utf-8'))
+        return bytes(self.data.encode("utf-8"))
 
 
 class TaggedData(BinaryData, ParseMixin, ABC):
@@ -43,7 +43,7 @@ class TaggedData(BinaryData, ParseMixin, ABC):
     @property
     def extension(self) -> str:
         # TODO check better
-        return self.relative_path.split('/')[-1].split('.')[-1]
+        return self.relative_path.split("/")[-1].split(".")[-1]
 
     @property
     def relative_path(self):

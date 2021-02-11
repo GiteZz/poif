@@ -2,8 +2,13 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import List
 
-from poif.utils import (FileIterator, InOrderPathIterator, get_file_depth,
-                        is_more_populated, sorted_files_by_extension)
+from poif.utils import (
+    FileIterator,
+    InOrderPathIterator,
+    get_file_depth,
+    is_more_populated,
+    sorted_files_by_extension,
+)
 
 
 @dataclass
@@ -34,7 +39,7 @@ class FileTreeIterator(InOrderPathIterator):
         if is_more_populated(directory, len(selected_files)):
             last_file = selected_files[-1]
 
-            selected_files.append(last_file.parent / '...')
+            selected_files.append(last_file.parent / "...")
 
         return selected_files
 
@@ -47,5 +52,7 @@ class FileTree:
     def get_lines(self) -> List[str]:
         lines = [self.base_dir.parts[-1]]
         for file in FileTreeIterator(self.base_dir, limit=self.limit):
-            lines.append('  ' * get_file_depth(self.base_dir, file) + '- ' + file.parts[-1])
+            lines.append(
+                "  " * get_file_depth(self.base_dir, file) + "- " + file.parts[-1]
+            )
         return lines

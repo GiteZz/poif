@@ -1,8 +1,9 @@
+import uuid
+
 from poif.tests import get_img_file
 from poif.tests.integration.minio.config import MinioConfig
-from poif.tests.integration.minio.setup import minio_setup, get_remote_from_config
+from poif.tests.integration.minio.setup import get_remote_from_config, minio_setup
 
-import uuid
 
 def setup_and_get_remote():
     minio_config = MinioConfig()
@@ -10,11 +11,12 @@ def setup_and_get_remote():
 
     return get_remote_from_config(minio_config)
 
+
 def test_s3_remote():
     s3_remote = setup_and_get_remote()
     img = get_img_file()
 
-    with open(img, 'rb') as f:
+    with open(img, "rb") as f:
         file_bytes = f.read()
 
     remote_name = str(uuid.uuid4())

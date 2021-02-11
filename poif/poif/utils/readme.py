@@ -10,7 +10,7 @@ from poif.utils.filetree import FileTree
 class ReadmeSection:
     _title: str = None
     _content: str = None
-    _subsections: List['ReadmeSection']
+    _subsections: List["ReadmeSection"]
 
     def __init__(self, title: str, content: Optional[str] = None):
         self._title = title
@@ -32,13 +32,13 @@ class ReadmeSection:
         code_block_start = "```\n"
 
         for line in lines:
-            code_block_start += f'{line}\n'
+            code_block_start += f"{line}\n"
 
-        code_block_start += '```'
+        code_block_start += "```"
 
         return code_block_start
 
-    def add_section(self, section: 'ReadmeSection'):
+    def add_section(self, section: "ReadmeSection"):
         self._subsections.append(section)
 
     def render(self, level=0):
@@ -49,12 +49,12 @@ class ReadmeSection:
         return rendered_title + rendered_content + rendered_subsections
 
     def render_title(self, level=0):
-        title_level = '#' * (level + 1)
-        return f'{title_level} {self.title}\n'
+        title_level = "#" * (level + 1)
+        return f"{title_level} {self.title}\n"
 
     def render_content(self):
         if len(self.content) > 0 and not has_newline(self.content):
-            return self.content + '\n'
+            return self.content + "\n"
 
         return self.content
 
@@ -98,7 +98,7 @@ class DatasetReadme(ReadmeSection, FileCreatorMixin):
         self.add_dataset_sections()
 
     def add_dataset_sections(self):
-        file_trees_section = ReadmeSection(title='Data directories')
+        file_trees_section = ReadmeSection(title="Data directories")
         self.add_section(file_trees_section)
 
         for data_folder in self.config.folders:
@@ -108,12 +108,12 @@ class DatasetReadme(ReadmeSection, FileCreatorMixin):
 
     @classmethod
     def get_default_name(cls) -> str:
-        return 'README.md'
+        return "README.md"
 
     def write_to_folder(self, folder: Path):
         rendered = self.render()
         file_name = folder / self.get_default_name()
-        with open(file_name, 'w') as f:
+        with open(file_name, "w") as f:
             f.write(rendered)
 
         self.add_created_file(file_name)

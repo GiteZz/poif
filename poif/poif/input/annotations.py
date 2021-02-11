@@ -31,7 +31,15 @@ class Point(DataSetAnnotation):
 
 class BoundingBox(DataSetAnnotation):
     # TODO fix with inheritance such that the meta input values should not be used here
-    def __init__(self, x: float, y: float, w: float, h: float, label: str = None, tags: List[str] = None):
+    def __init__(
+        self,
+        x: float,
+        y: float,
+        w: float,
+        h: float,
+        label: str = None,
+        tags: List[str] = None,
+    ):
         super().__init__(label=label, tags=tags)
 
         self.x = x
@@ -46,15 +54,20 @@ class BoundingBox(DataSetAnnotation):
         return [self.x, self.y, self.w, self.h]
 
     def int_bbox(self, img_width, img_height) -> List[int]:
-        return [int(self.x * img_width), int(self.y * img_height), int(self.w * img_width), int(self.h * img_height)]
+        return [
+            int(self.x * img_width),
+            int(self.y * img_height),
+            int(self.w * img_width),
+            int(self.h * img_height),
+        ]
 
     def coco_bbox(self, img_width, img_height) -> str:
 
         int_bbox = self.int_bbox(img_width, img_height)
-        return ' '.join(str(value) for value in int_bbox)
+        return " ".join(str(value) for value in int_bbox)
 
     def yolo_label(self):
         yolo_x = self.x + self.w / 2
         yolo_y = self.y + self.h / 2
 
-        return f'{self.label} {yolo_x} {yolo_y} {self.w} {self.h}'
+        return f"{self.label} {yolo_x} {yolo_y} {self.w} {self.h}"

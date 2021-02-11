@@ -5,36 +5,42 @@ from typing import Callable, List, Optional
 
 def simple_input(title: str, default: str = None) -> str:
     if default is not None:
-        print(f'{title}: [default: {default}]')
+        print(f"{title}: [default: {default}]")
     else:
-        print(f'{title}: ')
+        print(f"{title}: ")
 
     return input_with_possible_default(default=default)
 
 
 def answer_from_list(title: str, answer_list: List[str], default: str = None):
-    print(f'{title} Options: {answer_list}')
-    return input_with_possible_default(default=default, validation_function=in_list_validation(answer_list))
+    print(f"{title} Options: {answer_list}")
+    return input_with_possible_default(
+        default=default, validation_function=in_list_validation(answer_list)
+    )
 
 
 def enum_input(title: str, enum_class: Enum, default=None):
     enum_values = [e.value for e in enum_class]
-    return answer_from_list(title, enum_values, None if default is None else default.value)
+    return answer_from_list(
+        title, enum_values, None if default is None else default.value
+    )
 
 
 def path_input(title: str, default: Path = None):
     if default is not None:
-        print(f'{title}: [default: {str(default)}]')
+        print(f"{title}: [default: {str(default)}]")
     else:
-        print(f'{title}: ')
+        print(f"{title}: ")
 
-    answer = input_with_possible_default(default=None if default is None else str(default))
+    answer = input_with_possible_default(
+        default=None if default is None else str(default)
+    )
 
     return Path(answer)
 
 
 def multi_input(title: str, empty_allowed=False):
-    print(title + ' [Empty input to stop]')
+    print(title + " [Empty input to stop]")
 
     answers = []
     while True:
@@ -45,7 +51,7 @@ def multi_input(title: str, empty_allowed=False):
             if len(answers) > 0 or empty_allowed:
                 return answers
             else:
-                print('Please provide one or more answers')
+                print("Please provide one or more answers")
 
 
 class MaxTriesReachedException(Exception):
@@ -60,7 +66,7 @@ def input_with_possible_default(default=None, validation_function=None) -> str:
         answer = input()
 
         if validation_function is not None and not validation_function(answer):
-            print('Answer was not valid, please provide a correct answer.')
+            print("Answer was not valid, please provide a correct answer.")
             invalid_count += 1
             continue
 
@@ -69,7 +75,9 @@ def input_with_possible_default(default=None, validation_function=None) -> str:
 
         return answer
 
-    raise MaxTriesReachedException(f'Valid input could not be provided after {max_invalid_count} tries.')
+    raise MaxTriesReachedException(
+        f"Valid input could not be provided after {max_invalid_count} tries."
+    )
 
 
 def not_empy_validation():
@@ -89,11 +97,11 @@ def yes(default=False) -> bool:
     while True:
         answer = input().lower()
 
-        if answer in ['y', 'yes']:
+        if answer in ["y", "yes"]:
             return True
-        elif answer in ['n', 'no']:
+        elif answer in ["n", "no"]:
             return False
         else:
             if answer == "" and default:
                 return True
-            print('Provide a valid answer. [y / yes / n / no]')
+            print("Provide a valid answer. [y / yes / n / no]")

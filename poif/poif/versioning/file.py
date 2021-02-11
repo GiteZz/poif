@@ -17,21 +17,20 @@ class VersionedFile(DiskData):
     def get_vfile_name(self):
         file_name = get_file_name_from_path(self.file_path)
 
-        return f'{file_name}.vfile'
+        return f"{file_name}.vfile"
 
     def write_vfile_to_folder(self, directory: Path) -> Path:
         vfile = directory / self.get_vfile_name()
-        with open(vfile, 'w') as f:
-            json.dump({
-                'path': self.relative_path,
-                'tag': self.tag
-            }, f, indent=4)
+        with open(vfile, "w") as f:
+            json.dump({"path": self.relative_path, "tag": self.tag}, f, indent=4)
 
         return vfile
 
     @staticmethod
-    def from_file(vfile: Path, base_dir: Path) -> 'VersionedFile':
+    def from_file(vfile: Path, base_dir: Path) -> "VersionedFile":
         with open(vfile) as f:
             file_content = json.load(f)
-        file_path = base_dir / file_content['path']
-        return VersionedFile(base_dir=base_dir, file_path=file_path, tag=file_content['tag'])
+        file_path = base_dir / file_content["path"]
+        return VersionedFile(
+            base_dir=base_dir, file_path=file_path, tag=file_content["tag"]
+        )

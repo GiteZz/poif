@@ -9,12 +9,12 @@ from poif.config import poif_config_folder
 class Config(BaseModel):
     @classmethod
     def read(cls, file: Path):
-        with open(file, 'r') as f:
+        with open(file, "r") as f:
             json_content = f.read()
         return cls.parse_raw(json_content)
 
     def write(self, file: Path):
-        with open(file, 'w') as f:
+        with open(file, "w") as f:
             f.write(self.json())
 
     @classmethod
@@ -25,7 +25,7 @@ class Config(BaseModel):
         return None
 
     def json(self, *args, **kwargs) -> str:
-        kwargs['exclude'] = self.get_write_exclusions()
+        kwargs["exclude"] = self.get_write_exclusions()
         return super().json(*args, **kwargs)
 
     def save_default(self):
@@ -41,4 +41,4 @@ class Config(BaseModel):
 
     @classmethod
     def get_write_exclusions(cls) -> Set[str]:
-        return {'default_location'}
+        return {"default_location"}

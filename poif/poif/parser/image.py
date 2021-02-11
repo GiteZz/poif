@@ -5,7 +5,8 @@ from poif.parser.base import Parser
 
 
 class ImageParser(Parser):
-    approved_extensions = ['jpg', 'png', 'jpeg']
+    approved_extensions = ["jpg", "png", "jpeg"]
+
     @staticmethod
     def parse(to_parse: bytes) -> np.ndarray:
         np_buf = np.frombuffer(to_parse, np.uint8)

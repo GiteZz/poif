@@ -1,5 +1,5 @@
-from poif.tagged_data.base import TaggedData
 from poif.repo.base import TaggedRepo
+from poif.tagged_data.base import TaggedData
 from poif.typing import FileHash
 
 

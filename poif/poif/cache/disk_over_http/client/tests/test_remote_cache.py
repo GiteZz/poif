@@ -5,46 +5,43 @@ import cv2
 from httmock import HTTMock, all_requests, response
 
 from poif.cache.disk_over_http import RemoteCache
-from poif.tagged_data import DvcDataPoint
 from poif.origin.git import DvcOrigin
+from poif.tagged_data import DvcDataPoint
 from poif.tests import get_img
 
 img = get_img()
 
-img_extension = 'png'
-img_file = tempfile.mkstemp(suffix=f'.{img_extension}')[1]
+img_extension = "png"
+img_file = tempfile.mkstemp(suffix=f".{img_extension}")[1]
 cv2.imwrite(img_file, img)
 
 
 @all_requests
 def mock_get_file(url, request):
-    with open(img_file, 'rb') as f:
+    with open(img_file, "rb") as f:
         img_bytes = f.read()
 
-    headers = {'extension': img_extension}
+    headers = {"extension": img_extension}
     content = img_bytes
     return response(200, content, headers)
 
 
-test_files = {
-    'aa': '01.jpg',
-    'bb': '02.jpg'
-}
+test_files = {"aa": "01.jpg", "bb": "02.jpg"}
 
 
 @all_requests
 def mock_get_files(url, request):
-    headers = {'mimetype': ' application/json'}
+    headers = {"mimetype": " application/json"}
 
     return response(200, json.dumps(test_files), headers)
 
 
-datacache_url = 'http://datasets.com'
+datacache_url = "http://datasets.com"
 
 
 def test_get_file():
     remote_cache = RemoteCache(datacache_url)
-    datapoint = DvcOrigin(git_commit='aa', git_url='git.com')
+    datapoint = DvcOrigin(git_commit="aa", git_url="git.com")
     with HTTMock(mock_get_file):
         # This is read in RGB
         cache_img = remote_cache.get_files(datapoint)
@@ -58,7 +55,7 @@ def test_get_file():
 
 def test_get_files():
     remote_cache = RemoteCache(datacache_url)
-    origin = DvcDataPoint(data_tag='aa', git_commit='aa', git_url='git.com')
+    origin = DvcDataPoint(data_tag="aa", git_commit="aa", git_url="git.com")
     with HTTMock(mock_get_files):
         # This is read in RGB
         retrieved_files = remote_cache.get_files(origin)

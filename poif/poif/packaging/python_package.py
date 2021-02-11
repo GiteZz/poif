@@ -17,7 +17,7 @@ class PythonPackage(Package):
 
     def init(self):
         template_path = get_python_package_template_dir()
-        for template_file in template_path.rglob('*.jinja2'):
+        for template_file in template_path.rglob("*.jinja2"):
             destination = self.get_template_destination(template_file, template_path)
             self.write_template(template_file, destination)
 
@@ -34,14 +34,16 @@ class PythonPackage(Package):
 
     def write_template(self, template_loc: Path, destination: Path):
         template = Template(open(template_loc).read())
-        rendered_template = template.render(data={'dataset_name': self.collection_config.name})
+        rendered_template = template.render(
+            data={"dataset_name": self.collection_config.name}
+        )
 
-        with open(destination, 'w') as f:
+        with open(destination, "w") as f:
             f.write(rendered_template)
 
     @classmethod
     def get_resource_directory(cls, base_dir: Path):
-        resource_dir = base_dir / 'datasets' / 'resources'
+        resource_dir = base_dir / "datasets" / "resources"
         resource_dir.mkdir(exist_ok=True, parents=True)
 
         return resource_dir

@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
+from typing import Dict, List
 
-from poif.input.meta_info import MetaInfoMixin
 from poif.input.annotations import DataSetAnnotation
+from poif.input.meta_info import MetaInfoMixin
 from poif.tagged_data.base import TaggedData
-from typing import List, Dict
 
 
 # TODO change to BinaryData and try to capture the original name if available

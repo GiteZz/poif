@@ -17,28 +17,30 @@ def get_relative_path(base_dir: Path, file: Path):
 
     => 'name/train/01.jpg'
     """
-    return str(file)[len(str(base_dir)) + 1:]
+    return str(file)[len(str(base_dir)) + 1 :]
 
 
 def hash_object(file: Path):
-    with open(file, 'rb') as f:
+    with open(file, "rb") as f:
         hash = md5(f.read()).hexdigest()
     return hash
 
 
 def hash_string(string: str):
-    return md5(string.encode('utf-8')).hexdigest()
+    return md5(string.encode("utf-8")).hexdigest()
 
 
 def get_file_name_from_path(file: Path):
     name_with_extension = file.parts[-1]
-    name_without_extension = name_with_extension.split('.')[0]
+    name_without_extension = name_with_extension.split(".")[0]
     return name_without_extension
+
 
 def get_extension_from_path(file: Path):
     name_with_extension = file.parts[-1]
-    extension = name_with_extension.split('.')[-1]
+    extension = name_with_extension.split(".")[-1]
     return extension
+
 
 def is_image(path: Path):
     return get_extension_from_path(path) in img_extensions
@@ -59,7 +61,7 @@ def convert_zero_or_more(arg):
 def has_newline(line: str):
     if len(line) == 0:
         return False
-    return line[-1] == '\n'
+    return line[-1] == "\n"
 
 
 class Iterator(ABC):
@@ -69,6 +71,7 @@ class Iterator(ABC):
     @abstractmethod
     def __next__(self):
         pass
+
 
 class IteratorValidator:
     def is_valid(self, path: Path) -> bool:
@@ -92,12 +95,12 @@ class OnlyImage(OnlyFile):
 
 class DirectoryExpander:
     def expand_directory(self, directory: Path):
-        return directory.glob('*')
+        return directory.glob("*")
 
 
 class RecursiveDirectoryExpand(DirectoryExpander):
     def expand_directory(self, directory: Path):
-        return directory.rglob('*')
+        return directory.rglob("*")
 
 
 @dataclass
@@ -188,7 +191,6 @@ class CombinedIterator(Iterator):
                 self.set_new_iterator()
 
 
-
 @dataclass
 class InOrderPathIterator(Iterator):
     dir: Path
@@ -262,3 +264,7 @@ def is_more_populated(directory: Path, value: int) -> bool:
             break
 
     return remaining < 0
+
+
+def is_close(value1: float, value2: float, max_diff: float = 0.0001):
+    return abs(value1 - value2) < max_diff

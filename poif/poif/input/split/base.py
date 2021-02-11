@@ -1,16 +1,15 @@
-from typing import List, Dict
+from collections import defaultdict
+from typing import Dict, List
 
 from poif.input.base import DataSetObject
 from poif.typing import SubSetName
-from collections import defaultdict
-
 
 SplitterDict = Dict[SubSetName, List[DataSetObject]]
 
 
 class Splitter:
     def split_single_input(self, ds_input: DataSetObject) -> SubSetName:
-        raise Exception('Single input transform was not defined.')
+        raise Exception("Single input transform was not defined.")
 
     def split_input_list(self, inputs: List[DataSetObject]) -> SplitterDict:
         splitter_dict = defaultdict[list]

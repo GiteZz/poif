@@ -2,8 +2,8 @@ from abc import ABC, abstractmethod
 from typing import Any, Dict
 
 from poif.cache.base import ParseMixin
-from poif.tagged_data import DvcDataPoint
 from poif.origin.git import DvcOrigin
+from poif.tagged_data import DvcDataPoint
 from poif.typing import FileHash, RelFilePath
 
 
@@ -30,7 +30,10 @@ class SingleRepoCache(ParseMixin):
         return self.base_cache.get_files(self.dvc_origin)
 
     def get_file(self, data_tag: FileHash):
-        return self.base_cache.get_file(DvcDataPoint(data_tag=data_tag,
-                                                     git_url=self.dvc_origin.git_url,
-                                                     git_commit=self.dvc_origin.git_commit)
-                                        )
+        return self.base_cache.get_file(
+            DvcDataPoint(
+                data_tag=data_tag,
+                git_url=self.dvc_origin.git_url,
+                git_commit=self.dvc_origin.git_commit,
+            )
+        )

@@ -12,7 +12,7 @@ class MockBinary(BinaryData):
         return len(self.data)
 
     def get(self) -> bytes:
-        return bytes(self.data.encode('utf-8'))
+        return bytes(self.data.encode("utf-8"))
 
 
 def test_filesystem_creation():
@@ -32,4 +32,6 @@ def test_filesystem_creation():
 
     p.terminate()
 
-    print(disk_loc)
+
+def test_conversion():
+    pass

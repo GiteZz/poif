@@ -1,4 +1,4 @@
-from typing import List, Callable, Optional, Union
+from typing import Callable, List, Optional, Union
 
 from poif.input.base import DataSetObject
 from poif.input.transform.base import Transformation
@@ -9,14 +9,15 @@ CallableDataSetTransformation = Callable[[List[DataSetObject]], List[DataSetObje
 
 
 class MethodTransformation(Transformation):
-    def __init__(self,
-                 single_transform: CallableDataPointTransformation = None,
-                 multi_transform: CallableDataSetTransformation = None
-                 ):
+    def __init__(
+        self,
+        single_transform: CallableDataPointTransformation = None,
+        multi_transform: CallableDataSetTransformation = None,
+    ):
         if single_transform is not None and multi_transform is not None:
-            raise Exception('Both transformation types can\'t be defined')
+            raise Exception("Both transformation types can't be defined")
         if single_transform is None and multi_transform is None:
-            raise Exception('Define one transformation')
+            raise Exception("Define one transformation")
 
         self.single_transform = single_transform
         self.multi_transform = multi_transform

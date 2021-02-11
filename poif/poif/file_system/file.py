@@ -10,7 +10,13 @@ class File:
         self.name = name
         self.data = PartialGetWrapper(data)
 
-    def get_attr(self, size=0, change_status_time=time(), modification_time=time(), access_time=time()):
+    def get_attr(
+        self,
+        size=0,
+        change_status_time=time(),
+        modification_time=time(),
+        access_time=time(),
+    ):
         # Info from here: https://man7.org/linux/man-pages/man2/stat.2.html
         return dict(
             st_mode=(S_IFREG | 0o644),  # Contains file type and mode

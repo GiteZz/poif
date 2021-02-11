@@ -7,9 +7,9 @@ from typing import List
 from tqdm import tqdm
 
 from poif.tagged_data import LazyLoadedTaggedData
-from poif.versioning.file import VersionedFile
 from poif.typing import FileHash
 from poif.utils import RecursiveFileIterator, get_relative_path
+from poif.versioning.file import VersionedFile
 
 
 class Mapping(LazyLoadedTaggedData, ABC):
@@ -23,10 +23,10 @@ class Mapping(LazyLoadedTaggedData, ABC):
 
     @property
     def extension(self) -> str:
-        return 'mapping'
+        return "mapping"
 
     def get(self) -> bytes:
-        return json.dumps(self.mapping).encode('utf-8')
+        return json.dumps(self.mapping).encode("utf-8")
 
     @property
     def mapping(self):
@@ -43,7 +43,7 @@ class Mapping(LazyLoadedTaggedData, ABC):
         intermediate_hash = md5()
 
         for tag in sorted_tags:
-            intermediate_hash.update(tag.encode('utf-8'))
+            intermediate_hash.update(tag.encode("utf-8"))
 
         return intermediate_hash.hexdigest()
 
@@ -51,7 +51,10 @@ class Mapping(LazyLoadedTaggedData, ABC):
         tags = list(self.mapping.keys())
         relative_files = list(self.mapping.values())
 
-        return [tag for _, tag in sorted(zip(relative_files, tags), key=lambda pair: pair[0])]
+        return [
+            tag
+            for _, tag in sorted(zip(relative_files, tags), key=lambda pair: pair[0])
+        ]
 
     @abstractmethod
     def set_mapping(self):
@@ -88,32 +91,36 @@ class VersionedDirectory(Mapping):
             self._files.append(versioned_file)
 
     def write_vdir_to_folder(self, directory: Path) -> Path:
-        vdir_file= directory / self.get_vdir_name()
-        with open(vdir_file, 'w') as f:
-            json.dump({
-                'data_folder': get_relative_path(self.base_dir, self.data_dir),
-                'tag': self.tag
-            }, f, indent=4)
+        vdir_file = directory / self.get_vdir_name()
+        with open(vdir_file, "w") as f:
+            json.dump(
+                {
+                    "data_folder": get_relative_path(self.base_dir, self.data_dir),
+                    "tag": self.tag,
+                },
+                f,
+                indent=4,
+            )
 
         return vdir_file
 
     def get_vdir_name(self):
         file_name = self._get_file_name()
 
-        return f'{file_name}.vdir'
+        return f"{file_name}.vdir"
 
     def _get_file_name(self):
         relative_path = get_relative_path(self.base_dir, self.data_dir)
-        path_snake_case = relative_path.replace('/', '_')
+        path_snake_case = relative_path.replace("/", "_")
 
         return path_snake_case
 
     @staticmethod
-    def from_vdir_file(vdir_file: Path, base_dir: Path) -> 'VersionedDirectory':
-        with open(vdir_file, 'r') as f:
+    def from_vdir_file(vdir_file: Path, base_dir: Path) -> "VersionedDirectory":
+        with open(vdir_file, "r") as f:
             vdir_contents = json.load(f)
 
-        tag = vdir_contents['tag']
-        data_dir = base_dir / vdir_contents['data_folder']
+        tag = vdir_contents["tag"]
+        data_dir = base_dir / vdir_contents["data_folder"]
 
         return VersionedDirectory(base_dir=base_dir, data_dir=data_dir, tag=tag)

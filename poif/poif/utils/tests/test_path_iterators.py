@@ -1,15 +1,20 @@
 import tempfile
 from pathlib import Path
 
-from poif.utils import (CombinedIterator, DirectoryIterator, FileIterator,
-                        InOrderPathIterator, RecursiveDirectoryIterator,
-                        RecursiveFileIterator)
+from poif.utils import (
+    CombinedIterator,
+    DirectoryIterator,
+    FileIterator,
+    InOrderPathIterator,
+    RecursiveDirectoryIterator,
+    RecursiveFileIterator,
+)
 
 t = tempfile.mkdtemp()
 temp_dir = Path(t)
 
-folder_names = ['a', 'b', 'c']
-file_names = ['01', '02', '03']
+folder_names = ["a", "b", "c"]
+file_names = ["01", "02", "03"]
 
 
 for file_name in file_names:
@@ -49,6 +54,7 @@ def test_folder_iterator():
 
     assert count == len(folder_names)
 
+
 def test_recursive_folder_iterator():
     count = 0
     for folder in RecursiveDirectoryIterator(temp_dir):
@@ -79,11 +85,11 @@ def test_combined_iterator():
     # assert count == len(file_names) + len(folder_names)
 
     iter.append(DirectoryIterator(temp_dir))
-    iter.prepend('test')
+    iter.prepend("test")
 
     for index, item in enumerate(iter):
         if index == 0:
-            assert item == 'test'
+            assert item == "test"
         else:
             assert item.is_dir()
 

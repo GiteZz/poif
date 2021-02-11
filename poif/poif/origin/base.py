@@ -8,4 +8,3 @@ class VersioningCollectionOrigin(ABC):
     @abstractmethod
     def get_files(self) -> List[TaggedData]:
         pass
-

@@ -3,7 +3,7 @@ from typing import List
 
 from poif.tagged_data.base import LazyLoadedTaggedData
 from poif.typing import FileHash
-from poif.utils import hash_object, get_relative_path
+from poif.utils import get_relative_path, hash_object
 
 
 class DiskData(LazyLoadedTaggedData):
@@ -18,7 +18,7 @@ class DiskData(LazyLoadedTaggedData):
         return self.file_path.stat().st_size
 
     def get(self) -> bytes:
-        with open(self.file_path, 'rb') as f:
+        with open(self.file_path, "rb") as f:
             file_bytes = f.read()
         return file_bytes
 
@@ -26,9 +26,9 @@ class DiskData(LazyLoadedTaggedData):
         self._tag = hash_object(self.file_path)
 
     @staticmethod
-    def from_folder(folder: Path) -> List['DiskData']:
+    def from_folder(folder: Path) -> List["DiskData"]:
         data = []
-        for file in folder.rglob('*'):
+        for file in folder.rglob("*"):
             rel_path = get_relative_path(base_dir=folder, file=file)
             data.append(DiskData(relative_path=rel_path, file_path=file))
 

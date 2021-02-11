@@ -33,7 +33,7 @@ def get_img():
 
 
 def get_img_file() -> Path:
-    img_file = Path(tempfile.mkstemp(suffix='.png')[1])
+    img_file = Path(tempfile.mkstemp(suffix=".png")[1])
     write_image_in_file(img_file)
 
     return img_file
@@ -45,11 +45,9 @@ def write_image_in_file(file: Path):
 
 
 def write_json_in_file(file: Path):
-    json_content = {
-        'test': 'test'
-    }
+    json_content = {"test": "test"}
 
-    with open(file, 'w') as f:
+    with open(file, "w") as f:
         json.dump(json_content, f)
 
 
@@ -57,7 +55,7 @@ def create_data_folder(folder: Path):
     folder.mkdir(exist_ok=True, parents=True)
 
     for i in range(10):
-        write_image_in_file(folder / (str(i) + '.png'))
+        write_image_in_file(folder / (str(i) + ".png"))
 
 
 def assert_image_nearly_equal(original_img: np.ndarray, new_img: np.ndarray):
@@ -69,23 +67,23 @@ def assert_image_nearly_equal(original_img: np.ndarray, new_img: np.ndarray):
 
 
 def get_standard_folder_template() -> List[RelFilePath]:
-    files = [f'0{i}.jpg' for i in range(10)]
-    base_folders = ['train', 'val', 'test']
-    sub_folders = ['image', 'mask']
+    files = [f"0{i}.jpg" for i in range(10)]
+    base_folders = ["train", "val", "test"]
+    sub_folders = ["image", "mask"]
 
     files_to_create = []
 
     additional_files = [
-        'meta.json',
-        'train/train_meta.json',
-        'val/val_meta.json',
-        'test/test_meta.json',
+        "meta.json",
+        "train/train_meta.json",
+        "val/val_meta.json",
+        "test/test_meta.json",
     ]
 
     for base_folder in base_folders:
         for sub_folder in sub_folders:
             for file in files:
-                files_to_create.append(f'{base_folder}/{sub_folder}/{file}')
+                files_to_create.append(f"{base_folder}/{sub_folder}/{file}")
 
     for file in additional_files:
         files_to_create.append(file)
@@ -127,7 +125,7 @@ class MockFileRemote(FileRemote):
 
     def download(self, remote_source: str) -> bytes:
         self.downloaded_files.append(remote_source)
-        return bytes('Hello')
+        return bytes("Hello")
 
     def get_object_size(self, file_name: str):
         return 0
@@ -139,7 +137,7 @@ class MockFileRemote(FileRemote):
 class MockTaggedRepo(FileRemoteTaggedRepo):
     def __init__(self):
         self.remote = MockFileRemote()
-        self.data_folder = 'data'
+        self.data_folder = "data"
 
 
 class MockGitRepo:

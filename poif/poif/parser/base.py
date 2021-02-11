@@ -25,5 +25,5 @@ class ParseMixin:
 
     def parse_file(self, file_bytes, extension):
         if extension not in self.parser_by_extension.keys():
-            raise Exception('Extension not supported')
+            raise Exception("Extension not supported")
         return self.parser_by_extension[extension].parse(file_bytes)

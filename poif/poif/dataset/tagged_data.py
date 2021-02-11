@@ -1,22 +1,18 @@
-from poif.dataset.base import MultiDataset, BaseDataset
 from collections import defaultdict
-
 from typing import List, Union
 
+from poif.dataset.base import BaseDataset, MultiDataset
 from poif.input.base import DataSetObject
-from poif.input.tagged_data import TaggedDataInput
-from poif.tagged_data.base import TaggedData
-
-from poif.input.transform.base import Transformation
 from poif.input.split.base import Splitter
-
+from poif.input.tagged_data import TaggedDataInput
+from poif.input.transform.base import Transformation
+from poif.tagged_data.base import TaggedData
 
 Operation = Union[Transformation, Splitter]
 
 
 class TaggedDataDataset(MultiDataset):
-    def __init__(self,
-                 operations: List[Operation] = None):
+    def __init__(self, operations: List[Operation] = None):
 
         self.operations = operations
         self.inputs = None
@@ -42,7 +38,7 @@ class TaggedDataDataset(MultiDataset):
         elif self.is_tranformation(operation):
             self.apply_transformation(operation)
         else:
-            raise Exception('Unknown type of operation')
+            raise Exception("Unknown type of operation")
         self.next_operation()
 
     def is_splitter(self, operation: Operation) -> bool:

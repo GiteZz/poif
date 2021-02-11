@@ -2,13 +2,12 @@ from collections import defaultdict
 from dataclasses import dataclass
 from typing import Dict, List, Union
 
-from poif.input.base import DataSetObject
 from poif.input.annotations import Mask
-
+from poif.input.base import DataSetObject
 from poif.input.mask import MaskInput
 from poif.input.tagged_data import TaggedDataInput
-from poif.input.transform.tools import extract_values, is_path_match
 from poif.input.transform.base import Transformation
+from poif.input.transform.tools import extract_values, is_path_match
 from poif.typing import PathTemplate
 
 
@@ -28,15 +27,21 @@ class MaskByTemplate(Transformation):
         masks = {}
         for ds_input in dataset:
             if is_path_match(self.template.mask, ds_input.relative_path):
-                values = extract_values(template=self.template.mask, path=ds_input.relative_path)
+                values = extract_values(
+                    template=self.template.mask, path=ds_input.relative_path
+                )
                 hashable_values = tuple(sorted(values.items()))
                 masks[hashable_values] = ds_input
             elif is_path_match(self.template.image, ds_input.relative_path):
-                values = extract_values(template=self.template.image, path=ds_input.relative_path)
+                values = extract_values(
+                    template=self.template.image, path=ds_input.relative_path
+                )
                 hashable_values = tuple(sorted(values.items()))
                 images[hashable_values] = ds_input
             else:
-                print(f'WARNING: item with path: {ds_input.relative_path} was not matched')
+                print(
+                    f"WARNING: item with path: {ds_input.relative_path} was not matched"
+                )
 
         new_inputs = []
         for values in set.intersection(set(images.keys()), set(masks.keys())):
@@ -57,7 +62,7 @@ class DropByTemplate(Transformation):
 
 
 class ClassificationByTemplate(Transformation):
-    def __init__(self, template: str, input_item='label'):
+    def __init__(self, template: str, input_item="label"):
         self.template = template
         self.input_item = input_item
 

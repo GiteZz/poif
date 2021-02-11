@@ -9,9 +9,8 @@ def is_alive(url):
         r = requests.get(url)
         return True
     except:
-        print('Not ready')
+        print("Not ready")
         return False
-
 
 
 def wait_on_url(url: str, timout=600, interval=10):
@@ -21,8 +20,8 @@ def wait_on_url(url: str, timout=600, interval=10):
         if is_alive(url):
             break
         else:
-            print('Not ready')
+            print("Not ready")
         time.sleep(interval)
     # TODO crude
-    time.sleep(20) # Gitlab takes a bit longer
-    print('Ready')
+    time.sleep(20)  # Gitlab takes a bit longer
+    print("Ready")

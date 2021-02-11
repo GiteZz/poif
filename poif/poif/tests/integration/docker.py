@@ -22,16 +22,17 @@ class DockerConfig:
 def docker_run(config: DockerConfig):
     if not is_alive(config.readiness_url):
         client = docker.from_env()
-        client.containers.prune() # TODO dangerous
+        client.containers.prune()  # TODO dangerous
 
-        client.containers.run(image=config.image,
-                              environment=config.envs,
-                              ports=config.ports,
-                              name=config.name,
-                              detach=True,
-                              command=config.command,
-                              volumes=config.volumes
-                              )
+        client.containers.run(
+            image=config.image,
+            environment=config.envs,
+            ports=config.ports,
+            name=config.name,
+            detach=True,
+            command=config.command,
+            volumes=config.volumes,
+        )
 
         wait_on_url(config.readiness_url)
         container = client.containers.get(config.name)

@@ -20,17 +20,17 @@ class PartialGetWrapper(BinaryData):
         return self.data.get()
 
     def clear_data(self):
-        print('Clearing data')
+        print("Clearing data")
         with self.get_lock:
             self.cached_data = None
 
     def get_partial(self, offset: int, length: int) -> bytes:
-        print('Accessing data')
+        print("Accessing data")
         with self.get_lock:
             if self.cached_data is None:
                 self.cached_data = self.get()
 
-            needed_data = self.cached_data[offset: offset + length]
+            needed_data = self.cached_data[offset : offset + length]
 
             if self.timer is not None:
                 self.timer.cancel()

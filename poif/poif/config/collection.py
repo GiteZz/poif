@@ -13,18 +13,23 @@ class DataCollectionConfig(Config):
 
     @classmethod
     def get_default_name(cls) -> str:
-        return 'collection_config.json'
+        return "collection_config.json"
 
     @staticmethod
     def prompt(data_default: RemoteConfig = None):
         if data_default is None:
             data_default = RemoteConfig.get_default()
-        collection_name = simple_input('Name of data collection?')
+        collection_name = simple_input("Name of data collection?")
 
-        folders = multi_input('Folder to track?', empty_allowed=True)
-        files = multi_input('Files to track?', empty_allowed=True)
+        folders = multi_input("Folder to track?", empty_allowed=True)
+        files = multi_input("Files to track?", empty_allowed=True)
 
-        print('Configuration for the data remote.')
+        print("Configuration for the data remote.")
         remote_config = RemoteConfig.prompt(data_default)
 
-        return DataCollectionConfig(name=collection_name, folders=folders, files=files, data_remote=remote_config)
+        return DataCollectionConfig(
+            name=collection_name,
+            folders=folders,
+            files=files,
+            data_remote=remote_config,
+        )

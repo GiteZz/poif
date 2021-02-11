@@ -16,13 +16,11 @@ class DatasetInfo:
     remote: Remote
 
     def save(self, file: Path):
-        with open(file, 'w') as f:
+        with open(file, "w") as f:
             json.dump(self.to_dict(), f)
 
     @staticmethod
-    def load(file: Path) -> 'DatasetInfo':
-        with open(file, 'r') as f:
+    def load(file: Path) -> "DatasetInfo":
+        with open(file, "r") as f:
             ds_info_dict = json.load(f)
         return DatasetInfo.from_dict(ds_info_dict)
-
-

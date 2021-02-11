@@ -8,7 +8,7 @@ class PackageConfig(Config):
 
     @classmethod
     def get_default_name(cls) -> str:
-        return 'package_config.json'
+        return "package_config.json"
 
     @staticmethod
     def prompt():

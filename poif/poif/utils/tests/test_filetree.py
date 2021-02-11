@@ -10,5 +10,6 @@ def test_filetree():
     for line in tree.get_lines():
         print(line)
 
+
 if __name__ == "__main__":
     test_filetree()

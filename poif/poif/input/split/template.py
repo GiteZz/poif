@@ -1,11 +1,11 @@
-from poif.input.tagged_data import TaggedDataInput
 from poif.input.split.base import Splitter
+from poif.input.tagged_data import TaggedDataInput
 from poif.input.transform.tools import extract_values
 from poif.typing import SubSetName
 
 
 class SplitByTemplate(Splitter):
-    def __init__(self, template: str, subset_tag='subset'):
+    def __init__(self, template: str, subset_tag="subset"):
         self.template = template
         self.subset_tag = subset_tag
 

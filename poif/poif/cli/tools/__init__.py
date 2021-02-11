@@ -16,4 +16,4 @@ def folder_list_to_pathlib(folder_list):
 
 
 def get_url(url):
-    return url + ('/' if url[-1] != '/' else '')
+    return url + ("/" if url[-1] != "/" else "")

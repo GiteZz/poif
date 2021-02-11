@@ -1,21 +1,20 @@
 import json
+from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List
 
 from poif.config.collection import DataCollectionConfig
 from poif.config.repo import DataRepoConfig
-from poif.tagged_data import TaggedData
-from poif.tagged_data import RepoData
 from poif.git.file import FileCreatorMixin
 from poif.git.repo import GitRepo
 from poif.packaging import packages
-from poif.repo.base import TaggedRepo
 from poif.repo import get_remote_repo_from_config
+from poif.repo.base import TaggedRepo
+from poif.tagged_data import RepoData, TaggedData
+from poif.utils import get_file_name_from_path
 from poif.versioning.directory import VersionedDirectory
 from poif.versioning.file import VersionedFile
-from poif.utils import get_file_name_from_path
-from abc import ABC, abstractmethod
 
 
 class VersionedCollection(ABC):
@@ -42,11 +41,15 @@ class FromDiskVersionedCollection(VersionedCollection, FileCreatorMixin):
     def __post_init__(self):
         for directory in self.config.folders:
             actual_directory = self.base_dir / directory
-            self.directories.append(VersionedDirectory(base_dir=self.base_dir, data_dir=actual_directory))
+            self.directories.append(
+                VersionedDirectory(base_dir=self.base_dir, data_dir=actual_directory)
+            )
 
         for file in self.config.files:
             actual_file = self.base_dir / file
-            self.files.append(VersionedFile(base_dir=self.base_dir, file_path=actual_file))
+            self.files.append(
+                VersionedFile(base_dir=self.base_dir, file_path=actual_file)
+            )
 
     def get_files(self) -> List[TaggedData]:
         return self.files + self.files_from_directory()
@@ -85,8 +88,7 @@ class FromDiskVersionedCollection(VersionedCollection, FileCreatorMixin):
         for directory in self.directories:
             if directory.get_vdir_name() == filename:
                 return directory
-        raise Exception('Directory with filename not found')
-
+        raise Exception("Directory with filename not found")
 
     def add_vfile(self, file: Path):
         # TODO
@@ -107,28 +109,31 @@ class RepoVersionedCollection(VersionedCollection):
         tagged_repo = get_remote_repo_from_config(config.collection.data_remote)
         self._tagged_repo = tagged_repo
 
-        self._resource_dir = packages[config.package.type].get_resource_directory(base_dir=repo.base_dir)
+        self._resource_dir = packages[config.package.type].get_resource_directory(
+            base_dir=repo.base_dir
+        )
 
         self.retrieve_mappings()
 
     def get_versioned_files(self, resource_dir: Path) -> List[Path]:
-        return list(resource_dir.glob('*.vfile'))
+        return list(resource_dir.glob("*.vfile"))
 
     def get_versioned_directories(self, resource_dir: Path) -> List[Path]:
-        return list(resource_dir.glob('*.vdir'))
+        return list(resource_dir.glob("*.vdir"))
 
     def retrieve_mappings(self):
         self._mappings = []
         vdirs = self.get_versioned_directories(self._resource_dir)
 
         for vdir_file in vdirs:
-            with open(vdir_file, 'r') as f:
+            with open(vdir_file, "r") as f:
                 vdir_content = json.load(f)
 
-            mapping = RepoData(relative_path=vdir_content['data_folder'] + '.mapping',
-                               repo=self._tagged_repo,
-                               tag=vdir_content['tag']
-                               )
+            mapping = RepoData(
+                relative_path=vdir_content["data_folder"] + ".mapping",
+                repo=self._tagged_repo,
+                tag=vdir_content["tag"],
+            )
 
             self._mappings.append(mapping)
 
@@ -137,12 +142,13 @@ class RepoVersionedCollection(VersionedCollection):
         vfiles = self.get_versioned_files(self._resource_dir)
 
         for vfile in vfiles:
-            with open(vfile, 'r') as f:
+            with open(vfile, "r") as f:
                 vfile_content = json.load(f)
-            file = RepoData(relative_path=vfile_content['path'],
-                               repo=self._tagged_repo,
-                               tag=vfile_content['tag']
-                               )
+            file = RepoData(
+                relative_path=vfile_content["path"],
+                repo=self._tagged_repo,
+                tag=vfile_content["tag"],
+            )
             self._files.append(file)
 
     def get_files_from_mappings(self):
@@ -152,10 +158,7 @@ class RepoVersionedCollection(VersionedCollection):
         for mapping in mappings:
             mapping_content = mapping.get_parsed()
             for tag, path in mapping_content.items():
-                file = RepoData(relative_path=path,
-                                repo=self._tagged_repo,
-                                tag=tag
-                                )
+                file = RepoData(relative_path=path, repo=self._tagged_repo, tag=tag)
 
                 files.append(file)
         return files
@@ -185,8 +188,10 @@ class HttpVersionedCollection(VersionedCollection):
 
 
 if __name__ == "__main__":
-    repo = RepoVersionedCollection(git_url='http://localhost:360/root/datasets-5729607b-372d-4422-bd2b-1db968099ef9.git', git_commit='fa2aa394f3a69654ecdf2e6e2c8b6a244ff482cb')
+    repo = RepoVersionedCollection(
+        git_url="http://localhost:360/root/datasets-5729607b-372d-4422-bd2b-1db968099ef9.git",
+        git_commit="fa2aa394f3a69654ecdf2e6e2c8b6a244ff482cb",
+    )
 
     all_files = repo.get_files()
     a = 5
-

@@ -1,11 +1,10 @@
-from typing import Union, TYPE_CHECKING
+from typing import TYPE_CHECKING, Union
 
-from fuse import FUSE, Operations, FuseOSError
+from fuse import FUSE, FuseOSError, Operations
 
 if TYPE_CHECKING:
     from poif.file_system.directory import Directory
     from poif.file_system.file import File
-
 
 import errno
 
@@ -15,11 +14,11 @@ class DataSetFileSystem(Operations):
     A read only http/https/ftp filesystem.
     """
 
-    def __init__(self, root_dir: 'Directory'):
+    def __init__(self, root_dir: "Directory"):
         self.root_dir = root_dir
 
-    def path_to_object(self, path: str) -> Union['Directory', 'File']:
-        path_parts = path.split('/')
+    def path_to_object(self, path: str) -> Union["Directory", "File"]:
+        path_parts = path.split("/")
         while len(path_parts) > 0 and len(path_parts[0]) == 0:
             path_parts.pop(0)
 
@@ -37,13 +36,13 @@ class DataSetFileSystem(Operations):
         return current_object
 
     def readdir(self, path, fh):
-        print(f'Read path: {path}')
+        print(f"Read path: {path}")
         object_pointer = self.path_to_object(path)
 
-        return ['.', '..'] + list(object_pointer.contents.keys())
+        return [".", ".."] + list(object_pointer.contents.keys())
 
     def getattr(self, path, fh=None):
-        print(f'getattr on path {path}')
+        print(f"getattr on path {path}")
 
         object_pointer = self.path_to_object(path)
         return object_pointer.get_attr()
@@ -60,11 +59,11 @@ class DataSetFileSystem(Operations):
         return 0
 
     def read(self, path, size, offset, fh):
-        print(f'read on path: {path}, size: {size}, offset: {offset}, fh: {fh}')
+        print(f"read on path: {path}, size: {size}, offset: {offset}, fh: {fh}")
 
-        if 'autorun.inf' in path:
+        if "autorun.inf" in path:
             return
-        if '.' == path[1]:
+        if "." == path[1]:
             return
 
         object_pointer = self.path_to_object(path)

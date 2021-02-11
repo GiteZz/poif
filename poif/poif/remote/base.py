@@ -7,6 +7,7 @@ class FileRemote(ABC):
     """
     This is meant for remotes where data is stored as files (e.g. object stores)
     """
+
     @abstractmethod
     def download(self, remote_source: str) -> bytes:
         pass
@@ -20,13 +21,13 @@ class FileRemote(ABC):
         pass
 
     def file_upload(self, file: Path, remote_dest: str):
-        with open(file, 'rb') as f:
+        with open(file, "rb") as f:
             file_bytes = f.read()
         self.upload(file_bytes, remote_dest)
 
     def file_download(self, destination_file: Path, remote_source: str):
         file_bytes = self.download(remote_source)
-        with open(destination_file, 'wb') as f:
+        with open(destination_file, "wb") as f:
             f.write(file_bytes)
 
 

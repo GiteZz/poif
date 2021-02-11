@@ -12,10 +12,11 @@ from poif.tests.integration.minio.config import MinioConfig
 
 def get_s3_resource(config: MinioConfig):
     dataset_sess = boto3.session.Session(profile_name=config.profile)
-    return dataset_sess.resource('s3',
-                               endpoint_url=f'http://localhost:{config.port}',
-                               config=Config(signature_version='s3v4')
-                               )
+    return dataset_sess.resource(
+        "s3",
+        endpoint_url=f"http://localhost:{config.port}",
+        config=Config(signature_version="s3v4"),
+    )
 
 
 def create_buckets(config: MinioConfig, bucket_names: List[str]):
@@ -25,7 +26,7 @@ def create_buckets(config: MinioConfig, bucket_names: List[str]):
         try:
             s3.create_bucket(Bucket=bucket_name)
         except Exception as e:
-            if not e.response['Error']['Code'] == "BucketAlreadyOwnedByYou":
+            if not e.response["Error"]["Code"] == "BucketAlreadyOwnedByYou":
                 raise e
 
 
@@ -38,21 +39,13 @@ def set_public(config: MinioConfig, bucket_names: List[str]):
         policy = {
             "Statement": [
                 {
-                    "Action": [
-                        "s3:GetObject"
-                    ],
+                    "Action": ["s3:GetObject"],
                     "Effect": "Allow",
-                    "Principal": {
-                        "AWS": [
-                            "*"
-                        ]
-                    },
-                    "Resource": [
-                        f'arn:aws:s3:::{bucket}/*'
-                    ]
+                    "Principal": {"AWS": ["*"]},
+                    "Resource": [f"arn:aws:s3:::{bucket}/*"],
                 }
             ],
-            "Version": "2012-10-17"
+            "Version": "2012-10-17",
         }
 
         existing_policy.put(Policy=json.dumps(policy))

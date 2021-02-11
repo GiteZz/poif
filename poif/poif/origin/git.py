@@ -1,4 +1,3 @@
-
 # TODO figure out / delete
 
 import hashlib
@@ -10,12 +9,11 @@ from typing import Any, Dict
 
 from poif.origin import Origin
 from poif.remote.base import Remote
-from poif.versioning.base import Tagged
 from poif.typing import FileHash, RelFilePath
+from poif.versioning.base import Tagged
 
 
 class LocalGitOrigin(Origin):
-
     @property
     def dataset_tag(self) -> str:
         pass
@@ -36,6 +34,7 @@ class RemoteGitOrigin(LocalGitOrigin):
     information is not yet present. If one of these two is called the repo will be cloned and data
     for both(!) of these functions is loaded.
     """
+
     git_url: str
     git_commit: str
 
@@ -60,15 +59,15 @@ class RemoteGitOrigin(LocalGitOrigin):
     @property
     def dataset_tag(self):
         if self._dataset_tag is None:
-            self._dataset_tag = hashlib.md5(self.git_url.encode('utf-8')).hexdigest()
+            self._dataset_tag = hashlib.md5(self.git_url.encode("utf-8")).hexdigest()
 
         return self._dataset_tag
 
     @property
     def origin_tag(self):
         if self._origin_tag is None:
-            ds_url = f'{self.git_url}?c={self.git_commit}'
-            self._origin_tag = hashlib.md5(ds_url.encode('utf-8')).hexdigest()
+            ds_url = f"{self.git_url}?c={self.git_commit}"
+            self._origin_tag = hashlib.md5(ds_url.encode("utf-8")).hexdigest()
 
         return self._dataset_tag
 
@@ -87,8 +86,8 @@ class RemoteGitOrigin(LocalGitOrigin):
     def init(self):
         repo = Path(tempfile.mkdtemp())
 
-        subprocess.call(['git', 'clone', self.git_url, str(repo)])
-        subprocess.call(['git', 'checkout', self.git_commit], cwd=str(repo))
+        subprocess.call(["git", "clone", self.git_url, str(repo)])
+        subprocess.call(["git", "checkout", self.git_commit], cwd=str(repo))
 
         self._remote = get_dvc_remote_config(repo)
         self._tag_file_mapping = get_tag_to_file_from_repo(repo, self._remote)
@@ -102,7 +101,6 @@ class RemoteGitOrigin(LocalGitOrigin):
     def get_extension(self, tag: FileHash) -> str:
         original_file = self.tag_to_original_file[tag]
         file_name = Path(original_file).parts[-1]
-        extension = file_name.split('.')[-1]
+        extension = file_name.split(".")[-1]
 
         return extension
-
