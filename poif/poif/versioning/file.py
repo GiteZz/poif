@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from poif.tagged_data import DiskData
+from poif.tagged_data.disk import DiskData
 from poif.typing import FileHash
 from poif.utils import get_file_name_from_path, get_relative_path
 

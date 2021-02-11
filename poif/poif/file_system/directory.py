@@ -22,6 +22,9 @@ class Directory:
         self.add_data("__test_file", StringBinaryData(""))
 
     def mkdir(self, path: str):
+        """
+        Allow for creation of directories, creates relevant subdirectories
+        """
         levels_to_create = path.split("/")
         new_level = levels_to_create[0]
 
@@ -29,7 +32,11 @@ class Directory:
             self.contents[new_level] = Directory()
 
         if len(levels_to_create) > 1:
-            self.contents[new_level].mkdir("/".join(levels_to_create[1:]))
+            next_dir = self.contents[new_level]
+            if isinstance(next_dir, Directory):
+                next_dir.mkdir("/".join(levels_to_create[1:]))
+            else:
+                raise Exception("Can't create directory while file exists with the same name.")
 
     def add_file(self, folders: List[str], file_name: str, data: BinaryData):
         if len(folders) == 0:

@@ -1,4 +1,4 @@
-from typing import Set, Optional
+from typing import Optional, Set
 
 from poif.cli.tools.cli import simple_input
 from poif.config.base import Config

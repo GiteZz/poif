@@ -12,7 +12,7 @@ class Splitter:
         raise Exception("Single input transform was not defined.")
 
     def split_input_list(self, inputs: List[DataSetObject]) -> SplitterDict:
-        splitter_dict = defaultdict[list]
+        splitter_dict = defaultdict(list)
         for ds_input in inputs:
             splitter_dict[self.split_single_input(ds_input)].append(ds_input)
 

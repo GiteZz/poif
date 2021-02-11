@@ -2,11 +2,11 @@ import json
 from abc import ABC, abstractmethod
 from hashlib import md5
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 from tqdm import tqdm
 
-from poif.tagged_data import LazyLoadedTaggedData
+from poif.tagged_data.base import LazyLoadedTaggedData
 from poif.typing import FileHash
 from poif.utils import RecursiveFileIterator, get_relative_path
 from poif.versioning.file import VersionedFile
@@ -60,9 +60,9 @@ class Mapping(LazyLoadedTaggedData, ABC):
 
 class VersionedDirectory(Mapping):
     base_dir: Path
-    data_dir: Path = None
+    data_dir: Optional[Path] = None
 
-    _files: List[VersionedFile] = None
+    _files: Optional[List[VersionedFile]] = None
 
     def __init__(self, base_dir: Path, data_dir: Path, tag=None):
         super().__init__()

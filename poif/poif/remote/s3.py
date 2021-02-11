@@ -10,8 +10,8 @@ from poif.remote.base import FileRemote
 from poif.repo.file_remote import FileRemoteTaggedRepo
 
 if typing.TYPE_CHECKING:
-    from poif.config.remote import S3Config
-    from poif.tagged_data import TaggedData
+    from poif.config.remote.s3 import S3Config
+    from poif.tagged_data.base import TaggedData
 
 
 @dataclass

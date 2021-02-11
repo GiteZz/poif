@@ -6,15 +6,6 @@ from poif.input.detection import DetectionInput
 from poif.tagged_data.base import TaggedData
 from poif.typing import DatasetType, RelFilePath
 
-# class CocoMeta:
-#
-#
-#
-# class CocoAnnotation:
-#     dataset_name: DatasetType
-#     annotation_file: RelFilePath
-#     data_folder: RelFilePath
-
 
 class CocoDetectionDataset(DetectionDataset):
     def __init__(
@@ -58,7 +49,7 @@ class CocoDetectionDataset(DetectionDataset):
 
             if original_filename in mapping:
                 new_inputs[img_id] = DetectionInput(
-                    data=mapping[original_filename],
+                    tagged_data=mapping[original_filename],
                     width=int(image_info["width"]),
                     height=int(image_info["height"]),
                 )

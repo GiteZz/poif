@@ -13,6 +13,7 @@ Operation = Union[Transformation, Splitter]
 class TaggedDataDataset(MultiDataset):
     def __init__(self, operations: List[Operation] = None):
 
+        super().__init__()
         self.operations = operations
         self.inputs = None
         self.splits = {}

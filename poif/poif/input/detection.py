@@ -1,13 +1,10 @@
-from dataclasses import dataclass
-
 from poif.input.annotations import BoundingBox
 from poif.input.base import Image
 
 
-@dataclass
 class DetectionInput(Image):
     def add_bounding_box(self, bbox: BoundingBox):
         self.annotations.append(bbox)
 
     def output(self):
-        return self.data.get_parsed(), [annotation.output() for annotation in self.annotations]
+        return self.get_parsed(), [annotation.output() for annotation in self.annotations]

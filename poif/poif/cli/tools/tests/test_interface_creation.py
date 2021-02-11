@@ -1,10 +1,10 @@
 import pytest
 
 from poif.cli.tools.interface import render_template_path, strip_jinja_extension
+from poif.config.collection import DataCollectionConfig
 from poif.config.remote.s3 import S3Config
 from poif.packaging.python_package import PythonPackage
 from poif.tests import get_temp_path
-from poif.config.collection import DataCollectionConfig
 
 
 def test_strip_jinja_extension():
