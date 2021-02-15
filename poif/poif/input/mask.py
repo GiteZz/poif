@@ -1,12 +1,12 @@
 from dataclasses import dataclass
 
-from poif.tagged_data.base import TaggedData
+from poif.input.annotations import Mask
+from poif.input.base import DataSetObject
 
 
-@dataclass
-class MaskInput(TaggedData):
-    image: TaggedData
-    mask: TaggedData
-
+class SingleMaskObject(DataSetObject):
     def output(self):
-        return self.image.get_parsed(), self.mask.get_parsed()
+        assert len(self.annotations) == 1
+        assert isinstance(self.annotations[0], Mask)
+
+        return self.get_parsed(), self.annotations[0].output()

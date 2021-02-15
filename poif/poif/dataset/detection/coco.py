@@ -91,9 +91,9 @@ class CocoDetectionDataset(DetectionDataset):
         sub_dataset_names = list(self.annotation_files.keys())
 
         for subset in sub_dataset_names:
-            new_inputs = self.parse_annotation_file(subset, data, self.data_folders[subset])
-            self.inputs.extend(new_inputs)
-            self.split_dict[subset] = new_inputs
+            new_objects = self.parse_annotation_file(subset, data, self.data_folders[subset])
+            self.objects.extend(new_objects)
+            self.splits[subset] = new_objects
 
 
 def detection_collection_to_coco_dict(inputs: List[DetectionInput]) -> Dict:

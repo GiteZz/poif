@@ -33,6 +33,7 @@ class TaggedData(BinaryData, ParseMixin, ABC):
     _relative_path: Optional[str] = None
 
     def __init__(self, relative_path: str, tag: FileHash = None):
+        super().__init__()
         self._tag = tag
         self._relative_path = relative_path
 
@@ -76,3 +77,19 @@ class TaggedPassthrough(TaggedData):
 
     def get(self) -> bytes:
         return self.tagged_data.get()
+
+    def get_parsed(self) -> Any:
+        return self.tagged_data.get_parsed()
+
+    @property
+    def tag(self):
+        return self.tagged_data.tag
+
+    @property
+    def extension(self) -> str:
+        # TODO check better
+        return self.tagged_data.extension
+
+    @property
+    def relative_path(self):
+        return self.tagged_data.relative_path

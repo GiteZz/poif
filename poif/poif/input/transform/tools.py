@@ -60,8 +60,8 @@ def extract_values(template: str, path: str) -> Dict[str, str]:
 
     if len(matches.groups()) != len(groups):
         return {}
-
-    return {key: value for key, value in zip(groups, matches.groups())}
+    regex_groups = matches.groups()
+    return {key: value for key, value in zip(groups, regex_groups)}
 
 
 def catch_all_to_value(template: str):

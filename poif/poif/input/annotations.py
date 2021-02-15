@@ -6,6 +6,9 @@ from poif.tagged_data.base import TaggedData, TaggedPassthrough
 
 
 class DataSetAnnotation(MetaInfoMixin, ABC):
+    def __init__(self):
+        super().__init__()
+
     @abstractmethod
     def output(self):
         pass
@@ -16,7 +19,10 @@ class Mask(TaggedPassthrough, DataSetAnnotation):
         super().__init__(tagged_data)
 
     def output(self):
-        return self.label, self.get_parsed()
+        if self.label is not None:
+            return self.label, self.get_parsed()
+        else:
+            return self.get_parsed()
 
 
 class Point(DataSetAnnotation):
@@ -38,7 +44,9 @@ class BoundingBox(DataSetAnnotation):
         label: str = None,
         tags: List[str] = None,
     ):
-        super().__init__(label=label, tags=tags)
+        super().__init__()
+        self.label = label
+        self.tags = tags
 
         self.x = x
         self.y = y

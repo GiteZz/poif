@@ -3,7 +3,6 @@ from typing import List
 
 from poif.input.annotations import Mask
 from poif.input.base import DataSetObject
-from poif.input.tagged_data import TaggedDataInput
 from poif.input.transform.base import Transformation
 from poif.input.transform.tools import extract_values, is_path_match
 from poif.typing import PathTemplate
@@ -19,16 +18,21 @@ class MaskByTemplate(Transformation):
     def __init__(self, template: MaskTemplate):
         self.template = template
 
-    def __call__(self, dataset: List[TaggedDataInput]) -> List[DataSetObject]:
+    def is_mask_match(self, relative_path: str) -> bool:
+        return is_path_match(self.template.mask, relative_path)
 
+    def is_image_match(self, relative_path: str) -> bool:
+        return is_path_match(self.template.image, relative_path)
+
+    def __call__(self, dataset: List[DataSetObject]) -> List[DataSetObject]:
         images = {}
         masks = {}
         for ds_input in dataset:
-            if is_path_match(self.template.mask, ds_input.relative_path):
+            if self.is_mask_match(ds_input.relative_path):
                 values = extract_values(template=self.template.mask, path=ds_input.relative_path)
                 hashable_values = tuple(sorted(values.items()))
                 masks[hashable_values] = ds_input
-            elif is_path_match(self.template.image, ds_input.relative_path):
+            elif self.is_image_match(ds_input.relative_path):
                 values = extract_values(template=self.template.image, path=ds_input.relative_path)
                 hashable_values = tuple(sorted(values.items()))
                 images[hashable_values] = ds_input
@@ -37,8 +41,11 @@ class MaskByTemplate(Transformation):
 
         new_inputs = []
         for values in set.intersection(set(images.keys()), set(masks.keys())):
-            mask_input = DataSetObject(data=masks[values].data)
-            mask_input.mask = Mask(data=images[values].data)
+            mask_input = masks[values]
+            image_input = images[values]
+
+            image_input.annotations.append(Mask(mask_input))
+            new_inputs.append(image_input)
         return new_inputs
 
 
@@ -46,7 +53,7 @@ class DropByTemplate(Transformation):
     def __init__(self, template: str):
         self.template = template
 
-    def transform_single_input(self, ds_input: TaggedDataInput) -> List[DataSetObject]:
+    def transform_single_object(self, ds_input: DataSetObject) -> List[DataSetObject]:
         if is_path_match(self.template, ds_input.relative_path):
             return []
         else:
@@ -58,8 +65,10 @@ class ClassificationByTemplate(Transformation):
         self.template = template
         self.input_item = input_item
 
-    def transform_single_input(self, ds_input: TaggedDataInput) -> List[DataSetObject]:
+    def transform_single_object(self, ds_input: DataSetObject) -> List[DataSetObject]:
         values = extract_values(template=self.template, path=ds_input.relative_path)
         label = values[self.input_item]
 
-        return [DataSetObject(data=ds_input.data, label=label)]
+        ds_input.label = label
+
+        return [ds_input]

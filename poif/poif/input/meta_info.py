@@ -1,7 +1,8 @@
-from typing import List
+from typing import List, Optional
 
 
 class MetaInfoMixin:
-    def __init__(self, label: str = None, tags: List[str] = None):
-        self.label = label
-        self.tags = [] if tags is None else tags
+    def __init__(self):
+        super().__init__()
+        self.label: Optional[str] = None
+        self.tags: List[str] = []

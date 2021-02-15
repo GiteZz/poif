@@ -1,6 +1,6 @@
 import pytest
 
-from poif.dataset.tests.test_tagged_data import MockTaggedData
+from poif.tagged_data.tests.mock import MockTaggedData
 from poif.input.tagged_data import TaggedDataInput
 from poif.input.transform.template import DropByTemplate, MaskByTemplate, MaskTemplate
 from poif.input.transform.tools import (

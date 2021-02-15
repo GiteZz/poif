@@ -1,5 +1,5 @@
+from poif.input.base import DataSetObject
 from poif.input.split.base import Splitter
-from poif.input.tagged_data import TaggedDataInput
 from poif.input.transform.tools import extract_values
 from poif.typing import SubSetName
 
@@ -9,6 +9,6 @@ class SplitByTemplate(Splitter):
         self.template = template
         self.subset_tag = subset_tag
 
-    def split_single_input(self, ds_input: TaggedDataInput) -> SubSetName:
-        values = extract_values(self.template, ds_input.relative_path)
+    def split_single_input(self, ds_object: DataSetObject) -> SubSetName:
+        values = extract_values(self.template, ds_object.relative_path)
         return values[self.subset_tag]

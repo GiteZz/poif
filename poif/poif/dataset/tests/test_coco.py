@@ -5,7 +5,7 @@ import pytest
 
 from poif.dataset.detection.base import DetectionFileOutputFormat
 from poif.dataset.detection.coco import CocoDetectionDataset, detection_collection_to_coco_dict
-from poif.dataset.tests.test_tagged_data import MockTaggedData
+from poif.tagged_data.tests.mock import MockTaggedData
 from poif.input.annotations import BoundingBox
 from poif.input.detection import DetectionInput
 from poif.tagged_data.disk import DiskData
