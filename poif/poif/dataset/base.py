@@ -1,3 +1,4 @@
+import copy
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import List, Type, Union
@@ -6,7 +7,6 @@ from poif.input.base import DataSetObject
 from poif.input.split.base import Splitter
 from poif.input.transform.base import Transformation
 from poif.tagged_data.base import TaggedData
-import copy
 
 Operation = Union[Transformation, Splitter]
 
@@ -30,12 +30,13 @@ class BaseDataset(ABC):
 
 
 class MultiDataset(BaseDataset):
-    def __init__(self,
-                 operations: List[Operation] = None,
-                 input_type: Type[DataSetObject] = DataSetObject,
-                 continue_splitting_after_splitter: bool = False,
-                 continue_transformations_after_splitter: bool = True
-                 ):
+    def __init__(
+        self,
+        operations: List[Operation] = None,
+        input_type: Type[DataSetObject] = DataSetObject,
+        continue_splitting_after_splitter: bool = False,
+        continue_transformations_after_splitter: bool = True,
+    ):
         self.operations = copy.deepcopy(operations)
         super().__init__()
         self.splits = {}

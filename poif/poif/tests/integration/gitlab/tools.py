@@ -1,5 +1,6 @@
 from enum import Enum
 from pathlib import Path
+from typing import Callable, Dict
 
 import requests
 
@@ -40,7 +41,7 @@ def execute_gitlab_api_call(
 ):
     api_url = git_api_url_from_config(config) + api_route
 
-    methods = {
+    methods: Dict[RequestType, Callable] = {
         RequestType.GET: requests.get,
         RequestType.POST: requests.post,
         RequestType.DELETE: requests.delete,

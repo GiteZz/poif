@@ -1,6 +1,5 @@
 import pytest
 
-from poif.tagged_data.tests.mock import MockTaggedData
 from poif.input.tagged_data import TaggedDataInput
 from poif.input.transform.template import DropByTemplate, MaskByTemplate, MaskTemplate
 from poif.input.transform.tools import (
@@ -10,6 +9,7 @@ from poif.input.transform.tools import (
     is_template_part,
     replace_template_with_regex_group,
 )
+from poif.tagged_data.tests.mock import MockTaggedData
 
 
 def test_matching():

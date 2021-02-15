@@ -15,7 +15,7 @@ class DockerConfig:
     commands: List[str] = field(default_factory=list)
     command: Optional[str] = None
     envs: Optional[Dict[str, str]] = None
-    ports: Optional[Dict[Union[str, int], Union[str, int]]] = None
+    ports: Optional[Union[Dict[str, int], Dict[str, int]]] = None
     volumes: Optional[Dict[str, Dict[str, str]]] = None
 
 

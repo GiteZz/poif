@@ -1,5 +1,3 @@
-from dataclasses import dataclass
-
 from poif.input.annotations import Mask
 from poif.input.base import DataSetObject
 
