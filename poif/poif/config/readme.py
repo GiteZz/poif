@@ -1,8 +1,14 @@
+from dataclasses import dataclass
+
+from dataclasses_json import dataclass_json
+
 from poif.cli.tools.cli import yes_with_question
 from poif.config.base import Config
 from poif.config.remote.base import RemoteConfig
 
 
+@dataclass_json
+@dataclass
 class ReadmeConfig(Config):
     enable: bool
     enable_filetree: bool

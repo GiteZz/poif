@@ -1,9 +1,14 @@
+from dataclasses import dataclass
 from pathlib import Path
+
+from dataclasses_json import dataclass_json
 
 from poif.cli.tools.cli import path_input, yes_with_question
 from poif.config.base import Config
 
 
+@dataclass_json
+@dataclass
 class CacheConfig(Config):
     enable: bool
     data_storage_location: Path = None

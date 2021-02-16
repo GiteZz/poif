@@ -1,10 +1,15 @@
+from dataclasses import dataclass
 from typing import List
+
+from dataclasses_json import dataclass_json
 
 from poif.cli.tools.cli import multi_input, simple_input
 from poif.config.base import Config
 from poif.config.remote.base import RemoteConfig
 
 
+@dataclass_json
+@dataclass
 class DataCollectionConfig(Config):
     name: str
     folders: List[str]

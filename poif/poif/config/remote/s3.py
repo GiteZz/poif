@@ -1,4 +1,7 @@
-from typing import Optional, Set
+from dataclasses import dataclass
+from typing import Set
+
+from dataclasses_json import dataclass_json
 
 from poif.cli.tools.cli import simple_input
 from poif.config.base import Config
@@ -6,6 +9,8 @@ from poif.config.remote.mixins import CreateRemoteMixin
 from poif.remote.s3 import S3Remote
 
 
+@dataclass_json
+@dataclass
 class S3Config(Config, CreateRemoteMixin):
     url: str
     profile: str
@@ -14,13 +19,11 @@ class S3Config(Config, CreateRemoteMixin):
 
     def __init__(self, url: str, profile: str, bucket: str):
         super().__init__()
-        
+
         self.url = url
         self.profile = profile
         self.bucket = bucket
-        self.type = 'S3'
-
-
+        self.type = "S3"
 
     @staticmethod
     def prompt(default: "S3Config" = None) -> "S3Config":

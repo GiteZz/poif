@@ -17,7 +17,7 @@ def test_init(monkeypatch):
     git_url = create_repo(gitlab_config, repo_name)
 
     sequence, config = get_repo_sequence(expected_result=repo_config)
-    monkeypatch.setattr("builtins.object", MonkeyPatchSequence(sequence + [git_url]))
+    monkeypatch.setattr("builtins.input", MonkeyPatchSequence(sequence + [git_url]))
 
     monkeypatch.setattr(Path, "cwd", lambda: base_dir)
 

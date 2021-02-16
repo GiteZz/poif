@@ -1,5 +1,8 @@
+from dataclasses import dataclass
 from enum import Enum
 from typing import Union
+
+from dataclasses_json import dataclass_json
 
 from poif.cli.tools.cli import answer_from_list, simple_input
 from poif.config.base import Config
@@ -13,6 +16,8 @@ class RemoteType(str, Enum):
 remote_types = {RemoteType.S3: S3Config}
 
 
+@dataclass_json
+@dataclass
 class RemoteConfig(Config):
     remote_type: RemoteType
     data_folder: str

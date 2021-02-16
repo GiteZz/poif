@@ -1,4 +1,7 @@
+from dataclasses import dataclass
 from pathlib import Path
+
+from dataclasses_json import dataclass_json
 
 from poif.config.base import Config
 from poif.config.collection import DataCollectionConfig
@@ -8,6 +11,8 @@ from poif.git.file import FileCreatorMixin
 from poif.packaging import packages
 
 
+@dataclass_json
+@dataclass
 class DataRepoConfig(Config, FileCreatorMixin):
     @classmethod
     def get_default_name(cls) -> str:
