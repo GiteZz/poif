@@ -1,5 +1,5 @@
-from poif.input.annotations import Mask
-from poif.input.base import DataSetObject
+from poif.dataset.object.annotations import Mask
+from poif.dataset.object.base import DataSetObject
 
 
 class SingleMaskObject(DataSetObject):

@@ -1,7 +1,7 @@
 from typing import Callable, List, Optional, Union
 
-from poif.input.base import DataSetObject
-from poif.input.transform.base import Transformation
+from poif.dataset.object.base import DataSetObject
+from poif.dataset.object.transform.base import Transformation
 
 ZeroOrMoreMetaInput = Optional[Union[DataSetObject, List[DataSetObject]]]
 CallableDataPointTransformation = Callable[[DataSetObject], ZeroOrMoreMetaInput]

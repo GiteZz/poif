@@ -34,7 +34,7 @@ def path_input(title: str, default: Path = None):
 
 
 def multi_input(title: str, empty_allowed=False):
-    print(title + " [Empty input to stop]")
+    print(title + " [Empty object to stop]")
 
     answers = []
     while True:
@@ -69,7 +69,7 @@ def input_with_possible_default(default=None, validation_function=None) -> str:
 
         return answer
 
-    raise MaxTriesReachedException(f"Valid input could not be provided after {max_invalid_count} tries.")
+    raise MaxTriesReachedException(f"Valid object could not be provided after {max_invalid_count} tries.")
 
 
 def not_empy_validation():

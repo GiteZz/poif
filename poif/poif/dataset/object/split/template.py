@@ -1,6 +1,6 @@
-from poif.input.base import DataSetObject
-from poif.input.split.base import Splitter
-from poif.input.transform.tools import extract_values
+from poif.dataset.object.base import DataSetObject
+from poif.dataset.object.split.base import Splitter
+from poif.dataset.object.transform.tools import extract_values
 from poif.typing import SubSetName
 
 

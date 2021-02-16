@@ -1,10 +1,10 @@
 check:
     autoflake --remove-all-unused-imports --recursive --remove-unused-variables --in-place .
-    cd ./poif && isort .
+    cd ./poif && isort --profile black --line-length 119 .
     cd ./poif && black --line-length 119 .
-    cd ./poif && mypy .
+    cd ./poif && mypy --ignore-missing-imports .
 
-pre-commit check:
+pre-commit: check
     cd ./poif && pytest .
 
 setup-test-environment:

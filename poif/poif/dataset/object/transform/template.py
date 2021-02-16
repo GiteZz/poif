@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from typing import List
 
-from poif.input.annotations import Mask
-from poif.input.base import DataSetObject
-from poif.input.transform.base import Transformation
-from poif.input.transform.tools import extract_values, is_path_match
+from poif.dataset.object.annotations import Mask
+from poif.dataset.object.base import DataSetObject
+from poif.dataset.object.transform.base import Transformation
+from poif.dataset.object.transform.tools import extract_values, is_path_match
 from poif.typing import PathTemplate
 
 

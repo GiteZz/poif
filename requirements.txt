@@ -1,3 +1,6 @@
+fuse
+pydantic
+numpy
 requests
 -e poif/interface
 -e poif/data_cache

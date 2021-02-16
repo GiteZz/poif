@@ -1,8 +1,8 @@
 from typing import Dict, List
 
 from poif.dataset.detection.base import DetectionDataset
-from poif.input.annotations import BoundingBox
-from poif.input.detection import DetectionInput
+from poif.dataset.object.detection import DetectionInput
+from poif.dataset.object.annotations import BoundingBox
 from poif.tagged_data.base import TaggedData
 from poif.typing import DatasetType, RelFilePath
 

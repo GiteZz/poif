@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from poif.config import S3Config
+from poif.config.remote.s3 import S3Config
 
 
 def test_s3():

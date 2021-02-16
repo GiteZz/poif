@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional
 
-from poif.input.meta_info import MetaInfoMixin
+from poif.dataset.object.meta_info import MetaInfoMixin
 from poif.tagged_data.base import TaggedData, TaggedPassthrough
 
 
@@ -34,7 +34,7 @@ class Point(DataSetAnnotation):
 
 
 class BoundingBox(DataSetAnnotation):
-    # TODO fix with inheritance such that the meta input values should not be used here
+    # TODO fix with inheritance such that the meta object values should not be used here
     def __init__(
         self,
         x: float,

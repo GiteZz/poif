@@ -1,6 +1,6 @@
 from typing import Callable, Dict, List
 
-from poif.input.base import DataSetObject
+from poif.dataset.object.base import DataSetObject
 
 # Used for splitting the dataset, used for train/val/test split
 CallableDataSetSplitter = Callable[[List[DataSetObject]], Dict[str, List[DataSetObject]]]

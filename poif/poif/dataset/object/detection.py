@@ -1,5 +1,5 @@
-from poif.input.annotations import BoundingBox
-from poif.input.base import Image
+from poif.dataset.object.base import Image
+from poif.dataset.object.annotations import BoundingBox
 
 
 class DetectionInput(Image):

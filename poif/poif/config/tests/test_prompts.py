@@ -122,7 +122,7 @@ def get_repo_sequence(expected_result: DataRepoConfig = None):
 
 def test_s3_prompt(monkeypatch):
     sequence, expected_output = get_s3_sequence()
-    monkeypatch.setattr("builtins.input", MonkeyPatchSequence(sequence))
+    monkeypatch.setattr("builtins.object", MonkeyPatchSequence(sequence))
     config1 = S3Config.prompt()
 
     assert config1 == expected_output
@@ -138,7 +138,7 @@ def test_s3_read_write(monkeypatch):
 
 def test_remote_config_prompt(monkeypatch):
     sequence, expected_output = get_remote_config_sequence()
-    monkeypatch.setattr("builtins.input", MonkeyPatchSequence(sequence))
+    monkeypatch.setattr("builtins.object", MonkeyPatchSequence(sequence))
     config1 = RemoteConfig.prompt()
 
     assert config1 == expected_output
@@ -154,7 +154,7 @@ def test_remote_config_read_write(monkeypatch):
 
 def test_readme_prompt(monkeypatch):
     sequence, expected_output = get_readme_sequence()
-    monkeypatch.setattr("builtins.input", MonkeyPatchSequence(sequence))
+    monkeypatch.setattr("builtins.object", MonkeyPatchSequence(sequence))
     config1 = ReadmeConfig.prompt()
 
     assert config1 == expected_output
@@ -172,7 +172,7 @@ def test_readme_read_write():
 
 def test_collection_prompt(monkeypatch):
     sequence, expected_output = get_collection_sequence()
-    monkeypatch.setattr("builtins.input", MonkeyPatchSequence(sequence))
+    monkeypatch.setattr("builtins.object", MonkeyPatchSequence(sequence))
     config1 = DataCollectionConfig.prompt()
 
     assert config1 == expected_output
@@ -188,7 +188,7 @@ def test_collection_read_write(monkeypatch):
 
 def test_cache_prompt(monkeypatch):
     sequence, expected_output = get_cache_sequence()
-    monkeypatch.setattr("builtins.input", MonkeyPatchSequence(sequence))
+    monkeypatch.setattr("builtins.object", MonkeyPatchSequence(sequence))
     config1 = CacheConfig.prompt()
 
     assert config1 == expected_output
@@ -204,7 +204,7 @@ def test_cache_read_write(monkeypatch):
 
 def test_package_prompt(monkeypatch):
     sequence, expected_output = get_package_sequence()
-    monkeypatch.setattr("builtins.input", MonkeyPatchSequence(sequence))
+    monkeypatch.setattr("builtins.object", MonkeyPatchSequence(sequence))
     config1 = PackageConfig.prompt()
 
     assert config1 == expected_output
@@ -220,7 +220,7 @@ def test_package_read_write(monkeypatch):
 
 def test_repo_prompt(monkeypatch):
     sequence, expected_output = get_repo_sequence()
-    monkeypatch.setattr("builtins.input", MonkeyPatchSequence(sequence))
+    monkeypatch.setattr("builtins.object", MonkeyPatchSequence(sequence))
     config1 = DataRepoConfig.prompt()
 
     assert config1 == expected_output

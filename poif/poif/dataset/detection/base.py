@@ -6,9 +6,9 @@ from typing import List
 from jinja2 import Template
 
 from poif.dataset.base import MultiDataset
+from poif.dataset.object.detection import DetectionInput
+from poif.dataset.object.annotations import BoundingBox
 from poif.file_system.directory import Directory
-from poif.input.annotations import BoundingBox
-from poif.input.detection import DetectionInput
 from poif.tagged_data.base import StringBinaryData
 from poif.templates import get_datasets_template_dir
 

@@ -1,6 +1,6 @@
 from typing import Any
 
-from poif.input.base import DataSetObject
+from poif.dataset.object.base import DataSetObject
 
 
 class TripleDataSetObject(DataSetObject):

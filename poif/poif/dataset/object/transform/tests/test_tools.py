@@ -1,8 +1,11 @@
+from typing import List
+
 import pytest
 
-from poif.input.tagged_data import TaggedDataInput
-from poif.input.transform.template import DropByTemplate, MaskByTemplate, MaskTemplate
-from poif.input.transform.tools import (
+from poif.dataset.object.base import DataSetObject
+from poif.dataset.object.split.template import SplitByTemplate
+from poif.dataset.object.transform.template import DropByTemplate
+from poif.dataset.object.transform.tools import (
     catch_all_to_value,
     extract_values,
     is_path_match,
@@ -83,7 +86,7 @@ def test_replace_template_with_group():
 
 
 @pytest.fixture
-def mask_inputs():
+def mask_objects() -> List[DataSetObject]:
     inputs = []
     for subset_name in ["train", "test", "val"]:
         for img_type in ["mask", "image"]:
@@ -92,37 +95,25 @@ def mask_inputs():
                     relative_path=f"{subset_name}/{img_type}/{img_index}.jpg",
                     data="{subset_name}{img_index}",
                 )
-                inputs.append(TaggedDataInput(data=tagged_data))
+                inputs.append(DataSetObject(tagged_data))
 
     return inputs
 
 
-def test_pair_collecter(mask_inputs):
-    collected_inputs = MaskByTemplate(MaskTemplate(image="{{}}/image/{{}}.jpg", mask="{{}}/mask/{{}}.jpg"))(
-        mask_inputs
-    )
-
-    for new_input in collected_inputs:
-        image, mask = new_input.output()
-        assert image == mask
-
-    assert len(mask_inputs) == 2 * len(collected_inputs)
-
-
-def test_split_by_template(mask_inputs):
+def test_split_by_template(mask_objects):
     dataset_type_splitter = SplitByTemplate("{{ dataset_type }}/{{ data_type }}/*", subset_tag="dataset_type")
     data_type_splitter = SplitByTemplate("{{ dataset_type }}/{{ data_type }}/*", subset_tag="data_type")
 
-    for input in mask_inputs:
-        assert input.relative_path.split("/")[0] == dataset_type_splitter(input)
-        assert input.relative_path.split("/")[1] == data_type_splitter(input)
+    for ds_object in mask_objects:
+        assert {ds_object.relative_path.split("/")[0]: [ds_object]} == dataset_type_splitter([ds_object])
+        assert {ds_object.relative_path.split("/")[1]: [ds_object]} == data_type_splitter([ds_object])
 
 
-def test_drop_by_template(mask_inputs):
+def test_drop_by_template(mask_objects):
     dataset_dropper = DropByTemplate("*/mask/*.jpg")
 
-    for ds_input in mask_inputs:
+    for ds_input in mask_objects:
         if "mask" in ds_input.relative_path:
-            assert dataset_dropper(ds_input) == []
+            assert dataset_dropper([ds_input]) == []
         else:
-            assert dataset_dropper(ds_input) == ds_input
+            assert dataset_dropper([ds_input]) == [ds_input]

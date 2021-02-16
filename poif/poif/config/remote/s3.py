@@ -10,14 +10,17 @@ class S3Config(Config, CreateRemoteMixin):
     url: str
     profile: str
     bucket: str
-    type: Optional[str] = "S3"
+    type = "S3"
 
     def __init__(self, url: str, profile: str, bucket: str):
         super().__init__()
-
+        
         self.url = url
         self.profile = profile
         self.bucket = bucket
+        self.type = 'S3'
+
+
 
     @staticmethod
     def prompt(default: "S3Config" = None) -> "S3Config":

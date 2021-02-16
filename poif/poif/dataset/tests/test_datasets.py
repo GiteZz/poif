@@ -4,10 +4,10 @@ import numpy as np
 import pytest
 
 from poif.dataset.base import MultiDataset
-from poif.input.mask import SingleMaskObject
-from poif.input.split.template import SplitByTemplate
-from poif.input.tests.mock import TripleDataSetObject
-from poif.input.transform.template import DropByTemplate, MaskByTemplate, MaskTemplate
+from poif.dataset.object.mask import SingleMaskObject
+from poif.dataset.object.split.template import SplitByTemplate
+from poif.dataset.object.tests.mock import TripleDataSetObject
+from poif.dataset.object.transform.template import DropByTemplate, MaskByTemplate, MaskTemplate
 from poif.tagged_data.base import TaggedData
 from poif.tagged_data.tests.mock import MockTaggedData
 from poif.tests import get_img

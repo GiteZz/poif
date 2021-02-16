@@ -3,9 +3,9 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import List, Type, Union
 
-from poif.input.base import DataSetObject
-from poif.input.split.base import Splitter
-from poif.input.transform.base import Transformation
+from poif.dataset.object.base import DataSetObject
+from poif.dataset.object.split.base import Splitter
+from poif.dataset.object.transform.base import Transformation
 from poif.tagged_data.base import TaggedData
 
 Operation = Union[Transformation, Splitter]

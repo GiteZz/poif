@@ -13,23 +13,32 @@ from poif.repo.file_remote import FileRemoteTaggedRepo
 from poif.typing import RelFilePath
 
 
-def get_img():
-    img_width = 200
-    img_height = 200
+def get_img(height: int = 200, width: int = 200, bw: bool = False) -> np.ndarray:
+    middle_x = width // 2
+    middle_y = height // 2
 
-    middle_x = img_width // 2
-    middle_y = img_height // 2
+    if not bw:
+        img = np.zeros((height, width, 3)).astype(np.uint8)
 
-    img = np.zeros((img_height, img_width, 3)).astype(np.uint8)
+        random_rgb = lambda: [random.randint(0, 255) for _ in range(3)]
 
-    random_rgb = lambda: [random.randint(0, 255) for _ in range(3)]
+        img[:middle_y, :middle_x] = random_rgb()
+        img[middle_y:, :middle_x] = random_rgb()
+        img[:middle_y, middle_x:] = random_rgb()
+        img[middle_y:, middle_x:] = random_rgb()
 
-    img[:middle_y, :middle_x] = random_rgb()
-    img[middle_y:, :middle_x] = random_rgb()
-    img[:middle_y, middle_x:] = random_rgb()
-    img[middle_y:, middle_x:] = random_rgb()
+        return img
+    else:
+        img = np.zeros((height, width)).astype(np.uint8)
 
-    return img
+        random_bw = lambda: random.randint(0, 255)
+
+        img[:middle_y, :middle_x] = random_bw()
+        img[middle_y:, :middle_x] = random_bw()
+        img[:middle_y, middle_x:] = random_bw()
+        img[middle_y:, middle_x:] = random_bw()
+
+        return img
 
 
 def get_img_file() -> Path:

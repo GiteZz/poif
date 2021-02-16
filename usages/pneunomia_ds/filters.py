@@ -1,4 +1,4 @@
-# from poif.input.transform.base import (
+# from poif.object.transform.base import (
 #     DataPointSplitter,
 #     DataPointTransformation,
 #

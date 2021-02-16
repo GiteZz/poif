@@ -16,7 +16,7 @@ def test_init(monkeypatch):
     temp_dir = get_temp_path()
 
     sequence, config = get_repo_sequence()
-    monkeypatch.setattr("builtins.input", MonkeyPatchSequence(sequence + ["git_url"]))
+    monkeypatch.setattr("builtins.object", MonkeyPatchSequence(sequence + ["git_url"]))
 
     monkeypatch.setattr(Path, "cwd", lambda: temp_dir)
 
