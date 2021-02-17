@@ -66,7 +66,7 @@ class CocoDetectionDataset(DetectionDataset):
             if img_id not in new_inputs:
                 continue
             current_input = new_inputs[img_id]
-            x, y, w, h = annotation["bbox"]
+            x, y, w, h = annotation["bbox"].split(" ")
 
             category_id = annotation["category_id"]
 
@@ -98,26 +98,31 @@ class CocoDetectionDataset(DetectionDataset):
         self.next_operation()
 
 
-def detection_collection_to_coco_dict(inputs: List[DetectionInput]) -> Dict:
+def detection_collection_to_coco_dict(inputs: List[DetectionInput], label_mapping: Dict[int, str]) -> Dict:
     coco_dict = {}
     coco_dict["images"] = []
     coco_dict["annotations"] = []
+    coco_dict["categories"] = []
     for index, detection_input in enumerate(inputs):
         coco_dict["images"].append(
             {
-                "file_name": detection_input.data.relative_path,
+                "file_name": detection_input.relative_path,
                 "id": index,
                 "width": detection_input.width,
                 "height": detection_input.height,
             }
         )
-        for bbox in detection_input.annotations:
-            coco_dict["annotations"].append(
-                {
-                    "image_id": index,
-                    "bbox": bbox.coco_bbox(detection_input.width, detection_input.height),
-                    "category_id": bbox.label,
-                }
-            )
+        for object_annotation in detection_input.annotations:
+            if isinstance(object_annotation, BoundingBox):
+                coco_dict["annotations"].append(
+                    {
+                        "image_id": index,
+                        "bbox": object_annotation.coco_bbox(detection_input.width, detection_input.height),
+                        "category_id": object_annotation.label,
+                    }
+                )
+
+    for label_id, label_name in label_mapping.items():
+        coco_dict["categories"].append({"id": label_id, "name": label_name})
 
     return coco_dict

@@ -42,7 +42,7 @@ def detection_collection(
 ):
     images = [
         DetectionInput(
-            data=MockTaggedData(f"{i}.jpg", get_img()),
+            tagged_data=MockTaggedData(f"{i}.jpg", get_img()),
             width=img_width,
             height=img_height,
         )
@@ -58,15 +58,16 @@ def detection_collection(
                     amount_of_classes=amount_of_classes,
                 )
             )
-
-    return images
+    label_mapping = {label_index: f"label_{label_index}" for label_index in range(amount_of_classes)}
+    return images, label_mapping
 
 
 def test_coco(detection_collection):
-    coco_dict = detection_collection_to_coco_dict(detection_collection)
+    images, label_mapping = detection_collection
+    coco_dict = detection_collection_to_coco_dict(images, label_mapping)
     annotation_file = MockTaggedData(relative_path="train.json", data=coco_dict)
 
-    tagged_data = [annotation_file] + [detection_input.data for detection_input in detection_collection]
+    tagged_data = [annotation_file] + [detection_input for detection_input in images]
     ds = CocoDetectionDataset(annotation_files={"train": "train.json"}, data_folders={"train": ""})
 
     ds.form(tagged_data)
@@ -84,5 +85,3 @@ def test_real_coco():
     ds.form(tagged_data)
 
     ds.create_file_system(DetectionFileOutputFormat.yolov5, disk_loc)
-
-
