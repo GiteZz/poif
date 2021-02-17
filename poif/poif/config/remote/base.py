@@ -13,7 +13,7 @@ class RemoteType(str, Enum):
     S3 = "S3"
 
 
-remote_types = {RemoteType.S3: S3Config}
+remote_types = {"S3": S3Config}
 
 
 @dataclass_json
@@ -33,14 +33,17 @@ class RemoteConfig(Config):
         if default_remote is None:
             default_remote = RemoteConfig.get_default()
 
+        default_type = "S3"
+        if default_remote is not None and default_remote.remote_type is not None:
+            default_type = default_remote.remote_type.value
+
         remote_type = answer_from_list(
             "Remote type?",
             list(remote_types.keys()),
-            default=None if default_remote is None else default_remote.remote_type,
+            default=default_type,
         )
-        remote_enum = RemoteType[remote_type]
 
-        if default_remote is not None and isinstance(default_remote.config, remote_types[remote_enum]):
+        if default_remote is not None and type(default_remote.config) == remote_types[remote_type]:
             config = remote_types[remote_type].prompt(default=default_remote.config)
         else:
             config = remote_types[remote_type].prompt()
@@ -50,4 +53,4 @@ class RemoteConfig(Config):
             default=None if default_remote is None else default_remote.data_folder,
         )
 
-        return RemoteConfig(remote_type=remote_enum, data_folder=data_folder, config=config)
+        return RemoteConfig(remote_type=remote_type, data_folder=data_folder, config=config)

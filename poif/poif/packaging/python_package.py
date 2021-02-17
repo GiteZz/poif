@@ -11,9 +11,7 @@ from poif.utils import get_relative_path
 
 class PythonPackage(Package):
     def __init__(self, base_dir: Path, collection_config: DataCollectionConfig):
-        super().__init__()
-        self.base_dir = base_dir
-        self.collection_config = collection_config
+        super().__init__(base_dir, collection_config)
 
     def init(self):
         template_path = get_python_package_template_dir()
@@ -39,9 +37,8 @@ class PythonPackage(Package):
         with open(destination, "w") as f:
             f.write(rendered_template)
 
-    @classmethod
-    def get_resource_directory(cls, base_dir: Path):
-        resource_dir = base_dir / "datasets" / "resources"
+    def get_resource_directory(self):
+        resource_dir = self.base_dir / "datasets" / self.collection_config.name / "resources"
         resource_dir.mkdir(exist_ok=True, parents=True)
 
         return resource_dir

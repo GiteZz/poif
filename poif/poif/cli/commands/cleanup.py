@@ -2,12 +2,7 @@ from pathlib import Path
 
 
 def cleanup(args):
-    possible_files = [
-        "README.md",
-        "setup.py",
-        "readme_config.json",
-        "package_config.json",
-    ]
+    possible_files = ["README.md", "setup.py", "readme_config.json", "package_config.json", ".resource_folder"]
     for file in possible_files:
         file_path = Path.cwd() / file
         if file_path.exists():

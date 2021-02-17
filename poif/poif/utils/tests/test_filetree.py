@@ -7,8 +7,43 @@ def test_filetree():
 
     tree = FileTree(base_dir)
 
-    for line in tree.get_lines():
-        print(line)
+    expected_lines = [
+        base_dir.parts[-1],
+        "  - test",
+        "    - image",
+        "      - 00.jpg",
+        "      - 01.jpg",
+        "      - ...",
+        "    - mask",
+        "      - 00.jpg",
+        "      - 01.jpg",
+        "      - ...",
+        "    - test_meta.json",
+        "  - train",
+        "    - image",
+        "      - 00.jpg",
+        "      - 01.jpg",
+        "      - ...",
+        "    - mask",
+        "      - 00.jpg",
+        "      - 01.jpg",
+        "      - ...",
+        "    - train_meta.json",
+        "  - val",
+        "    - image",
+        "      - 00.jpg",
+        "      - 01.jpg",
+        "      - ...",
+        "    - mask",
+        "      - 00.jpg",
+        "      - 01.jpg",
+        "      - ...",
+        "    - val_meta.json",
+        "  - meta.json",
+    ]
+
+    for line, expected_line in zip(tree.get_lines(), expected_lines):
+        assert line == expected_line
 
 
 if __name__ == "__main__":

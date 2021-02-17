@@ -7,7 +7,7 @@ from poif.config.readme import ReadmeConfig
 from poif.config.remote.base import RemoteConfig, RemoteType
 from poif.config.remote.s3 import S3Config
 from poif.config.repo import DataRepoConfig
-from poif.packaging import PackageOptions
+from poif.packaging import PackageOptions, PythonPackage
 from poif.tests import MonkeyPatchSequence, get_temp_file, get_temp_path
 
 
@@ -232,8 +232,9 @@ def test_repo_read_write(monkeypatch):
     config.write(config_file)
 
     assert config.read(config_file) == config
-
     temp_dir = get_temp_path()
-    config.write_to_package(temp_dir)
+    package = PythonPackage(base_dir=temp_dir, collection_config=config.collection)
+
+    config.write_to_package(package)
 
     assert DataRepoConfig.read_from_package(temp_dir) == config

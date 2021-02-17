@@ -22,6 +22,5 @@ def wait_on_url(url: str, timout=600, interval=10):
         else:
             print("Not ready")
         time.sleep(interval)
-    # TODO crude
-    time.sleep(20)  # Gitlab takes a bit longer
+
     print("Ready")

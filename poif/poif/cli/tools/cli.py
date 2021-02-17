@@ -1,6 +1,6 @@
 from enum import Enum
 from pathlib import Path
-from typing import List
+from typing import List, Type
 
 
 def simple_input(title: str, default: str = None) -> str:
@@ -13,13 +13,15 @@ def simple_input(title: str, default: str = None) -> str:
 
 
 def answer_from_list(title: str, answer_list: List[str], default: str = None):
-    print(f"{title} Options: {answer_list}")
+    print(f"{title} Options: {answer_list} Default: {default}")
     return input_with_possible_default(default=default, validation_function=in_list_validation(answer_list))
 
 
-def enum_input(title: str, enum_class: Enum, default=None):
+def enum_input(title: str, enum_class: Type[Enum], default=None):
     enum_values = [e.value for e in enum_class]
-    return answer_from_list(title, enum_values, None if default is None else default.value)
+    if default is None:
+        default = enum_values[0]
+    return answer_from_list(title, enum_values, default)
 
 
 def path_input(title: str, default: Path = None):
@@ -59,13 +61,13 @@ def input_with_possible_default(default=None, validation_function=None) -> str:
     while invalid_count < max_invalid_count:
         answer = input()
 
+        if default is not None and answer == "":
+            return default
+
         if validation_function is not None and not validation_function(answer):
             print("Answer was not valid, please provide a correct answer.")
             invalid_count += 1
             continue
-
-        if default is not None and answer == "":
-            return default
 
         return answer
 

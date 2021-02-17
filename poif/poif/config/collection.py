@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from pathlib import Path
 from typing import List
 
 from dataclasses_json import dataclass_json
@@ -24,7 +25,9 @@ class DataCollectionConfig(Config):
     def prompt(data_default: RemoteConfig = None):
         if data_default is None:
             data_default = RemoteConfig.get_default()
-        collection_name = simple_input("Name of data collection?")
+
+        cwd_dir_name = Path.cwd().parts[-1]
+        collection_name = simple_input("Name of data collection?", default=cwd_dir_name)
 
         folders = multi_input("Folder to track?", empty_allowed=True)
         files = multi_input("Files to track?", empty_allowed=True)

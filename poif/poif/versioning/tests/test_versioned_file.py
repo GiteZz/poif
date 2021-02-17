@@ -31,8 +31,7 @@ img_hash = hash_object(img_path)
 
 def test_writing():
     file = VersionedFile(base_dir=temp_dir, file_path=img_path)
-    vfile = temp_dir / file.get_vfile_name()
-    file.write_vfile_to_file(vfile)
+    vfile = file.write_vfile_to_folder(temp_dir)
 
     with open(vfile, "r") as f:
         vfile_contents = json.load(f)

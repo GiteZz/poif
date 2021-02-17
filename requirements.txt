@@ -1,3 +1,4 @@
+tqdm
 fuse
 pydantic
 numpy

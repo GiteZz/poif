@@ -1,19 +1,14 @@
-from pathlib import Path
-
-from poif.utils.readme import FileTreeSection, ReadmeSection
+from poif.config.collection import DataCollectionConfig
+from poif.tests import create_standard_folder_structure
+from poif.utils.readme import DatasetReadme
 
 
 def test_readme():
-    ds_folder = Path("/home/gilles/datasets/pneunomia")
-    data_folders = ["train", "test", "val"]
+    base_dir = create_standard_folder_structure()
 
-    readme = ReadmeSection(title="Pneunomia dataset")
-    file_trees_section = ReadmeSection(title="Data directories")
-    readme.add_section(file_trees_section)
+    collection_config = DataCollectionConfig(
+        name="dummy", files=[], folders=["train", "test", "val"], data_remote=None
+    )
+    readme = DatasetReadme(base_dir=base_dir, config=collection_config)
 
-    for data_folder in data_folders:
-        base_dir = ds_folder / data_folder
-        single_file_tree = FileTreeSection(base_dir)
-        file_trees_section.add_section(single_file_tree)
-
-    readme.write_to_file(ds_folder / "README.md")
+    readme.write_to_folder(base_dir)

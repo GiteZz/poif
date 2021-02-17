@@ -106,7 +106,9 @@ def create_standard_folder_structure():
 
     template = get_standard_folder_template()
     for file in template:
-        (temp_dir / file).touch()
+        file_path = temp_dir / file
+        file_path.parent.mkdir(exist_ok=True, parents=True)
+        file_path.touch()
 
     return temp_dir
 

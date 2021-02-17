@@ -83,7 +83,7 @@ class VersionedDirectory(Mapping):
 
     def set_files(self):
         self._files = []
-        for file in tqdm(RecursiveFileIterator(self.data_dir)):
+        for file in tqdm(RecursiveFileIterator(self.data_dir), desc=f"Hashing {self.data_dir.parts[-1]} folder"):
             versioned_file = VersionedFile(base_dir=self.base_dir, file_path=file)
             self._files.append(versioned_file)
 

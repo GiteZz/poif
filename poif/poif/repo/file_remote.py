@@ -1,6 +1,8 @@
 import typing
 from dataclasses import dataclass
 
+from tqdm import tqdm
+
 from poif.repo.base import TaggedRepo
 
 if typing.TYPE_CHECKING:
@@ -29,7 +31,7 @@ class FileRemoteTaggedRepo(TaggedRepo):
         self.remote.upload(data.get(), self.get_remote_name(data.tag))
 
     def upload_collection(self, collection: "VersionedCollection"):
-        for tagged_data in collection.get_tagged_data():
+        for tagged_data in tqdm(collection.get_tagged_data(), desc="Uploading files"):
             self.upload(tagged_data)
 
 

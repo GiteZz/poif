@@ -21,6 +21,6 @@ def test_init(monkeypatch):
 
     monkeypatch.setattr(Path, "cwd", lambda: base_dir)
 
-    from poif.cli.commands import init
+    from poif.cli.commands.init import init
 
     init([])

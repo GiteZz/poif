@@ -21,7 +21,7 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires=">=3.6",
-    entry_points={"console_scripts": ["daif=poif.cli.datasets.cli:main"]},
+    entry_points={"console_scripts": ["daif=poif.cli.cli:main"]},
     install_requires=[
         "dataclasses",
         "PyYAML",
