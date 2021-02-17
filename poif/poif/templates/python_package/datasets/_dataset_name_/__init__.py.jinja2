@@ -1,1 +1,6 @@
-recursive-include datasets/{{data.dataset_name}}/resources/*
+from pathlib import Path
+
+def get_resource_dir():
+    current_loc = Path(__file__)
+    ds_dir = current_loc.parent
+    return ds_dir / "resources"
