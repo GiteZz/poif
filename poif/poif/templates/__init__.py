@@ -6,7 +6,7 @@ def get_template_dir():
 
 
 def get_python_package_template_dir():
-    return get_template_dir() / "package"
+    return get_template_dir() / "python_package"
 
 
 def get_datasets_template_dir():

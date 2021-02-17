@@ -95,6 +95,8 @@ class CocoDetectionDataset(DetectionDataset):
             self.objects.extend(new_objects)
             self.splits[subset] = new_objects
 
+        self.next_operation()
+
 
 def detection_collection_to_coco_dict(inputs: List[DetectionInput]) -> Dict:
     coco_dict = {}

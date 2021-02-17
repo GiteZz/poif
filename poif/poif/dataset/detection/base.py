@@ -68,18 +68,16 @@ class DetectionDataset(MultiDataset, ABC):
         dataset_dir = Directory()
 
         if data_format == DetectionFileOutputFormat.yolov5:
-            train_data_folder = base_folder / "images" / "train"
-            val_data_folder = base_folder / "images" / "val"
+            data_folder = {"train": base_folder / "images" / "train", "val": base_folder / "images" / "val"}
 
-            train_label_folder = base_folder / "labels" / "train"
-            val_label_folder = base_folder / "labels" / "val"
+            label_folder = {"train": base_folder / "labels" / "train", "val": base_folder / "labels" / "val"}
 
             sorted_ids = self.get_classes_sorted_by_id()
             needed_information = {
                 "number_of_classes": len(sorted_ids),
                 "classes": sorted_ids,
-                "train_folder": str(train_data_folder),
-                "val_folder": str(val_data_folder),
+                "train_folder": str(data_folder["train"]),
+                "val_folder": str(data_folder["val"]),
             }
 
             yolov5_template = get_datasets_template_dir() / "detection" / "yolov5.yaml.jinja2"
@@ -89,27 +87,15 @@ class DetectionDataset(MultiDataset, ABC):
 
             dataset_dir.add_data("meta.yaml", StringBinaryData(rendered_template))
 
-            # TODO fix this duplication
-            for object_index, ds_object in enumerate(self.val):
-                # TODO fix this hacky stuff, extension needs to be known but this is not clean
-                original_extension = ds_object.data.relative_path.split("/")[-1].split(".")[-1]
-                file_name = str(val_data_folder / f"{object_index}.{original_extension}")
+            for subset in ["train", "val"]:
+                for object_index, ds_object in enumerate(self.splits[subset].objects):
+                    original_extension = ds_object.relative_path.split("/")[-1].split(".")[-1]
+                    file_name = str(data_folder[subset] / f"{object_index}.{original_extension}")
 
-                dataset_dir.add_data(file_name, StringBinaryData(rendered_template))
+                    dataset_dir.add_data(file_name, StringBinaryData(rendered_template))
 
-                label = detection_input_to_yolo_annotation(ds_object)
-                label_name = str(val_label_folder / f"{object_index}.txt")
-                dataset_dir.add_data(label_name, StringBinaryData(label))
-
-            for object_index, ds_object in enumerate(self.train):
-                # TODO fix this hacky stuff, extension needs to be known but this is not clean
-                original_extension = ds_object.data.relative_path.split("/")[-1].split(".")[-1]
-                file_name = str(train_data_folder / f"{object_index}.{original_extension}")
-
-                dataset_dir.add_data(file_name, StringBinaryData(rendered_template))
-
-                label = detection_input_to_yolo_annotation(ds_object)
-                label_name = str(train_label_folder / f"{object_index}.txt")
-                dataset_dir.add_data(label_name, StringBinaryData(label))
+                    label = detection_input_to_yolo_annotation(ds_object)
+                    label_name = str(label_folder[subset] / f"{object_index}.txt")
+                    dataset_dir.add_data(label_name, StringBinaryData(label))
 
         dataset_dir.setup_as_filesystem(base_folder, daemon=True)

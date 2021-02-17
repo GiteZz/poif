@@ -7,6 +7,7 @@ from poif.dataset.detection.base import DetectionFileOutputFormat
 from poif.dataset.detection.coco import CocoDetectionDataset, detection_collection_to_coco_dict
 from poif.dataset.object.annotations import BoundingBox
 from poif.dataset.object.detection import DetectionInput
+from poif.dataset.object.split.base import RandomSplitter
 from poif.tagged_data.disk import DiskData
 from poif.tagged_data.tests.mock import MockTaggedData
 from poif.tests import get_img, get_temp_path
@@ -79,8 +80,9 @@ def test_real_coco():
 
     tagged_data = DiskData.from_folder(disk_path)
     ds = CocoDetectionDataset(annotation_files={"main": "ann.json"}, data_folders={"main": "images"})
+    ds.add_transformation(RandomSplitter({"train": 0.7, "val": 0.3}))
     ds.form(tagged_data)
 
-    ds.random_split({"train": 0.7, "val": 0.3})
-
     ds.create_file_system(DetectionFileOutputFormat.yolov5, disk_loc)
+
+

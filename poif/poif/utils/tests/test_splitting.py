@@ -13,4 +13,4 @@ def test_random_split():
         actual_percentage = len(split_dict[ds_type]) / len(objects)
         ideal_percentage = split_percentages[ds_type]
 
-        is_close(actual_percentage, ideal_percentage, 0.02)
+        assert is_close(actual_percentage, ideal_percentage, 0.02)

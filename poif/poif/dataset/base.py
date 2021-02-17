@@ -37,9 +37,14 @@ class MultiDataset(BaseDataset):
         continue_splitting_after_splitter: bool = False,
         continue_transformations_after_splitter: bool = True,
     ):
-        self.operations = copy.deepcopy(operations)
+
         super().__init__()
         self.splits = {}
+        if operations is not None:
+            self.operations = copy.deepcopy(operations)
+        else:
+            self.operations = []
+
         self.input_type = input_type
 
         self.continue_splitting_after_splitter = continue_splitting_after_splitter
@@ -106,6 +111,9 @@ class MultiDataset(BaseDataset):
 
     def apply_transformation(self, transformation: Transformation):
         self.objects = transformation(self.objects)
+
+    def add_transformation(self, operation: Operation):
+        self.operations.append(operation)
 
     def __len__(self):
         return len(self.objects)

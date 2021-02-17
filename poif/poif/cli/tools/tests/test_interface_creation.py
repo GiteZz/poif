@@ -20,7 +20,7 @@ def dummy_config() -> DataCollectionConfig:
     # TODO remove the type, no idea why it is required
     dummy_s3_config = S3Config(url="", profile="", bucket="")
     dummy_ds_config = DataCollectionConfig(
-        dataset_name="dummy", git_url="", data_s3=dummy_s3_config, files=[], folders=[]
+        name="dummy", data_remote=dummy_s3_config, files=[], folders=[]
     )
 
     return dummy_ds_config
