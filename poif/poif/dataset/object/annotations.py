@@ -67,10 +67,10 @@ class BoundingBox(DataSetAnnotation):
             int(self.h * img_height),
         ]
 
-    def coco_bbox(self, img_width, img_height) -> str:
+    def coco_bbox(self, img_width, img_height) -> list:
 
         int_bbox = self.int_bbox(img_width, img_height)
-        return " ".join(str(value) for value in int_bbox)
+        return int_bbox
 
     def yolo_label(self):
         yolo_x = self.x + self.w / 2

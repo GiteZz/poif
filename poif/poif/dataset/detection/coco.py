@@ -66,7 +66,7 @@ class CocoDetectionDataset(DetectionDataset):
             if img_id not in new_inputs:
                 continue
             current_input = new_inputs[img_id]
-            x, y, w, h = annotation["bbox"].split(" ")
+            x, y, w, h = annotation["bbox"]
 
             category_id = annotation["category_id"]
 

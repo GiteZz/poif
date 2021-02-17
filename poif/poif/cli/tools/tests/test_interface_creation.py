@@ -19,9 +19,7 @@ def test_strip_jinja_extension():
 def dummy_config() -> DataCollectionConfig:
     # TODO remove the type, no idea why it is required
     dummy_s3_config = S3Config(url="", profile="", bucket="")
-    dummy_ds_config = DataCollectionConfig(
-        name="dummy", data_remote=dummy_s3_config, files=[], folders=[]
-    )
+    dummy_ds_config = DataCollectionConfig(name="dummy", data_remote=dummy_s3_config, files=[], folders=[])
 
     return dummy_ds_config
 
