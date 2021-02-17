@@ -24,8 +24,7 @@ dir_hash = hash_string(img1_hash + img2_hash)
 
 def test_writing():
     directory = VersionedDirectory(base_dir=temp_dir, data_dir=img_folder)
-    vdir_file = temp_dir / directory.get_vdir_name()
-    directory.write_vdir_to_file(vdir_file)
+    vdir_file = directory.write_vdir_to_folder(temp_dir)
 
     with open(vdir_file, "r") as f:
         vdir_contents = json.load(f)
@@ -33,11 +32,7 @@ def test_writing():
     assert vdir_contents["data_folder"] == "image"
     assert vdir_contents["tag"] == dir_hash
 
-    mapping_file = temp_dir / directory.get_mapping_name()
-    directory.write_mapping_to_file(mapping_file)
-
-    with open(mapping_file, "r") as f:
-        mapping_contents = json.load(f)
+    mapping_contents = directory.get_parsed()
 
     assert mapping_contents[img1_hash] == "image/01.jpg"
     assert mapping_contents[img2_hash] == "image/02.jpg"
