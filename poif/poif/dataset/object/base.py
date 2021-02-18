@@ -61,8 +61,10 @@ class DataSetObject(TaggedPassthrough, MetaInfoMixin):
 
 
 class TransformedDataSetObject(DataSetObject):
-    def __init__(self, tagged_data: TaggedData, transformation: DataTransform):
-        super().__init__(tagged_data)
+    def __init__(
+        self, tagged_data: TaggedData, transformation: DataTransform, output_function: DataSetObjectOutputFunction
+    ):
+        super().__init__(tagged_data, output_function=output_function)
         self.transformation = transformation
 
     def tag(self):

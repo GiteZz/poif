@@ -59,12 +59,12 @@ class DetectionDataset(MultiDataset, ABC):
 
     def create_sub_dataset_from_objects(self, new_objects: List):
         sub_dataset = DetectionDataset()
-        sub_dataset.inputs = new_objects
+        sub_dataset.objects = new_objects
         sub_dataset.category_mapping = self.category_mapping
 
         return sub_dataset
 
-    def create_file_system(self, data_format: DetectionFileOutputFormat, base_folder: Path):
+    def create_file_system(self, data_format: str, base_folder: Path):
         dataset_dir = Directory()
 
         if data_format == DetectionFileOutputFormat.yolov5:
