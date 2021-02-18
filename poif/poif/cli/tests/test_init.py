@@ -1,5 +1,3 @@
-from pathlib import Path
-
 from poif.cli.commands.init import init
 from poif.config.tests.test_prompts import get_repo_sequence
 from poif.tests import (

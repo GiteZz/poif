@@ -1,11 +1,74 @@
 from abc import ABC, abstractmethod
 from collections import defaultdict
 from dataclasses import dataclass, field
+from enum import Enum
 from hashlib import md5
 from pathlib import Path
-from typing import Dict, Generator, List
+from typing import Dict, Generator, List, Tuple
+
+import cv2
+import numpy as np
 
 from poif.config import img_extensions
+
+
+class ResizeMethod(Enum):
+    NORMAL = 0
+    PAD = 1
+
+
+def get_img_size(img: np.ndarray) -> Tuple[int, int]:
+    if len(img.shape) == 2:
+        h, w = img.shape
+
+        return h, w
+    elif len(img.shape) == 3:
+        h, w, c = img.shape
+
+        return h, w
+    else:
+        raise Exception("Can't interpret image where len(shape) is not 2 or 3")
+
+
+def resize_with_padding(img: np.ndarray, new_width: int, new_height: int, padding_value: int = 0):
+    h, w = get_img_size(img)
+
+    original_ratio = w / h
+    new_ratio = new_width / new_height
+
+    if len(img.shape) == 3:
+        canvas = np.zeros((new_height, new_width, img.shape[2]))
+    else:
+        canvas = np.zeros((new_height, new_width))
+
+    if new_ratio > original_ratio:
+        # new dimensions are proportionally wider than the original dimensions
+        # This means that we will have to pad on the sides
+        rescaling_width = int(original_ratio * new_height)
+        padding_width = (new_width - rescaling_width) // 2
+
+        rescaled_img = cv2.resize(img, (rescaling_width, new_height))
+
+        canvas[:, padding_width : padding_width + rescaling_width] = rescaled_img
+
+    else:
+        rescaling_height = int(new_width / original_ratio)
+        padding_height = (new_height - rescaling_height) // 2
+
+        rescaled_img = cv2.resize(img, (new_width, rescaling_height))
+
+        canvas[padding_height : padding_height + rescaling_height, :] = rescaled_img
+
+    return canvas
+
+
+def resize_img(
+    img: np.ndarray, new_width: int, new_height: int, resize_method: ResizeMethod = ResizeMethod.PAD
+) -> np.ndarray:
+    if resize_method == ResizeMethod.NORMAL:
+        return cv2.resize(img, (new_width, new_height))
+    else:
+        return resize_with_padding(img, new_width=new_width, new_height=new_height)
 
 
 def get_relative_path(base_dir: Path, file: Path):

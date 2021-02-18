@@ -1,8 +1,11 @@
 from typing import Callable, Dict, List
 
-from poif.dataset.object.base import DataSetObject
+from poif.dataset.object.annotations import BoundingBox
+from poif.dataset.object.base import DataSetObject, TransformedDataSetObject
 
 # Used for splitting the dataset, used for train/val/test split
+from poif.dataset.object.data_transform.crop import Crop
+
 CallableDataSetSplitter = Callable[[List[DataSetObject]], Dict[str, List[DataSetObject]]]
 CallableDataPointSplitter = Callable[[DataSetObject], str]
 
@@ -20,3 +23,14 @@ class Transformation:
 
     def __call__(self, objects: List[DataSetObject]) -> List[DataSetObject]:
         return self.transform_object_list(objects)
+
+
+class DetectionToClassification(Transformation):
+    def transform_single_object(self, dataset_object: DataSetObject) -> List[DataSetObject]:
+        new_detections = []
+        for annotation in dataset_object.annotations:
+            if isinstance(annotation, BoundingBox):
+                transformation = Crop(x=annotation.x, y=annotation.y, w=annotation.w, h=annotation.h)
+                new_object = TransformedDataSetObject(dataset_object, transformation)
+                new_object.label = annotation.label
+                new_detections.append(new_object)

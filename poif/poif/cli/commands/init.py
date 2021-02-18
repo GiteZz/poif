@@ -15,7 +15,7 @@ def init(args: List[str]) -> None:
         base_dir = Path(args[0])
     else:
         base_dir = Path.cwd()
-    print(f'init from {base_dir}')
+    print(f"init from {base_dir}")
     repo_config = DataRepoConfig.prompt()
     git_remote = simple_input(title="Git remote?")
     if git_remote == "":
