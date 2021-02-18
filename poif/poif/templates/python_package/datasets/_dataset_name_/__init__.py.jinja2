@@ -1,6 +1,12 @@
 from pathlib import Path
+from poif.versioning.dataset import CollectionFromResourceDir
+
 
 def get_resource_dir():
     current_loc = Path(__file__)
     ds_dir = current_loc.parent
     return ds_dir / "resources"
+
+
+versioned_collection = CollectionFromResourceDir(get_resource_dir())
+all_files = versioned_collection.get_files()

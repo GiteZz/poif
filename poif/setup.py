@@ -26,7 +26,6 @@ setuptools.setup(
         "dataclasses",
         "PyYAML",
         "jinja2",
-        "dvc[s3]",
         "dataclasses_json",
         "opencv-python",
         "awscli",

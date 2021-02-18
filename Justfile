@@ -7,12 +7,14 @@ check:
 pre-commit: check
     cd ./poif && pytest .
 
-setup-test-environment:
-    python ./poif/poif/tests/gitlab/setup.py
-    python ./poif/poif/tests/minio/setup.py
-
 setup-test-minio:
     python ./poif/poif/tests/integration/minio/setup.py
+
+setup-test-gitlab:
+    python ./poif/poif/tests/integration/gitlab/setup.py
+
+setup-test-environment: setup-test-minio setup-test-gitlab
+
 
 get-repo:
     python ./poif/poif/tests/gitlab/get_repo.py

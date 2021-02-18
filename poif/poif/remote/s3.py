@@ -68,11 +68,3 @@ class TaggedS3(FileRemoteTaggedRepo):
 
     def upload(self, data: "TaggedData"):
         return self.s3_remote.upload(data.get(), self.get_remote_name(data))
-
-
-# TODO finish
-# class TaggedHttp(TaggedRemote):
-#     git_url: str
-#     git_commit: str
-#
-#     def get_url_params(self, data: TaggedData):

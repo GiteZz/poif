@@ -8,9 +8,8 @@ from poif.config.collection import DataCollectionConfig
 from poif.config.repo import DataRepoConfig
 from poif.git.file import FileCreatorMixin
 from poif.git.repo import GitRepo
-from poif.packaging import packages
 from poif.repo.base import TaggedRepo
-from poif.repo.file_remote import get_remote_repo_from_config
+from poif.repo.file_remote import FileRemoteTaggedRepo, get_remote_repo_from_config
 from poif.tagged_data.base import TaggedData
 from poif.tagged_data.repo import RepoData
 from poif.utils import get_file_name_from_path
@@ -92,21 +91,22 @@ class FromDiskVersionedCollection(VersionedCollection, FileCreatorMixin):
         pass
 
 
-@dataclass
-class RepoVersionedCollection(VersionedCollection):
+class CollectionFromResourceDir(VersionedCollection):
     _mappings: List[TaggedData] = None
     _files: List[TaggedData] = None
     _tagged_repo: TaggedRepo = field(init=False)
     _resource_dir: Path = field(init=False)
 
-    def __init__(self, git_url: str, git_commit: str):
+    def __init__(self, resource_dir: Path):
+        self._resource_dir = resource_dir
+        collection_config = DataCollectionConfig.read(self._resource_dir / "collection_config.json")
 
-        repo = GitRepo(git_url=git_url, git_commit=git_commit)
-        config = DataRepoConfig.read_from_package(repo.base_dir)
-        tagged_repo = get_remote_repo_from_config(config.collection.data_remote)
-        self._tagged_repo = tagged_repo
+        file_remote = collection_config.data_remote.config.get_configured_remote()
+        data_folder = collection_config.data_remote.data_folder
 
-        self._resource_dir = packages[config.package.type].get_resource_directory(base_dir=repo.base_dir)
+        self._tagged_repo = FileRemoteTaggedRepo(remote=file_remote, data_folder=data_folder)
+
+        self.retrieve_mappings()
 
         self.retrieve_mappings()
 
@@ -170,16 +170,28 @@ class RepoVersionedCollection(VersionedCollection):
         return self._mappings
 
 
-class HttpVersionedCollection(VersionedCollection):
-    # TODO
-    def __init__(self, datacache_url: str, git_url: str, git_commit: str):
-        pass
+@dataclass
+class RepoVersionedCollection(CollectionFromResourceDir):
+    _mappings: List[TaggedData] = None
+    _files: List[TaggedData] = None
+    _tagged_repo: TaggedRepo = field(init=False)
+    _resource_dir: Path = field(init=False)
 
-    def get_files(self) -> List[TaggedData]:
-        pass
+    def __init__(self, git_url: str, git_commit: str):
+        repo = GitRepo(git_url=git_url, git_commit=git_commit)
 
-    def get_mappings(self) -> List[TaggedData]:
-        pass
+        resource_dir_link = repo.base_dir / ".resource_folder"
+        with open(resource_dir_link, "r") as f:
+            relative_resource_dir = f.read()
+
+        self._resource_dir = repo.base_dir / relative_resource_dir
+
+        super().__init__(self._resource_dir)
+
+        config = DataRepoConfig.read_from_package(repo.base_dir)
+        self._tagged_repo = get_remote_repo_from_config(config.collection.data_remote)
+
+        self.retrieve_mappings()
 
 
 if __name__ == "__main__":
