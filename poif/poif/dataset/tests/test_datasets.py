@@ -4,18 +4,24 @@ import numpy as np
 import pytest
 
 from poif.dataset.base import MultiDataset
-from poif.dataset.object.mask import SingleMaskObject
+from poif.dataset.object.base import DataSetObject
+from poif.dataset.object.output import single_mask_output
 from poif.dataset.object.split.template import SplitByTemplate
-from poif.dataset.object.tests.mock import TripleDataSetObject
 from poif.dataset.object.transform.template import DropByTemplate, MaskByTemplate, MaskTemplate
 from poif.tagged_data.base import TaggedData
 from poif.tagged_data.tests.mock import MockTaggedData
 from poif.tests import get_img
 
 
+def triple_output(ds_object: DataSetObject) -> int:
+    parsed_output = ds_object.get_parsed()
+    assert isinstance(parsed_output, int)
+    return parsed_output * 3
+
+
 def test_different_input():
     ds_tagged_data = [MockTaggedData(f"{i}.png", i) for i in range(10)]
-    ds = MultiDataset(input_type=TripleDataSetObject)
+    ds = MultiDataset(output_function=triple_output)
 
     ds.form(ds_tagged_data)
 
@@ -60,7 +66,7 @@ def test_combining_mask_img(mask_dataset):
     mask_template = MaskTemplate(image="{{subset}}/image_{{img_id}}.jpg", mask="{{subset}}/mask_{{img_id}}.jpg")
     operation_list = [MaskByTemplate(mask_template)]
 
-    ds = MultiDataset(operations=operation_list, input_type=SingleMaskObject)
+    ds = MultiDataset(operations=operation_list, output_function=single_mask_output)
     ds.form(mask_dataset)
 
     assert len(ds.objects) == len(mask_dataset) // 2

@@ -7,7 +7,7 @@ from jinja2 import Template
 
 from poif.dataset.base import MultiDataset
 from poif.dataset.object.annotations import BoundingBox
-from poif.dataset.object.detection import DetectionInput
+from poif.dataset.object.base import DataSetObject
 from poif.file_system.directory import Directory
 from poif.tagged_data.base import StringBinaryData
 from poif.templates import get_datasets_template_dir
@@ -27,10 +27,10 @@ yolo_family = [
 ]
 
 
-def detection_input_to_yolo_annotation(object: DetectionInput):
+def detection_input_to_yolo_annotation(ds_object: DataSetObject):
     output_str = ""
     yet_insert_newline = False
-    for annotation in object.annotations:
+    for annotation in ds_object.annotations:
         if isinstance(annotation, BoundingBox):
             if yet_insert_newline:
                 output_str += "\n"

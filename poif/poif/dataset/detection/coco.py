@@ -2,7 +2,8 @@ from typing import Dict, List
 
 from poif.dataset.detection.base import DetectionDataset
 from poif.dataset.object.annotations import BoundingBox
-from poif.dataset.object.detection import DetectionInput
+from poif.dataset.object.base import DataSetObject
+from poif.dataset.object.output import detection_output
 from poif.tagged_data.base import TaggedData
 from poif.typing import DatasetType, RelFilePath
 
@@ -27,7 +28,7 @@ class CocoDetectionDataset(DetectionDataset):
 
     def parse_annotation_file(
         self, dataset_type: str, inputs: List[TaggedData], data_folder: str
-    ) -> List[DetectionInput]:
+    ) -> List[DataSetObject]:
         """
         data
         """
@@ -48,11 +49,13 @@ class CocoDetectionDataset(DetectionDataset):
             original_filename += f'{image_info["file_name"]}'
 
             if original_filename in mapping:
-                new_inputs[img_id] = DetectionInput(
-                    tagged_data=mapping[original_filename],
-                    width=int(image_info["width"]),
-                    height=int(image_info["height"]),
+                new_inputs[img_id] = DataSetObject(
+                    tagged_data=mapping[original_filename], output_function=detection_output
                 )
+
+                # TODO find a better solution in the future
+                new_inputs[img_id]._width = int(image_info["width"])
+                new_inputs[img_id]._height = int(image_info["height"])
             else:
                 not_found_count += 1
                 #
@@ -70,7 +73,7 @@ class CocoDetectionDataset(DetectionDataset):
 
             category_id = annotation["category_id"]
 
-            current_input.add_bounding_box(
+            current_input.add_annotation(
                 BoundingBox(
                     label=category_id,
                     x=int(x) / current_input.width,
@@ -85,7 +88,7 @@ class CocoDetectionDataset(DetectionDataset):
         for category in annotation_data["categories"]:
             self.category_mapping[category["id"]] = category["name"]
 
-        return new_inputs.values()
+        return list(new_inputs.values())
 
     def form(self, data: List[TaggedData]):
         sub_dataset_names = list(self.annotation_files.keys())
@@ -98,7 +101,7 @@ class CocoDetectionDataset(DetectionDataset):
         self.next_operation()
 
 
-def detection_collection_to_coco_dict(inputs: List[DetectionInput], label_mapping: Dict[int, str]) -> Dict:
+def detection_collection_to_coco_dict(inputs: List[DataSetObject], label_mapping: Dict[int, str]) -> Dict:
     coco_dict = {}
     coco_dict["images"] = []
     coco_dict["annotations"] = []

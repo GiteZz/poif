@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from poif.dataset.object.meta_info import MetaInfoMixin
 from poif.tagged_data.base import TaggedData, TaggedPassthrough
@@ -41,7 +41,7 @@ class BoundingBox(DataSetAnnotation):
         y: float,
         w: float,
         h: float,
-        label: str = None,
+        label: Optional[Union[str, int]] = None,
         tags: List[str] = None,
     ):
         super().__init__()

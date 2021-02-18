@@ -1,16 +1,12 @@
 import random
-from pathlib import Path
 
 import pytest
 
-from poif.dataset.detection.base import DetectionFileOutputFormat
 from poif.dataset.detection.coco import CocoDetectionDataset, detection_collection_to_coco_dict
 from poif.dataset.object.annotations import BoundingBox
-from poif.dataset.object.detection import DetectionInput
-from poif.dataset.object.split.base import RandomSplitter
-from poif.tagged_data.disk import DiskData
+from poif.dataset.object.base import DataSetObject
 from poif.tagged_data.tests.mock import MockTaggedData
-from poif.tests import get_img, get_temp_path
+from poif.tests import get_img
 
 
 def get_random_bounding_box(img_width=1280, img_height=720, amount_of_classes=3):
@@ -40,18 +36,11 @@ def detection_collection(
     img_height=720,
     amount_of_classes=3,
 ):
-    images = [
-        DetectionInput(
-            tagged_data=MockTaggedData(f"{i}.jpg", get_img()),
-            width=img_width,
-            height=img_height,
-        )
-        for i in range(image_count)
-    ]
+    images = [DataSetObject(tagged_data=MockTaggedData(f"{i}.jpg", get_img())) for i in range(image_count)]
     for image in images:
         img_annotation_iterations = random.randint(1, max_annotations_per_image - 1)
         for _ in range(img_annotation_iterations):
-            image.add_bounding_box(
+            image.add_annotation(
                 get_random_bounding_box(
                     img_width=img_width,
                     img_height=img_height,
@@ -75,13 +64,13 @@ def test_coco(detection_collection):
     # TODO check
 
 
-def test_real_coco():
-    disk_loc = get_temp_path()
-    disk_path = Path("/home/gilles/datasets/mask/")
-
-    tagged_data = DiskData.from_folder(disk_path)
-    ds = CocoDetectionDataset(annotation_files={"main": "ann.json"}, data_folders={"main": "images"})
-    ds.add_transformation(RandomSplitter({"train": 0.7, "val": 0.3}))
-    ds.form(tagged_data)
-
-    ds.create_file_system(DetectionFileOutputFormat.yolov5, disk_loc)
+# def test_real_coco():
+#     disk_loc = get_temp_path()
+#     disk_path = Path("/home/gilles/datasets/mask/")
+#
+#     tagged_data = DiskData.from_folder(disk_path)
+#     ds = CocoDetectionDataset(annotation_files={"main": "ann.json"}, data_folders={"main": "images"})
+#     ds.add_transformation(RandomSplitter({"train": 0.7, "val": 0.3}))
+#     ds.form(tagged_data)
+#
+#     ds.create_file_system(DetectionFileOutputFormat.yolov5, disk_loc)

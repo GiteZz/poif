@@ -5,11 +5,12 @@ import numpy as np
 from poif.dataset.object.annotations import DataSetAnnotation
 from poif.dataset.object.data_transform.base import DataTransform
 from poif.dataset.object.meta_info import MetaInfoMixin
+from poif.dataset.object.output import DataSetObjectOutputFunction
 from poif.tagged_data.base import TaggedData, TaggedPassthrough
 
 
 class DataSetObject(TaggedPassthrough, MetaInfoMixin):
-    def __init__(self, tagged_data: TaggedData):
+    def __init__(self, tagged_data: TaggedData, output_function: Optional[DataSetObjectOutputFunction] = None):
         super().__init__(tagged_data)
 
         self.annotations: List[DataSetAnnotation] = []
@@ -17,32 +18,17 @@ class DataSetObject(TaggedPassthrough, MetaInfoMixin):
 
         self.future_transforms: List[DataTransform] = []
 
+        self.output_function = output_function
+
+        self._height = None
+        self._width = None
+
     def output(self) -> Any:
+        if self.output_function is not None:
+            return self.output_function(self)
+
         parsed_output = self.get_parsed()
         return parsed_output
-
-
-class TransformedDataSetObject(DataSetObject):
-    def __init__(self, tagged_data: TaggedData, transformation: DataTransform):
-        super().__init__(tagged_data)
-        self.transformation = transformation
-
-    def tag(self):
-        parent_tag = super().tag
-
-        return f"{parent_tag} - {self.transformation.tag}"
-
-    def get_parsed(self) -> Any:
-        parent_parsed = self.get_parsed()
-        return self.transformation(parent_parsed)
-
-
-class Image(DataSetObject):
-    def __init__(self, tagged_data: TaggedData, width: Optional[int] = None, height: Optional[int] = None):
-        super().__init__(tagged_data)
-
-        self._height = height
-        self._width = width
 
     def set_wh_from_data(self):
         np_img = self.get_parsed()
@@ -70,7 +56,20 @@ class Image(DataSetObject):
             self.set_wh_from_data()
         return self._height
 
+    def add_annotation(self, annotation: DataSetAnnotation):
+        self.annotations.append(annotation)
 
-class ClassificationInput(DataSetObject):
-    def output(self):
-        return self.get_parsed(), self.label
+
+class TransformedDataSetObject(DataSetObject):
+    def __init__(self, tagged_data: TaggedData, transformation: DataTransform):
+        super().__init__(tagged_data)
+        self.transformation = transformation
+
+    def tag(self):
+        parent_tag = super().tag
+
+        return f"{parent_tag} - {self.transformation.tag}"
+
+    def get_parsed(self) -> Any:
+        parent_parsed = self.get_parsed()
+        return self.transformation(parent_parsed)

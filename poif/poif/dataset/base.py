@@ -1,9 +1,10 @@
 import copy
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import List, Type, Union
+from typing import List, Optional, Union
 
 from poif.dataset.object.base import DataSetObject
+from poif.dataset.object.output import DataSetObjectOutputFunction
 from poif.dataset.object.split.base import Splitter
 from poif.dataset.object.transform.base import Transformation
 from poif.tagged_data.base import TaggedData
@@ -33,7 +34,7 @@ class MultiDataset(BaseDataset):
     def __init__(
         self,
         operations: List[Operation] = None,
-        input_type: Type[DataSetObject] = DataSetObject,
+        output_function: Optional[DataSetObjectOutputFunction] = None,
         continue_splitting_after_splitter: bool = False,
         continue_transformations_after_splitter: bool = True,
     ):
@@ -45,7 +46,7 @@ class MultiDataset(BaseDataset):
         else:
             self.operations = []
 
-        self.input_type = input_type
+        self.output_function = output_function
 
         self.continue_splitting_after_splitter = continue_splitting_after_splitter
         self.continue_transformations_after_splitter = continue_transformations_after_splitter
@@ -63,7 +64,7 @@ class MultiDataset(BaseDataset):
         return list(self.splits.keys())
 
     def form(self, data: List[TaggedData]):
-        inputs = [self.input_type(tagged_data) for tagged_data in data]
+        inputs = [DataSetObject(tagged_data, output_function=self.output_function) for tagged_data in data]
         self.form_from_ds_objects(inputs)
 
     def form_from_ds_objects(self, objects: List[DataSetObject]):
