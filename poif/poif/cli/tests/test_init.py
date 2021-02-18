@@ -18,8 +18,6 @@ def test_init(monkeypatch):
     sequence, config = get_repo_sequence()
     monkeypatch.setattr("builtins.input", MonkeyPatchSequence(sequence + ["git_url"]))
 
-    monkeypatch.setattr(Path, "cwd", lambda: temp_dir)
-
     for data_folder in config.collection.folders:
         create_data_folder(temp_dir / data_folder)
 
@@ -35,4 +33,4 @@ def test_init(monkeypatch):
     )
     monkeypatch.setattr("poif.cli.commands.init.GitRepo", MockGitRepo)
 
-    init([])
+    init([str(temp_dir)])

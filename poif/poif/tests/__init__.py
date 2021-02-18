@@ -75,6 +75,7 @@ def assert_image_nearly_equal(original_img: np.ndarray, new_img: np.ndarray):
     assert av_pixel_diff < 5
 
 
+# TODO unify with create_realistic_folder_structure in repo tests
 def get_standard_folder_template() -> List[RelFilePath]:
     files = [f"0{i}.jpg" for i in range(10)]
     base_folders = ["train", "val", "test"]

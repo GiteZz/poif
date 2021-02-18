@@ -196,8 +196,8 @@ class RepoVersionedCollection(CollectionFromResourceDir):
 
 if __name__ == "__main__":
     repo = RepoVersionedCollection(
-        git_url="http://localhost:360/root/datasets-5729607b-372d-4422-bd2b-1db968099ef9.git",
-        git_commit="fa2aa394f3a69654ecdf2e6e2c8b6a244ff482cb",
+        git_url="https://github.ugent.be/gballege/minimal_pneumonia.git",
+        git_commit="85d749fd6422af1a178013c45c304576939d3b4c",
     )
 
     all_files = repo.get_files()

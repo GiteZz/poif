@@ -42,8 +42,6 @@ class DataSetFileSystem(Operations):
         return [".", ".."] + list(object_pointer.contents.keys())
 
     def getattr(self, path, fh=None):
-        print(f"getattr on path {path}")
-
         object_pointer = self.path_to_object(path)
         return object_pointer.get_attr()
 

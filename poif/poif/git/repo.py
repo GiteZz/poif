@@ -37,17 +37,14 @@ class GitRepo:
         for file in files:
             self.repo.index.add(str(file))
 
-    def get_files(self):
-        t = self.repo.head.object.hexsha
-        commit = self.repo.commit(t)
-        commit.tree
-        self.repo.tree()
-
     def add_remote(self, remote: str):
         self.repo.create_remote("origin", remote)
 
     def commit(self, message: str):
         self.repo.index.commit(message)
+
+    def get_latest_hash(self):
+        return self.repo.head.object.hexsha
 
     def push(self):
         self.repo.remotes.origin.push(refspec="master:master")
@@ -58,5 +55,4 @@ class GitRepo:
 
 if __name__ == "__main__":
     repo = GitRepo(git_url="http://localhost:360/root/datasets-991bd55b-2c97-4848-8b44-8387dbaa8295.git")
-    files = repo.get_files()
     a = "a"
