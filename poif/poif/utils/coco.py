@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import Dict, List
 
 from poif.dataset.object.annotations import BoundingBox
 from poif.dataset.object.base import DataSetObject

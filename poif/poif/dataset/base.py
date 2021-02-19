@@ -7,9 +7,11 @@ from poif.dataset.object.base import DataSetObject
 from poif.dataset.object.output import DataSetObjectOutputFunction
 from poif.dataset.operation.split.base import Splitter
 from poif.dataset.operation.transform.base import Transformation
+from poif.dataset.operation.transform.sampler import LimitSamplesByBin
+from poif.dataset.operation.transform_and_split.base import TransformAndSplit
 from poif.tagged_data.base import TaggedData
 
-Operation = Union[Transformation, Splitter]
+Operation = Union[Transformation, Splitter, TransformAndSplit]
 
 
 class BaseDataset(ABC):
@@ -91,7 +93,7 @@ class MultiDataset(BaseDataset):
         self.next_operation()
 
     def is_splitter(self, operation: Operation) -> bool:
-        return isinstance(operation, Splitter)
+        return isinstance(operation, Splitter) or isinstance(operation, TransformAndSplit)
 
     def is_tranformation(self, operation: Operation) -> bool:
         return isinstance(operation, Transformation)
@@ -124,3 +126,31 @@ class MultiDataset(BaseDataset):
     def __getitem__(self, idx: int):
         value = self.objects[idx].output()
         return value
+
+
+if __name__ == "__main__":
+    from poif.dataset.operation.transform.detection import DetectionToClassification
+    from poif.dataset.operation.transform_and_split.coco import MultiCoco
+    from poif.tagged_data.disk import DiskData
+
+    ds_loc = Path("/home/gilles/datasets/retail_product_checkout")
+    tagged_data = DiskData.from_folder(ds_loc)
+
+    annotation_files = {
+        "train": "instances_train2019.json",
+        "val": "instances_val2019.json",
+        "test": "instances_test2019.json",
+    }
+
+    data_folders = {"train": "train2019", "val": "val2019", "test": "test2019"}
+
+    coco_transform = MultiCoco(annotation_files=annotation_files, data_folders=data_folders)
+    limiter = LimitSamplesByBin(sample_limit=10, bin_creator=lambda x: x.label)
+    operations = [coco_transform, DetectionToClassification(), limiter]
+    ds = MultiDataset(operations=operations)
+    ds.form(tagged_data)
+
+    print(len(ds))
+    print(len(ds.train))
+    print(len(ds.val))
+    print(len(ds.test))

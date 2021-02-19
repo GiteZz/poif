@@ -3,12 +3,12 @@ import random
 import pytest
 
 from poif.dataset.base import MultiDataset
-from poif.dataset.operation.transform.coco import SingleCoco
-from poif.utils.coco import detection_collection_to_coco_dict
 from poif.dataset.object.annotations import BoundingBox
 from poif.dataset.object.base import DataSetObject
+from poif.dataset.operation.transform.coco import SingleCoco
 from poif.tagged_data.tests.mock import MockTaggedData
 from poif.tests import get_img
+from poif.utils.coco import detection_collection_to_coco_dict
 
 
 def get_random_bounding_box(img_width=1280, img_height=720, amount_of_classes=3):
@@ -59,13 +59,12 @@ def test_coco(detection_collection):
     annotation_file = MockTaggedData(relative_path="train.json", data=coco_dict)
 
     tagged_data = [annotation_file] + [detection_input for detection_input in images]
-    coco_transform = SingleCoco(annotation_file='train.json', data_folder="")
+    coco_transform = SingleCoco(annotation_file="train.json", data_folder="")
 
     ds = MultiDataset(operations=[coco_transform])
     ds.form(tagged_data)
 
     assert len(ds) == len(images)
-
 
     # TODO check
 

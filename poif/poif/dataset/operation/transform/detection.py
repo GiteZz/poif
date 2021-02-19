@@ -2,10 +2,10 @@ from typing import List
 
 from poif.dataset.object.annotations import BoundingBox
 from poif.dataset.object.base import DataSetObject, TransformedDataSetObject
+from poif.dataset.object.output import classification_output
 
 # Used for splitting the dataset, used for train/val/test split
-from poif.dataset.object.data_transform.crop import Crop
-from poif.dataset.object.output import classification_output
+from poif.dataset.object.transform.crop import Crop
 from poif.dataset.operation.transform.base import Transformation
 
 
