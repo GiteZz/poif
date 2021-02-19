@@ -5,8 +5,8 @@ from typing import List, Optional, Union
 
 from poif.dataset.object.base import DataSetObject
 from poif.dataset.object.output import DataSetObjectOutputFunction
-from poif.dataset.object.split.base import Splitter
-from poif.dataset.object.transform.base import Transformation
+from poif.dataset.operation.split.base import Splitter
+from poif.dataset.operation.transform.base import Transformation
 from poif.tagged_data.base import TaggedData
 
 Operation = Union[Transformation, Splitter]

@@ -4,9 +4,9 @@ import numpy as np
 
 from poif.cache.base import CacheManager
 from poif.dataset.object.annotations import DataSetAnnotation
-from poif.dataset.object.data_transform.base import DataTransform
 from poif.dataset.object.meta_info import MetaInfoMixin
 from poif.dataset.object.output import DataSetObjectOutputFunction
+from poif.dataset.object.transform.base import DataTransform
 from poif.tagged_data.base import TaggedData, TaggedPassthrough
 
 

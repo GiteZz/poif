@@ -3,9 +3,9 @@ from typing import List
 
 from poif.dataset.object.annotations import Mask
 from poif.dataset.object.base import DataSetObject
-from poif.dataset.object.transform.base import Transformation
-from poif.dataset.object.transform.tools import extract_values, is_path_match
+from poif.dataset.operation.transform.base import Transformation
 from poif.typing import PathTemplate
+from poif.utils.template import extract_values, is_path_match
 
 
 @dataclass

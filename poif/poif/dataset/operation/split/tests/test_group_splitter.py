@@ -2,8 +2,8 @@ import itertools
 import random
 from collections import defaultdict
 
-from poif.dataset.object.split.base import GroupSplitter
 from poif.dataset.object.tests.mock import MockDataSetObject
+from poif.dataset.operation.split.base import GroupSplitter
 from poif.utils import is_close
 
 

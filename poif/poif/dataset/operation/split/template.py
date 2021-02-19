@@ -1,7 +1,7 @@
 from poif.dataset.object.base import DataSetObject
-from poif.dataset.object.split.base import Splitter
-from poif.dataset.object.transform.tools import extract_values
+from poif.dataset.operation.split.base import Splitter
 from poif.typing import SubSetName
+from poif.utils.template import extract_values
 
 
 class SplitByTemplate(Splitter):

@@ -6,8 +6,8 @@ import pytest
 from poif.dataset.base import MultiDataset
 from poif.dataset.object.base import DataSetObject
 from poif.dataset.object.output import single_mask_output
-from poif.dataset.object.split.template import SplitByTemplate
-from poif.dataset.object.transform.template import DropByTemplate, MaskByTemplate, MaskTemplate
+from poif.dataset.operation.split.template import SplitByTemplate
+from poif.dataset.operation.transform.template import DropByTemplate, MaskByTemplate, MaskTemplate
 from poif.tagged_data.base import TaggedData
 from poif.tagged_data.tests.mock import MockTaggedData
 from poif.tests import get_img

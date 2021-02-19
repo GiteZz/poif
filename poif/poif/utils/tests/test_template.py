@@ -3,16 +3,16 @@ from typing import List
 import pytest
 
 from poif.dataset.object.base import DataSetObject
-from poif.dataset.object.split.template import SplitByTemplate
-from poif.dataset.object.transform.template import DropByTemplate
-from poif.dataset.object.transform.tools import (
+from poif.dataset.operation.split.template import SplitByTemplate
+from poif.dataset.operation.transform.template import DropByTemplate
+from poif.tagged_data.tests.mock import MockTaggedData
+from poif.utils.template import (
     catch_all_to_value,
     extract_values,
     is_path_match,
     is_template_part,
     replace_template_with_regex_group,
 )
-from poif.tagged_data.tests.mock import MockTaggedData
 
 
 def test_matching():
