@@ -20,8 +20,8 @@ class DataSetObject(TaggedPassthrough, MetaInfoMixin):
 
         self.output_function = output_function
 
-        self._height = None
-        self._width = None
+        self._height: Optional[int] = None
+        self._width: Optional[int] = None
 
     def output(self) -> Any:
         if self.output_function is not None:

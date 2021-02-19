@@ -105,7 +105,9 @@ class MultiDataset(BaseDataset):
 
     def add_splitter_dict(self, splitter_dict):
         for subset_name, inputs in splitter_dict.items():
-            new_dataset = MultiDataset(operations=copy.deepcopy(self.operations))
+            # TODO make a bit more transparent, if new attributes are added these should be also added here which is
+            # not that clean
+            new_dataset = MultiDataset(operations=copy.deepcopy(self.operations), output_function=self.output_function)
             new_dataset.form_from_ds_objects(inputs)
 
             self.splits[subset_name] = new_dataset

@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from poif.dataset.detection.base import DetectionDataset
 from poif.dataset.object.annotations import BoundingBox
@@ -11,10 +11,35 @@ from poif.typing import DatasetType, RelFilePath
 class CocoDetectionDataset(DetectionDataset):
     def __init__(
         self,
-        annotation_files: Dict[DatasetType, RelFilePath] = None,
-        data_folders: Dict[DatasetType, RelFilePath] = None,
+        annotation_file: Optional[RelFilePath] = None,
+        data_folder: Optional[RelFilePath] = None,
+        annotation_files: Optional[Dict[DatasetType, RelFilePath]] = None,
+        data_folders: Optional[Dict[DatasetType, RelFilePath]] = None,
     ):
         super().__init__()
+
+        self._single_input = annotation_file is not None and data_folder is not None
+        self._multi_input = annotation_files is not None and data_folders is not None
+
+        if annotation_file is not None and data_folder is None:
+            raise Exception("Only the annotation_file is provided, the data_folder is missing")
+
+        if annotation_file is not None and data_folder is None:
+            raise Exception("Only the data_folder is provided, the annotation_file is missing")
+
+        if annotation_files is not None and data_folders is None:
+            raise Exception("Only the annotation_files is provided, the data_folders is missing")
+
+        if annotation_files is not None and data_folders is None:
+            raise Exception("Only the data_folders is provided, the annotation_files is missing")
+
+        if self._single_input and self._multi_input:
+            raise Exception(
+                "Either supply single dataset information (annotation_file and data_folder) or multi dataset information (annotation_files and data_folders)"
+            )
+
+        self.annotation_file = annotation_file
+        self.data_folder = data_folder
 
         self.annotation_files = annotation_files
         self.data_folders = data_folders
@@ -27,14 +52,14 @@ class CocoDetectionDataset(DetectionDataset):
         return mapping
 
     def parse_annotation_file(
-        self, dataset_type: str, inputs: List[TaggedData], data_folder: str
+        self, annotation_file: str, data_folder: str, inputs: List[TaggedData]
     ) -> List[DataSetObject]:
         """
         data
         """
         mapping = self.get_rel_file_mapping(inputs)
 
-        annotation_data = mapping[self.annotation_files[dataset_type]].get_parsed()
+        annotation_data = mapping[annotation_file].get_parsed()
 
         new_inputs = {}
         not_found_count = 0
@@ -43,7 +68,7 @@ class CocoDetectionDataset(DetectionDataset):
 
             # The coco annotation file only contains the image name and not the folder, tagged data however
             # includes this data, therefore we need to add it.
-            original_filename = self.data_folders[dataset_type]
+            original_filename = data_folder
             if data_folder != "":
                 original_filename += "/"
             original_filename += f'{image_info["file_name"]}'
@@ -91,12 +116,21 @@ class CocoDetectionDataset(DetectionDataset):
         return list(new_inputs.values())
 
     def form(self, data: List[TaggedData]):
-        sub_dataset_names = list(self.annotation_files.keys())
+        if self._single_input:
+            assert self.annotation_file is not None and self.data_folder is not None
+            new_objects = self.parse_annotation_file(self.annotation_file, self.data_folder, data)
+            self.objects = new_objects
+        elif self._multi_input:
+            assert self.annotation_files is not None
+            sub_dataset_names = list(self.annotation_files.keys())
 
-        for subset in sub_dataset_names:
-            new_objects = self.parse_annotation_file(subset, data, self.data_folders[subset])
-            self.objects.extend(new_objects)
-            self.splits[subset] = new_objects
+            for subset in sub_dataset_names:
+                annotation_file = self.annotation_files[subset]
+                data_folder = self.data_folders[subset]
+                new_objects = self.parse_annotation_file(annotation_file, data_folder, data)
+
+                self.objects.extend(new_objects)
+                self.splits[subset] = new_objects
 
         self.next_operation()
 
