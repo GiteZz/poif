@@ -2,6 +2,7 @@ from typing import Any, Dict, List, Optional
 
 import numpy as np
 
+from poif.cache.base import CacheManager
 from poif.dataset.object.annotations import DataSetAnnotation
 from poif.dataset.object.data_transform.base import DataTransform
 from poif.dataset.object.meta_info import MetaInfoMixin
@@ -10,7 +11,13 @@ from poif.tagged_data.base import TaggedData, TaggedPassthrough
 
 
 class DataSetObject(TaggedPassthrough, MetaInfoMixin):
-    def __init__(self, tagged_data: TaggedData, output_function: Optional[DataSetObjectOutputFunction] = None):
+    def __init__(
+        self,
+        tagged_data: TaggedData,
+        output_function: Optional[DataSetObjectOutputFunction] = None,
+        cache: bool = True,
+        cache_manager: Optional[CacheManager] = None,
+    ):
         super().__init__(tagged_data)
 
         self.annotations: List[DataSetAnnotation] = []
@@ -19,6 +26,9 @@ class DataSetObject(TaggedPassthrough, MetaInfoMixin):
         self.future_transforms: List[DataTransform] = []
 
         self.output_function = output_function
+
+        self.cache = cache
+        self.cache_manager = cache_manager
 
         self._height: Optional[int] = None
         self._width: Optional[int] = None
@@ -29,6 +39,20 @@ class DataSetObject(TaggedPassthrough, MetaInfoMixin):
 
         parsed_output = self.get_parsed()
         return parsed_output
+
+    def get(self) -> bytes:
+        if self.cache_manager is not None and self.cache:
+            cache_content = self.cache_manager.get(self.tag)
+            if cache_content is None:
+                parsed_content = self.parse_file(super(DataSetObject, self).get(), self.extension)
+                self.cache_manager.write(parsed_content=parsed_content, tag=self.tag, extension=self.extension)
+
+            cache_content = self.cache_manager.get(self.tag)
+            if cache_content is not None:
+                return cache_content
+            raise Exception("Caching failed")
+
+        return super(DataSetObject, self).get()
 
     def set_wh_from_data(self):
         np_img = self.get_parsed()

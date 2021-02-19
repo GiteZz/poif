@@ -41,8 +41,8 @@ def get_img(height: int = 200, width: int = 200, bw: bool = False) -> np.ndarray
         return img
 
 
-def get_img_file() -> Path:
-    img_file = Path(tempfile.mkstemp(suffix=".png")[1])
+def get_img_file(extension="png") -> Path:
+    img_file = Path(tempfile.mkstemp(suffix=f".{extension}")[1])
     write_image_in_file(img_file)
 
     return img_file
