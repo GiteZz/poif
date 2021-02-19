@@ -2,7 +2,9 @@ import random
 
 import pytest
 
-from poif.dataset.detection.coco import CocoDetectionDataset, detection_collection_to_coco_dict
+from poif.dataset.base import MultiDataset
+from poif.dataset.operation.transform.coco import SingleCoco
+from poif.utils.coco import detection_collection_to_coco_dict
 from poif.dataset.object.annotations import BoundingBox
 from poif.dataset.object.base import DataSetObject
 from poif.tagged_data.tests.mock import MockTaggedData
@@ -57,9 +59,13 @@ def test_coco(detection_collection):
     annotation_file = MockTaggedData(relative_path="train.json", data=coco_dict)
 
     tagged_data = [annotation_file] + [detection_input for detection_input in images]
-    ds = CocoDetectionDataset(annotation_files={"train": "train.json"}, data_folders={"train": ""})
+    coco_transform = SingleCoco(annotation_file='train.json', data_folder="")
 
+    ds = MultiDataset(operations=[coco_transform])
     ds.form(tagged_data)
+
+    assert len(ds) == len(images)
+
 
     # TODO check
 
