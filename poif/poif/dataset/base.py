@@ -3,14 +3,17 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import List, Optional, Union
 
+from poif.dataset.meta import MetaCollection
 from poif.dataset.object.base import DataSetObject
 from poif.dataset.object.output import DataSetObjectOutputFunction
+from poif.dataset.operation.meta_provider.base import MetaProvider
+from poif.dataset.operation.meta_provider.coco import CocoMetaProvider
 from poif.dataset.operation.split.base import Splitter
 from poif.dataset.operation.transform.base import Transformation
 from poif.dataset.operation.transform_and_split.base import TransformAndSplit
 from poif.tagged_data.base import TaggedData
 
-Operation = Union[Transformation, Splitter, TransformAndSplit]
+Operation = Union[Transformation, Splitter, TransformAndSplit, MetaProvider]
 
 
 class BaseDataset(ABC):
@@ -54,6 +57,8 @@ class MultiDataset(BaseDataset):
 
         self.initial_split_performed = False
 
+        self.meta = MetaCollection()
+
     def __getattr__(self, item) -> Union[BaseDataset, "MultiDataset"]:
         if item in self.available_sub_datasets:
             return self.splits[item]
@@ -88,6 +93,8 @@ class MultiDataset(BaseDataset):
             self.apply_splitter(operation)
         elif self.is_tranformation(operation) and not stop_transformation:
             self.apply_transformation(operation)
+        elif isinstance(operation, MetaProvider):
+            self.apply_meta_provider(operation)
         elif not stop_splitting or not stop_transformation:
             raise Exception("Unknown type of operation")
 
@@ -96,6 +103,11 @@ class MultiDataset(BaseDataset):
 
     def is_tranformation(self, operation: Operation) -> bool:
         return isinstance(operation, Transformation)
+
+    def apply_meta_provider(self, meta_provider: MetaProvider):
+        new_meta_information = meta_provider.provide_meta(self.objects)
+        for meta_name, meta_value in new_meta_information:
+            self.meta[meta_name] = meta_value
 
     def apply_splitter(self, splitter: Splitter):
         splitter_dict = splitter(self.objects)
@@ -126,6 +138,16 @@ class MultiDataset(BaseDataset):
         value = self.objects[idx].output()
         return value
 
+    def __add__(self, other: "MultiDataset") -> "MultiDataset":
+        total_objects = self.objects + other.objects
+        new_ds = MultiDataset()
+        new_ds.objects = total_objects
+
+        new_meta = self.meta + other.meta
+        new_ds.meta = new_meta
+
+        return new_ds
+
 
 if __name__ == "__main__":
     from poif.dataset.operation.transform.detection import DetectionToClassification
@@ -143,10 +165,10 @@ if __name__ == "__main__":
     }
 
     data_folders = {"train": "train2019", "val": "val2019", "test": "test2019"}
-
+    add_index_mapping = CocoMetaProvider(annotation_file=annotation_files["train"])
     coco_transform = MultiCoco(annotation_files=annotation_files, data_folders=data_folders)
     limiter = LimitSamplesByBin(sample_limit=10, bin_creator=lambda x: x.label)
-    operations = [coco_transform, DetectionToClassification(), limiter]
+    operations = [add_index_mapping, coco_transform, DetectionToClassification(), limiter]
     ds = MultiDataset(operations=operations)
     ds.form(tagged_data)
 
@@ -156,3 +178,4 @@ if __name__ == "__main__":
     print(len(ds.train))
     print(len(ds.val))
     print(len(ds.test))
+    print(ds.meta.index_to_label)
