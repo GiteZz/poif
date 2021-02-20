@@ -97,5 +97,5 @@ class TransformedDataSetObject(DataSetObject):
         return f"{parent_tag} - {self.transformation.tag}"
 
     def get_parsed(self) -> Any:
-        parent_parsed = self.get_parsed()
+        parent_parsed = super().get_parsed()
         return self.transformation(parent_parsed)

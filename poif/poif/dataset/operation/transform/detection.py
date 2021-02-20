@@ -14,7 +14,12 @@ class DetectionToClassification(Transformation):
         new_objects = []
         for annotation in dataset_object.annotations:
             if isinstance(annotation, BoundingBox):
-                transformation = Crop(x=annotation.x, y=annotation.y, w=annotation.w, h=annotation.h)
+                transformation = Crop(
+                    x=int(annotation.x * dataset_object.width),
+                    y=int(annotation.y * dataset_object.height),
+                    w=int(annotation.w * dataset_object.width),
+                    h=int(annotation.h * dataset_object.height),
+                )
                 new_object = TransformedDataSetObject(
                     dataset_object, transformation, output_function=classification_output
                 )

@@ -7,7 +7,6 @@ from poif.dataset.object.base import DataSetObject
 from poif.dataset.object.output import DataSetObjectOutputFunction
 from poif.dataset.operation.split.base import Splitter
 from poif.dataset.operation.transform.base import Transformation
-from poif.dataset.operation.transform.sampler import LimitSamplesByBin
 from poif.dataset.operation.transform_and_split.base import TransformAndSplit
 from poif.tagged_data.base import TaggedData
 
@@ -79,6 +78,7 @@ class MultiDataset(BaseDataset):
             return
         current_operation = self.operations.pop(0)
         self.apply_operation(current_operation)
+        self.next_operation()
 
     def apply_operation(self, operation: Operation):
         stop_splitting = self.initial_split_performed and not self.continue_splitting_after_splitter
@@ -90,7 +90,6 @@ class MultiDataset(BaseDataset):
             self.apply_transformation(operation)
         elif not stop_splitting or not stop_transformation:
             raise Exception("Unknown type of operation")
-        self.next_operation()
 
     def is_splitter(self, operation: Operation) -> bool:
         return isinstance(operation, Splitter) or isinstance(operation, TransformAndSplit)
@@ -130,6 +129,7 @@ class MultiDataset(BaseDataset):
 
 if __name__ == "__main__":
     from poif.dataset.operation.transform.detection import DetectionToClassification
+    from poif.dataset.operation.transform.sampler import LimitSamplesByBin
     from poif.dataset.operation.transform_and_split.coco import MultiCoco
     from poif.tagged_data.disk import DiskData
 
@@ -149,6 +149,8 @@ if __name__ == "__main__":
     operations = [coco_transform, DetectionToClassification(), limiter]
     ds = MultiDataset(operations=operations)
     ds.form(tagged_data)
+
+    ds.train[0]
 
     print(len(ds))
     print(len(ds.train))
