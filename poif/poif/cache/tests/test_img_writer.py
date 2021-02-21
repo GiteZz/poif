@@ -12,7 +12,8 @@ def test_png_img_writer():
 
     assert manager.get(tagged_data.tag) is None
 
-    ds_object = DataSetObject(tagged_data, cache_manager=manager, cache=True)
+    ds_object = DataSetObject(tagged_data)
+    ds_object.add_cache_manager(manager)
     object_bytes = ds_object.get()  # This load the object into the cache
     assert manager.get(ds_object.tag) == object_bytes
 
@@ -25,6 +26,7 @@ def test_jpg_img_writer():
 
     assert manager.get(tagged_data.tag) is None
 
-    ds_object = DataSetObject(tagged_data, cache_manager=manager, cache=True)
+    ds_object = DataSetObject(tagged_data)
+    ds_object.add_cache_manager(manager)
     object_bytes = ds_object.get()  # This load the object into the cache
     assert manager.get(ds_object.tag) == object_bytes

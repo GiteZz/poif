@@ -10,8 +10,8 @@ def get_resource_dir():
 
 
 versioned_collection = CollectionFromResourceDir(get_resource_dir())
-all_files = versioned_collection.get_files()
+{{data.dataset_name}}_files = versioned_collection.get_files()
 
 
 {{data.dataset_name}} = MultiDataset()
-{{data.dataset_name}}.form(all_files)
+{{data.dataset_name}}.form({{data.dataset_name}}_files)

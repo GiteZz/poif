@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List, Optional
 
-from poif.versioning.dataset import RepoVersionedCollection, VersionedCollection
+from poif.versioning.dataset import GitRepoCollection, VersionedCollection
 
 
 @dataclass
@@ -20,6 +20,6 @@ class DataQuery:
             # Http FileOrigin
             raise NotImplementedError
         elif self.git_url is not None and self.git_commit is not None:
-            self._data_collection = RepoVersionedCollection(git_url=self.git_url, git_commit=self.git_commit)
+            self._data_collection = GitRepoCollection(git_url=self.git_url, git_commit=self.git_commit)
         else:
             raise Exception("No valid collection could be constructed")

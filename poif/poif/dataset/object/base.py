@@ -15,8 +15,6 @@ class DataSetObject(TaggedPassthrough, MetaInfoMixin):
         self,
         tagged_data: TaggedData,
         output_function: Optional[DataSetObjectOutputFunction] = None,
-        cache: bool = True,
-        cache_manager: Optional[CacheManager] = None,
     ):
         super().__init__(tagged_data)
 
@@ -27,8 +25,7 @@ class DataSetObject(TaggedPassthrough, MetaInfoMixin):
 
         self.output_function = output_function
 
-        self.cache = cache
-        self.cache_manager = cache_manager
+        self.cache_manager = None
 
         self._height: Optional[int] = None
         self._width: Optional[int] = None
@@ -40,8 +37,11 @@ class DataSetObject(TaggedPassthrough, MetaInfoMixin):
         parsed_output = self.get_parsed()
         return parsed_output
 
+    def add_cache_manager(self, cache_manager: CacheManager):
+        self.cache_manager = cache_manager
+
     def get(self) -> bytes:
-        if self.cache_manager is not None and self.cache:
+        if self.cache_manager is not None:
             cache_content = self.cache_manager.get(self.tag)
             if cache_content is None:
                 parsed_content = self.parse_file(super(DataSetObject, self).get(), self.extension)
@@ -86,9 +86,11 @@ class DataSetObject(TaggedPassthrough, MetaInfoMixin):
 
 class TransformedDataSetObject(DataSetObject):
     def __init__(
-        self, tagged_data: TaggedData, transformation: DataTransform, output_function: DataSetObjectOutputFunction
+        self, parent_object: DataSetObject, transformation: DataTransform, output_function: DataSetObjectOutputFunction
     ):
-        super().__init__(tagged_data, output_function=output_function)
+        # TODO fix the duplication, ideally DataSetObject should not be TaggedData but keep some the interface
+        super().__init__(parent_object, output_function=output_function)
+        self.parent_object = parent_object
         self.transformation = transformation
 
     def tag(self):
@@ -99,3 +101,7 @@ class TransformedDataSetObject(DataSetObject):
     def get_parsed(self) -> Any:
         parent_parsed = super().get_parsed()
         return self.transformation(parent_parsed)
+
+    def add_cache_manager(self, cache_manager: CacheManager):
+        super().add_cache_manager(cache_manager)
+        self.parent_object.add_cache_manager(cache_manager)

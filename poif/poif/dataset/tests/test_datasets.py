@@ -117,12 +117,7 @@ def test_splitting_and_combining(mask_dataset):
         MaskByTemplate(mask_template),
     ]
 
-    ds1 = MultiDataset(operations=operation_list, continue_transformations_after_splitter=False)
+    ds1 = MultiDataset(operations=operation_list)
     ds1.form(mask_dataset)
 
     assert (len(ds1.train) + len(ds1.test) + len(ds1.val)) * 2 == len(ds1)
-
-    ds2 = MultiDataset(operations=operation_list, continue_transformations_after_splitter=True)
-    ds2.form(mask_dataset)
-
-    assert len(ds2.train) + len(ds2.test) + len(ds2.val) == len(ds2)

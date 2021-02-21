@@ -6,14 +6,13 @@ from typing import List, Optional, Union
 from poif.dataset.meta import MetaCollection
 from poif.dataset.object.base import DataSetObject
 from poif.dataset.object.output import DataSetObjectOutputFunction
+from poif.dataset.operation import Operation, SelectiveSubsetOperation
 from poif.dataset.operation.meta_provider.base import MetaProvider
 from poif.dataset.operation.meta_provider.coco import CocoMetaProvider
 from poif.dataset.operation.split.base import Splitter
 from poif.dataset.operation.transform.base import Transformation
 from poif.dataset.operation.transform_and_split.base import TransformAndSplit
 from poif.tagged_data.base import TaggedData
-
-Operation = Union[Transformation, Splitter, TransformAndSplit, MetaProvider]
 
 
 class BaseDataset(ABC):
@@ -36,11 +35,7 @@ class BaseDataset(ABC):
 
 class MultiDataset(BaseDataset):
     def __init__(
-        self,
-        operations: List[Operation] = None,
-        output_function: Optional[DataSetObjectOutputFunction] = None,
-        continue_splitting_after_splitter: bool = False,
-        continue_transformations_after_splitter: bool = True,
+        self, operations: List[Operation] = None, output_function: Optional[DataSetObjectOutputFunction] = None
     ):
 
         super().__init__()
@@ -51,9 +46,6 @@ class MultiDataset(BaseDataset):
             self.operations = []
 
         self.output_function = output_function
-
-        self.continue_splitting_after_splitter = continue_splitting_after_splitter
-        self.continue_transformations_after_splitter = continue_transformations_after_splitter
 
         self.initial_split_performed = False
 
@@ -73,6 +65,9 @@ class MultiDataset(BaseDataset):
         inputs = [DataSetObject(tagged_data, output_function=self.output_function) for tagged_data in data]
         self.form_from_ds_objects(inputs)
 
+    def set_ds_objects(self, objects: List[DataSetObject]):
+        self.objects = objects
+
     def form_from_ds_objects(self, objects: List[DataSetObject]):
         # TODO maybe remove and integrate into self.form
         self.objects = objects
@@ -86,17 +81,25 @@ class MultiDataset(BaseDataset):
         self.next_operation()
 
     def apply_operation(self, operation: Operation):
-        stop_splitting = self.initial_split_performed and not self.continue_splitting_after_splitter
-        stop_transformation = self.initial_split_performed and not self.continue_transformations_after_splitter
-
-        if self.is_splitter(operation) and not stop_splitting:
-            self.apply_splitter(operation)
-        elif self.is_tranformation(operation) and not stop_transformation:
-            self.apply_transformation(operation)
-        elif isinstance(operation, MetaProvider):
-            self.apply_meta_provider(operation)
-        elif not stop_splitting or not stop_transformation:
-            raise Exception("Unknown type of operation")
+        if len(self.splits) != 0:
+            if isinstance(operation, SelectiveSubsetOperation):
+                for subset, sub_ds in self.splits.items():
+                    if subset in operation.subsets:
+                        sub_ds.apply_operation(operation[subset])
+                    else:
+                        sub_ds.apply_operation(operation)
+            else:
+                for sub_ds in self.splits.values():
+                    sub_ds.apply_operation(operation)
+        else:
+            if self.is_splitter(operation):
+                self.apply_splitter(operation)
+            elif self.is_tranformation(operation):
+                self.apply_transformation(operation)
+            elif isinstance(operation, MetaProvider):
+                self.apply_meta_provider(operation)
+            else:
+                raise Exception("Unknown type of operation")
 
     def is_splitter(self, operation: Operation) -> bool:
         return isinstance(operation, Splitter) or isinstance(operation, TransformAndSplit)
@@ -116,12 +119,17 @@ class MultiDataset(BaseDataset):
 
         self.initial_split_performed = True
 
+    def create_child_dataset(self) -> "MultiDataset":
+        new_ds = MultiDataset()
+        new_ds.output_function = self.output_function
+        new_ds.meta = self.meta
+
+        return new_ds
+
     def add_splitter_dict(self, splitter_dict):
-        for subset_name, inputs in splitter_dict.items():
-            # TODO make a bit more transparent, if new attributes are added these should be also added here which is
-            # not that clean
-            new_dataset = MultiDataset(operations=copy.deepcopy(self.operations), output_function=self.output_function)
-            new_dataset.form_from_ds_objects(inputs)
+        for subset_name, objects in splitter_dict.items():
+            new_dataset = self.create_child_dataset()
+            new_dataset.set_ds_objects(objects)
 
             self.splits[subset_name] = new_dataset
 
@@ -168,8 +176,8 @@ if __name__ == "__main__":
     add_index_mapping = CocoMetaProvider(annotation_file=annotation_files["train"])
     coco_transform = MultiCoco(annotation_files=annotation_files, data_folders=data_folders)
     limiter = LimitSamplesByBin(sample_limit=10, bin_creator=lambda x: x.label)
-    operations = [add_index_mapping, coco_transform, DetectionToClassification(), limiter]
-    ds = MultiDataset(operations=operations)
+    ds_operations = [add_index_mapping, coco_transform, DetectionToClassification(), limiter]
+    ds = MultiDataset(operations=ds_operations)
     ds.form(tagged_data)
 
     ds.train[0]

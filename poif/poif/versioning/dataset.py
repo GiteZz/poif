@@ -91,7 +91,7 @@ class FromDiskVersionedCollection(VersionedCollection, FileCreatorMixin):
         pass
 
 
-class CollectionFromResourceDir(VersionedCollection):
+class ResourceDirCollection(VersionedCollection):
     _mappings: List[TaggedData] = None
     _files: List[TaggedData] = None
     _tagged_repo: TaggedRepo = field(init=False)
@@ -171,7 +171,7 @@ class CollectionFromResourceDir(VersionedCollection):
 
 
 @dataclass
-class RepoVersionedCollection(CollectionFromResourceDir):
+class GitRepoCollection(ResourceDirCollection):
     _mappings: List[TaggedData] = None
     _files: List[TaggedData] = None
     _tagged_repo: TaggedRepo = field(init=False)
@@ -195,7 +195,7 @@ class RepoVersionedCollection(CollectionFromResourceDir):
 
 
 if __name__ == "__main__":
-    repo = RepoVersionedCollection(
+    repo = GitRepoCollection(
         git_url="https://github.ugent.be/gballege/minimal_pneumonia.git",
         git_commit="85d749fd6422af1a178013c45c304576939d3b4c",
     )
