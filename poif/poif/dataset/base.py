@@ -155,35 +155,3 @@ class MultiDataset(BaseDataset):
         new_ds.meta = new_meta
 
         return new_ds
-
-
-if __name__ == "__main__":
-    from poif.dataset.operation.transform.detection import DetectionToClassification
-    from poif.dataset.operation.transform.sampler import LimitSamplesByBin
-    from poif.dataset.operation.transform_and_split.coco import MultiCoco
-    from poif.tagged_data.disk import DiskData
-
-    ds_loc = Path("/home/gilles/datasets/retail_product_checkout")
-    tagged_data = DiskData.from_folder(ds_loc)
-
-    annotation_files = {
-        "train": "instances_train2019.json",
-        "val": "instances_val2019.json",
-        "test": "instances_test2019.json",
-    }
-
-    data_folders = {"train": "train2019", "val": "val2019", "test": "test2019"}
-    add_index_mapping = CocoMetaProvider(annotation_file=annotation_files["train"])
-    coco_transform = MultiCoco(annotation_files=annotation_files, data_folders=data_folders)
-    limiter = LimitSamplesByBin(sample_limit=10, bin_creator=lambda x: x.label)
-    ds_operations = [add_index_mapping, coco_transform, DetectionToClassification(), limiter]
-    ds = MultiDataset(operations=ds_operations)
-    ds.form(tagged_data)
-
-    ds.train[0]
-
-    print(len(ds))
-    print(len(ds.train))
-    print(len(ds.val))
-    print(len(ds.test))
-    print(ds.meta.index_to_label)

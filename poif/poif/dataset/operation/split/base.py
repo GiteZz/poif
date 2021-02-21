@@ -1,5 +1,5 @@
 from collections import defaultdict
-from typing import Callable, Dict, List
+from typing import Callable, Dict, List, Optional
 
 from poif.dataset.object.base import DataSetObject
 from poif.typing import SubSetName
@@ -9,13 +9,15 @@ SplitterDict = Dict[SubSetName, List[DataSetObject]]
 
 
 class Splitter:
-    def split_single_input(self, ds_input: DataSetObject) -> SubSetName:
+    def split_single_input(self, ds_input: DataSetObject) -> Optional[SubSetName]:
         raise Exception("Single object transform was not defined.")
 
     def split_input_list(self, inputs: List[DataSetObject]) -> SplitterDict:
         splitter_dict = defaultdict(list)
         for ds_input in inputs:
-            splitter_dict[self.split_single_input(ds_input)].append(ds_input)
+            subset = self.split_single_input(ds_input)
+            if subset is not None:
+                splitter_dict[subset].append(ds_input)
 
         return splitter_dict
 

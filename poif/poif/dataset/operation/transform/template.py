@@ -61,14 +61,20 @@ class DropByTemplate(Transformation):
 
 
 class ClassificationByTemplate(Transformation):
-    def __init__(self, template: str, input_item="label"):
+    def __init__(self, template: str, input_item="label", drop_if_no_match=True):
         self.template = template
         self.input_item = input_item
+        self.drop_if_no_match = drop_if_no_match
 
     def transform_single_object(self, ds_input: DataSetObject) -> List[DataSetObject]:
         values = extract_values(template=self.template, path=ds_input.relative_path)
-        label = values[self.input_item]
+        if self.input_item in values:
+            label = values[self.input_item]
 
-        ds_input.label = label
+            ds_input.label = label
 
-        return [ds_input]
+            return [ds_input]
+        elif self.drop_if_no_match:
+            return []
+        else:
+            return [ds_input]
