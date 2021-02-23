@@ -1,7 +1,8 @@
+from typing import List
+
 from poif.cache.base import CacheManager
 from poif.dataset.object.base import DataSetObject
 from poif.dataset.operation import Transformation
-from typing import List
 
 
 class AddCache(Transformation):

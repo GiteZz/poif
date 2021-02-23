@@ -1,5 +1,5 @@
 from collections import defaultdict
-from typing import List, Dict, Any
+from typing import Any, Dict, List
 
 from poif.dataset.object.base import DataSetObject
 from poif.dataset.operation.split.base import Splitter, SplitterDict
@@ -7,7 +7,7 @@ from poif.dataset.operation.transform.sampler import BinCreator
 
 
 class SplitByBin(Splitter):
-    def __init__(self, bins: Dict[str, List[Any]],  bin_creator: BinCreator):
+    def __init__(self, bins: Dict[str, List[Any]], bin_creator: BinCreator):
         self.bins = bins
         self.bin_creator = bin_creator
 
@@ -16,4 +16,3 @@ class SplitByBin(Splitter):
 
         for ds_object in objects:
             items_per_bin[self.bin_creator(ds_object)].append(ds_object)
-

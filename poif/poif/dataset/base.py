@@ -8,7 +8,6 @@ from poif.dataset.object.base import DataSetObject
 from poif.dataset.object.output import DataSetObjectOutputFunction
 from poif.dataset.operation import Operation, SelectiveSubsetOperation
 from poif.dataset.operation.meta_provider.base import MetaProvider
-from poif.dataset.operation.meta_provider.coco import CocoMetaProvider
 from poif.dataset.operation.split.base import Splitter
 from poif.dataset.operation.transform.base import Transformation
 from poif.dataset.operation.transform_and_split.base import TransformAndSplit
