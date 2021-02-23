@@ -1,3 +1,4 @@
+import json
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from pathlib import Path
@@ -10,8 +11,6 @@ from poif.dataset.detection.base import detection_input_to_yolo_annotation
 from poif.file_system.directory import Directory
 from poif.tagged_data.base import StringBinaryData
 from poif.utils.coco import detection_collection_to_coco_dict
-
-import json
 
 
 class FileSystemCreator(ABC):
@@ -89,10 +88,12 @@ class COCOFileSystem(FileSystemCreator):
         dataset_dir = Directory()
 
         for subset in dataset.available_sub_datasets:
-            annotation_dict = detection_collection_to_coco_dict(dataset.splits[subset].objects, dataset.meta.index_to_label)
+            annotation_dict = detection_collection_to_coco_dict(
+                dataset.splits[subset].objects, dataset.meta.index_to_label
+            )
             annotation_json = json.dumps(annotation_dict)
 
-            dataset_dir.add_data(f'{subset}.json', StringBinaryData(annotation_json))
+            dataset_dir.add_data(f"{subset}.json", StringBinaryData(annotation_json))
 
             for ds_object in dataset.splits[subset].objects:
                 dataset_dir.add_data(ds_object.relative_path, ds_object)

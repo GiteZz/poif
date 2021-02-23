@@ -1,32 +1,31 @@
-import pytest
-
 from poif.dataset.meta import MetaCollection
-
-
-def test_meta_collection():
-    meta = MetaCollection()
-    meta["value1"] = "value1"
-    assert meta.value1 == "value1"
 
 
 def test_adding():
     meta1 = MetaCollection()
     meta2 = MetaCollection()
 
-    for i in range(5):
-        meta1[f"value{i}"] = f"value{i}"
+    index_to_label = {1: "a", 2: "b", 3: "c"}
+    label_to_index = {"a": 1, "b": 2, "c": 3}
 
-    for i in range(5, 10):
-        meta2[f"value{i}"] = f"value{i}"
+    meta1.index_to_label = index_to_label
+    meta2.label_to_index = label_to_index
 
     combined_meta = meta1 + meta2
-    for i in range(10):
-        assert combined_meta[f"value{i}"] == f"value{i}"
 
-    for i in range(5, 10):
-        with pytest.raises(KeyError):
-            meta1[f"value{i}"]
+    assert combined_meta.index_to_label == index_to_label
+    assert combined_meta.label_to_index == label_to_index
 
-    for i in range(5):
-        with pytest.raises(KeyError):
-            meta2[f"value{i}"]
+    meta3 = MetaCollection()
+    meta4 = MetaCollection()
+
+    index_to_label1 = {1: "a", 2: "b", 3: "c"}
+    index_to_label2 = {1: "a", 2: "b", 3: "c"}
+
+    meta3.index_to_label = index_to_label1
+    meta4.index_to_label = index_to_label2
+
+    combined_meta = meta3 + meta4
+
+    assert combined_meta.index_to_label == index_to_label1
+    assert combined_meta.label_to_index is None

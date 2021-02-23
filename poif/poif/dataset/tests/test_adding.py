@@ -23,5 +23,3 @@ def test_adding():
     assert len(ds) == len(ds.train + ds.val)
 
     assert set(ds.objects) == set((ds.train + ds.val).objects)
-
-    assert ds.meta.base_dict == (ds.train + ds.val).meta.base_dict

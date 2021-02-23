@@ -12,7 +12,7 @@ def detection_collection_to_coco_dict(inputs: List[DataSetObject], label_mapping
     for index, detection_input in enumerate(inputs):
         coco_dict["images"].append(
             {
-                "file_name": detection_input.relative_path.split('/')[-1],
+                "file_name": detection_input.relative_path.split("/")[-1],
                 "id": index,
                 "width": detection_input.width,
                 "height": detection_input.height,

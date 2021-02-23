@@ -107,9 +107,8 @@ class MultiDataset(BaseDataset):
         return isinstance(operation, Transformation)
 
     def apply_meta_provider(self, meta_provider: MetaProvider):
-        new_meta_information = meta_provider.provide_meta(self.objects)
-        for meta_name, meta_value in new_meta_information:
-            self.meta[meta_name] = meta_value
+        new_meta = meta_provider.provide_meta(self.objects, self.meta)
+        self.meta = new_meta
 
     def apply_splitter(self, splitter: Splitter):
         splitter_dict = splitter(self.objects)
