@@ -49,14 +49,14 @@ class GroupSplitter(RandomSplitter):
 
         biggest_to_smallest = sorted(bin_counts, key=lambda x: x[1], reverse=True)
 
-        split = {subset: [] for subset in self.percentage_dict.keys()}
+        split: Dict[SubSetName, List[DataSetObject]] = {subset: [] for subset in self.percentage_dict.keys()}
         max_capacity = {subset: percentage * len(ds_objects) for subset, percentage in self.percentage_dict.items()}
         subsets = list(self.percentage_dict.keys())
         current_subset_index = 0
 
         for group, group_count in biggest_to_smallest:
             destination_found = False
-            min_subset = None
+            min_subset = subsets[0]
             min_diff = float("inf")
             for subset_offset in range(len(subsets)):
 

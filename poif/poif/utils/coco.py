@@ -5,7 +5,7 @@ from poif.dataset.object.base import DataSetObject
 
 
 def detection_collection_to_coco_dict(inputs: List[DataSetObject], label_mapping: Dict[int, str]) -> Dict:
-    coco_dict = {}
+    coco_dict: Dict[str, list] = {}
     coco_dict["images"] = []
     coco_dict["annotations"] = []
     coco_dict["categories"] = []

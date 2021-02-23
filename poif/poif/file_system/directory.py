@@ -47,7 +47,11 @@ class Directory:
         if new_folder_name not in self.contents:
             self.contents[new_folder_name] = Directory()
 
-        self.contents[new_folder_name].add_file(folders[1:], file_name, data)
+        folder_to_add_in = self.contents[new_folder_name]
+        if isinstance(folder_to_add_in, Directory):
+            folder_to_add_in.add_file(folders[1:], file_name, data)
+        else:
+            raise Exception("Can't add content to file")
 
     def add_data(self, rel_path: RelFilePath, data: BinaryData):
         levels = rel_path.split("/")

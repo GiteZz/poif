@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 from hashlib import md5
 from pathlib import Path
-from typing import Dict, Generator, List, Tuple
+from typing import Any, Dict, Generator, List, Tuple
 
 import cv2
 import numpy as np
@@ -30,7 +30,7 @@ def get_img_size(img: np.ndarray) -> Tuple[int, int]:
         raise Exception("Can't interpret image where len(shape) is not 2 or 3")
 
 
-def resize_with_padding(img: np.ndarray, new_width: int, new_height: int, padding_value: int = 0):
+def resize_with_padding(img: np.ndarray, new_width: int, new_height: int, padding_value: int = 0) -> np.ndarray:
     h, w = get_img_size(img)
 
     original_ratio = w / h
@@ -71,7 +71,7 @@ def resize_img(
         return resize_with_padding(img, new_width=new_width, new_height=new_height)
 
 
-def get_relative_path(base_dir: Path, file: Path):
+def get_relative_path(base_dir: Path, file: Path) -> str:
     """
     base_dir = Path('/home/user/datasets')
     file_path = Path('/home/user/datasets/name/train/01.jpg')
@@ -81,37 +81,37 @@ def get_relative_path(base_dir: Path, file: Path):
     return str(file)[len(str(base_dir)) + 1 :]
 
 
-def hash_object(file: Path):
+def hash_object(file: Path) -> str:
     with open(file, "rb") as f:
         hash = md5(f.read()).hexdigest()
     return hash
 
 
-def hash_string(string: str):
+def hash_string(string: str) -> str:
     return md5(string.encode("utf-8")).hexdigest()
 
 
-def get_file_name_from_path(file: Path):
+def get_file_name_from_path(file: Path) -> str:
     name_with_extension = file.parts[-1]
     name_without_extension = name_with_extension.split(".")[0]
     return name_without_extension
 
 
-def get_extension_from_path(file: Path):
+def get_extension_from_path(file: Path) -> str:
     name_with_extension = file.parts[-1]
     extension = name_with_extension.split(".")[-1]
     return extension
 
 
-def is_image(path: Path):
+def is_image(path: Path) -> bool:
     return get_extension_from_path(path) in img_extensions
 
 
-def get_file_depth(base_dir: Path, file: Path):
+def get_file_depth(base_dir: Path, file: Path) -> int:
     return len(file.parts) - len(base_dir.parts)
 
 
-def convert_zero_or_more(arg):
+def convert_zero_or_more(arg: Any) -> List:
     if arg is None:
         return []
     if isinstance(arg, list):
@@ -119,7 +119,7 @@ def convert_zero_or_more(arg):
     return [arg]
 
 
-def has_newline(line: str):
+def has_newline(line: str) -> bool:
     if len(line) == 0:
         return False
     return line[-1] == "\n"

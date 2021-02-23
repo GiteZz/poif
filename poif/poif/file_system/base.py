@@ -29,6 +29,8 @@ class DataSetFileSystem(Operations):
         try:
             current_object = self.root_dir
             for access_name in path_parts:
+                if isinstance(current_object, File):
+                    raise Exception("Can't open file, there might exist a file and folder that are named the same.")
                 current_object = current_object.contents[access_name]
         except:
             raise FuseOSError(errno.ENOENT)

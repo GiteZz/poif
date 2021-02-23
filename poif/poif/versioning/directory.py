@@ -13,8 +13,8 @@ from poif.versioning.file import VersionedFile
 
 
 class Mapping(LazyLoadedTaggedData, ABC):
-    def __init__(self):
-        super().__init__(relative_path="")
+    def __init__(self, tag: Optional[str] = None):
+        super().__init__(relative_path="", tag=tag)
         self._mapping = None
 
     @property
@@ -59,16 +59,12 @@ class Mapping(LazyLoadedTaggedData, ABC):
 
 
 class VersionedDirectory(Mapping):
-    base_dir: Path
-    data_dir: Optional[Path] = None
-
-    _files: Optional[List[VersionedFile]] = None
-
-    def __init__(self, base_dir: Path, data_dir: Path, tag=None):
-        super().__init__()
+    def __init__(self, base_dir: Path, data_dir: Path, tag: Optional[str] = None):
+        super().__init__(tag=tag)
 
         self.base_dir = base_dir
         self.data_dir = data_dir
+        self._files: Optional[List[VersionedFile]] = None
 
     @property
     def files(self):

@@ -40,9 +40,9 @@ class MaskByTemplate(Transformation):
                 print(f"WARNING: item with path: {ds_input.relative_path} was not matched")
 
         new_inputs = []
-        for values in set.intersection(set(images.keys()), set(masks.keys())):
-            mask_input = masks[values]
-            image_input = images[values]
+        for intersected_values in set.intersection(set(images.keys()), set(masks.keys())):
+            mask_input = masks[intersected_values]
+            image_input = images[intersected_values]
 
             image_input.annotations.append(Mask(mask_input))
             new_inputs.append(image_input)

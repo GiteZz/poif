@@ -1,13 +1,11 @@
-from typing import Callable, List, Optional, Union
+from typing import Callable, List
 
 from poif.dataset.object.base import DataSetObject
 from poif.dataset.operation.transform.base import Transformation
 
 # Used for splitting the dataset, used for train/val/test split
 
-
-ZeroOrMoreMetaInput = Optional[Union[DataSetObject, List[DataSetObject]]]
-CallableDataPointTransformation = Callable[[DataSetObject], ZeroOrMoreMetaInput]
+CallableDataPointTransformation = Callable[[DataSetObject], List[DataSetObject]]
 CallableDataSetTransformation = Callable[[List[DataSetObject]], List[DataSetObject]]
 
 

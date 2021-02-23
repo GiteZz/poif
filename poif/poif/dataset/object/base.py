@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 
@@ -25,7 +25,7 @@ class DataSetObject(TaggedPassthrough, MetaInfoMixin):
 
         self.output_function = output_function
 
-        self.cache_manager = None
+        self.cache_manager: Optional[CacheManager] = None
 
         self._height: Optional[int] = None
         self._width: Optional[int] = None
@@ -54,7 +54,7 @@ class DataSetObject(TaggedPassthrough, MetaInfoMixin):
 
         return super(DataSetObject, self).get()
 
-    def set_wh_from_data(self):
+    def set_wh_from_data(self) -> Tuple[int, int]:
         np_img = self.get_parsed()
 
         assert isinstance(np_img, np.ndarray)
@@ -68,17 +68,23 @@ class DataSetObject(TaggedPassthrough, MetaInfoMixin):
         self._width = w
         self._height = h
 
+        return w, h
+
     @property
     def width(self) -> int:
         if self._width is None:
-            self.set_wh_from_data()
-        return self._width
+            w, _ = self.set_wh_from_data()
+        else:
+            w = self._width
+        return w
 
     @property
     def height(self) -> int:
         if self._height is None:
-            self.set_wh_from_data()
-        return self._height
+            _, h = self.set_wh_from_data()
+        else:
+            h = self._height
+        return h
 
     def add_annotation(self, annotation: DataSetAnnotation):
         self.annotations.append(annotation)
