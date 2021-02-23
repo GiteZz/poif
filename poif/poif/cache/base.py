@@ -11,7 +11,7 @@ class Writer(ABC):
 
     @classmethod
     @abstractmethod
-    def write(cls, parsed_content: Any, tag: str, extension: str):
+    def write(cls, parsed_content: Any, location: Path, extension: str):
         pass
 
 

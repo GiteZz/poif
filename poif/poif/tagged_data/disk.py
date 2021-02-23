@@ -7,8 +7,6 @@ from poif.utils import get_relative_path, hash_object
 
 
 class DiskData(LazyLoadedTaggedData):
-    file_path: Path = None
-
     def __init__(self, file_path: Path, relative_path: str, tag: FileHash = None):
         super().__init__(relative_path, tag)
         self.file_path = file_path

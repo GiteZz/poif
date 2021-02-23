@@ -1,4 +1,5 @@
-import threading
+from threading import Lock, Timer
+from typing import Optional
 
 from poif.tagged_data.base import BinaryData
 
@@ -7,9 +8,9 @@ class PartialGetWrapper(BinaryData):
     def __init__(self, data: BinaryData, grace_period=1):
         self.data = data
 
-        self.get_lock = threading.Lock()
-        self.timer = None
-        self.cached_data = None
+        self.get_lock = Lock()
+        self.timer: Optional[Timer] = None
+        self.cached_data: Optional[bytes] = None
         self.grace_period = grace_period
 
     @property
@@ -32,7 +33,7 @@ class PartialGetWrapper(BinaryData):
 
             if self.timer is not None:
                 self.timer.cancel()
-            self.timer = threading.Timer(self.grace_period, self.clear_data)
+            self.timer = Timer(self.grace_period, self.clear_data)
             self.timer.start()
 
         return needed_data

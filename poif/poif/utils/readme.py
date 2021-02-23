@@ -8,10 +8,6 @@ from poif.utils.filetree import FileTree
 
 
 class ReadmeSection:
-    _title: str = None
-    _content: str = None
-    _subsections: List["ReadmeSection"]
-
     def __init__(self, title: str, content: Optional[str] = None):
         self._title = title
         self._content = content

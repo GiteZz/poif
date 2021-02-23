@@ -46,7 +46,8 @@ class BoundingBox(DataSetAnnotation):
     ):
         super().__init__()
         self.label = label
-        self.tags = tags
+        if tags is not None:
+            self.tags = tags
 
         self.x = x
         self.y = y

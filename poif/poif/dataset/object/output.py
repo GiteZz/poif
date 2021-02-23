@@ -11,6 +11,8 @@ DataSetObjectOutputFunction = Callable[["DataSetObject"], Any]
 
 
 def classification_output(ds_object: "DataSetObject") -> Tuple[Any, Union[str, int]]:
+    if ds_object.label is None:
+        raise Exception("Classification is use while label is None")
     return ds_object.get_parsed(), ds_object.label
 
 

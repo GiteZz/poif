@@ -7,10 +7,10 @@ from poif.dataset.object.transform.base import DataTransform
 
 @dataclass
 class Crop(DataTransform):
-    x: float
-    y: float
-    w: float
-    h: float
+    x: int
+    y: int
+    w: int
+    h: int
 
     def __post_init__(self):
         self.supported_type = np.ndarray

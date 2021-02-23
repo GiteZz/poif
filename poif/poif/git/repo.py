@@ -1,6 +1,6 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 from git import Repo
 
@@ -10,11 +10,11 @@ from poif.tests import get_temp_path
 
 @dataclass
 class GitRepo:
-    base_dir: Path = None
-    git_url: str = None
-    git_commit: str = None
-    init: bool = False
-    repo: Repo = None
+    base_dir: Optional[Path] = None
+    git_url: Optional[str] = None
+    git_commit: Optional[str] = None
+    init: Optional[bool] = False
+    repo: Repo = field(init=False)
 
     def __post_init__(self):
         if self.init:

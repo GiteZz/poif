@@ -1,42 +1,65 @@
+from dataclasses import dataclass
+from pathlib import Path
+from typing import List
+
+import yaml
 from click import Path
 
 from poif.dataset.base import MultiDataset
+from poif.dataset.detection.base import detection_input_to_yolo_annotation
 from poif.dataset.file_system.base import FileSystemCreator
 from poif.file_system.directory import Directory
+from poif.tagged_data.base import StringBinaryData
+
+
+@dataclass
+class Yolov5MetaFile:
+    train_image_folder: Path
+    val_image_folder: Path
+    # number of classes
+    number_of_classes: int
+    # class names
+    class_names: List[str]
+
+    def to_file(self) -> str:
+        return yaml.dump(
+            {
+                "train": str(self.train_image_folder),
+                "val": str(self.val_image_folder),
+                "nc": self.number_of_classes,
+                "names": self.class_names,
+            }
+        )
 
 
 class Yolov5FileSystem(FileSystemCreator):
-    def create(self, dataset: MultiDataset, base_dir: Path):
+    def create(self, dataset: MultiDataset, base_dir: Path, daemon=True):
         dataset_dir = Directory()
 
-        data_folder = {"train": base_folder / "images" / "train", "val": base_folder / "images" / "val"}
+        data_folder = {"train": base_dir / "images" / "train", "val": base_dir / "images" / "val"}
 
-        label_folder = {"train": base_folder / "labels" / "train", "val": base_folder / "labels" / "val"}
+        label_folder = {"train": base_dir / "labels" / "train", "val": base_dir / "labels" / "val"}
 
-        sorted_ids = self.get_classes_sorted_by_id()
-        needed_information = {
-            "number_of_classes": len(sorted_ids),
-            "classes": sorted_ids,
-            "train_folder": str(data_folder["train"]),
-            "val_folder": str(data_folder["val"]),
-        }
+        sorted_ids = self.get_classes_sorted_by_id(dataset)
 
-        yolov5_template = get_datasets_template_dir() / "detection" / "yolov5.yaml.jinja2"
+        meta = Yolov5MetaFile(
+            train_image_folder=data_folder["train"],
+            val_image_folder=data_folder["val"],
+            number_of_classes=len(sorted_ids),
+            class_names=sorted_ids,
+        )
 
-        template = Template(open(yolov5_template).read())
-        rendered_template = template.render(data=needed_information)
-
-        dataset_dir.add_data("meta.yaml", StringBinaryData(rendered_template))
+        dataset_dir.add_data("meta.yaml", StringBinaryData(meta.to_file()))
 
         for subset in ["train", "val"]:
-            for object_index, ds_object in enumerate(self.splits[subset].objects):
+            for object_index, ds_object in enumerate(dataset.splits[subset].objects):
                 original_extension = ds_object.relative_path.split("/")[-1].split(".")[-1]
                 file_name = str(data_folder[subset] / f"{object_index}.{original_extension}")
 
-                dataset_dir.add_data(file_name, StringBinaryData(rendered_template))
+                dataset_dir.add_data(file_name, ds_object)
 
                 label = detection_input_to_yolo_annotation(ds_object)
                 label_name = str(label_folder[subset] / f"{object_index}.txt")
                 dataset_dir.add_data(label_name, StringBinaryData(label))
 
-        dataset_dir.setup_as_filesystem(base_folder, daemon=True)
+        dataset_dir.setup_as_filesystem(base_dir, daemon=daemon)
