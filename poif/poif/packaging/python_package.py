@@ -11,6 +11,7 @@ from poif.utils import get_relative_path
 
 class PythonPackage(Package):
     def __init__(self, base_dir: Path, collection_config: DataCollectionConfig):
+        print(f"Python package init in {base_dir}")
         super().__init__(base_dir, collection_config)
 
     def init(self):

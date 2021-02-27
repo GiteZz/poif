@@ -21,7 +21,7 @@ def test_get_filename():
 
 
 def test_extension_bins():
-    temp_path = get_temp_path()
+    temp_path = get_temp_path(prefix="test_extension_bins")
 
     jpg_files = [f"{i}.jpg" for i in range(10)]
     png_files = [f"{i}.png" for i in range(10)]
@@ -55,7 +55,7 @@ def test_extension_bins():
 
 
 def test_is_more_populated():
-    temp_path = get_temp_path()
+    temp_path = get_temp_path(prefix="test_is_more_populated")
 
     jpg_files = [f"{i}.jpg" for i in range(10)]
 

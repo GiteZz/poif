@@ -114,8 +114,8 @@ def create_standard_folder_structure():
     return temp_dir
 
 
-def get_temp_path() -> Path:
-    return Path(tempfile.mkdtemp())
+def get_temp_path(prefix: str = "") -> Path:
+    return Path(tempfile.mkdtemp(prefix="poif_" + prefix + "_"))
 
 
 def get_temp_file() -> Path:

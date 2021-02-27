@@ -31,7 +31,7 @@ class GitRepo:
             self.repo = Repo(str(self.base_dir))
 
     def get_clone_location(self) -> Path:
-        return get_temp_path()
+        return get_temp_path(prefix="git_get_clone_location")
 
     def add_files(self, files: List[Path]):
         for file in files:
@@ -47,7 +47,9 @@ class GitRepo:
         return self.repo.head.object.hexsha
 
     def push(self):
+        print("pushing")
         self.repo.remotes.origin.push(refspec="master:master")
+        print("done pushing")
 
     def add_file_creator(self, creator: FileCreatorMixin):
         self.add_files(creator.get_created_files())

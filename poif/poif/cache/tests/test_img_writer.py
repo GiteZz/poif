@@ -5,7 +5,7 @@ from poif.tests import get_temp_path
 
 
 def test_png_img_writer():
-    base_dir = get_temp_path()
+    base_dir = get_temp_path(prefix="test_png_img_writer")
     manager = CacheManager(base_dir)
 
     tagged_data = ImageMockTaggedData(relative_path="img.png")
@@ -19,7 +19,7 @@ def test_png_img_writer():
 
 
 def test_jpg_img_writer():
-    base_dir = get_temp_path()
+    base_dir = get_temp_path(prefix="test_jpg_img_writer")
     manager = CacheManager(base_dir)
 
     tagged_data = ImageMockTaggedData(relative_path="img.jpg")

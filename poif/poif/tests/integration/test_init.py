@@ -1,9 +1,7 @@
 import uuid
 
-from poif.cli.commands.init import init
-from poif.config.tests.test_prompts import get_repo_sequence
+from poif.cli.commands.init import configured_init
 from poif.git.repo import GitRepo
-from poif.tests import MonkeyPatchSequence
 from poif.tests.integration.gitlab.tools import create_repo
 from poif.tests.integration.setup import setup
 from poif.tests.repo import create_data_repo
@@ -11,20 +9,17 @@ from poif.utils import FileIterator, get_relative_path
 from poif.versioning.dataset import GitRepoCollection
 
 
-def test_init(monkeypatch):
+def test_init():
     minio_config, gitlab_config = setup()
 
     base_dir, repo_config = create_data_repo(minio_config)
-    original_files = list(FileIterator(base_dir))  # List is done to capture the original state
+
+    original_files = list(FileIterator(base_dir))  # list() is done to capture the original state
 
     repo_name = str(uuid.uuid4())
     git_url = create_repo(gitlab_config, repo_name)
 
-    sequence, config = get_repo_sequence(expected_result=repo_config)
-    monkeypatch.setattr("builtins.input", MonkeyPatchSequence(sequence + [git_url]))
-
-    print(base_dir)
-    init([str(base_dir)])
+    configured_init(base_dir, repo_config, git_url)
 
     repo = GitRepo(base_dir=base_dir, init=False)
     latest_commit = repo.get_latest_hash()

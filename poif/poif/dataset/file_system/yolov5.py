@@ -3,7 +3,6 @@ from pathlib import Path
 from typing import List
 
 import yaml
-from click import Path
 
 from poif.dataset.base import MultiDataset
 from poif.dataset.detection.base import detection_input_to_yolo_annotation

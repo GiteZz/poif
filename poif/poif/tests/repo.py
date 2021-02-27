@@ -13,7 +13,7 @@ from poif.tests.integration.minio.setup import get_repo_remotes_from_config
 
 
 def create_realistic_folder_structure() -> Tuple[Path, List[str], List[str]]:
-    base_dir = get_temp_path()
+    base_dir = get_temp_path(prefix="create_realistic_folder_structure")
 
     files = [f"0{i}.jpg" for i in range(10)]
     base_folders = ["train", "val", "test"]

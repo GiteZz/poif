@@ -69,17 +69,20 @@ class Directory:
         p = Process(target=setup_filesystem, args=(file_system, system_path), daemon=daemon)
         p.start()
 
+        start_waiting = time.time()
         while not (system_path / "__test_file").exists():
-            print("Wait")
+            if time.time() - start_waiting > 120:
+                p.terminate()
+                raise Exception("FUSE filesystem did not start correctly")
             time.sleep(0.02)
 
         return p
 
 
 def setup_filesystem(filesystem: DataSetFileSystem, system_path: Path):
-    fuse_handler = FUSE(
+    fuse_handler = FUSE(  # noqa
         filesystem,
         str(system_path),
-        foreground=True,
+        foreground=False,
         allow_other=False,
     )

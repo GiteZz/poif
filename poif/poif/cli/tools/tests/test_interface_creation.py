@@ -32,7 +32,7 @@ def test_rendered_path(dummy_config):
 
 # TODO a bit more extensive
 def test_interface_creation(dummy_config):
-    base_dir = get_temp_path()
+    base_dir = get_temp_path(prefix="test_interface_creation")
 
     package = PythonPackage(base_dir=base_dir, collection_config=dummy_config)
     package.init()

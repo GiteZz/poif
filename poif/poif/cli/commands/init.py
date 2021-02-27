@@ -21,6 +21,10 @@ def init(args: List[str]) -> None:
     if git_remote == "":
         print("No git remote provided, git repo will be created but files will not be pushed to remote.")
 
+    configured_init(base_dir, repo_config, git_remote)
+
+
+def configured_init(base_dir: Path, repo_config: DataRepoConfig, git_remote: str):
     package = PythonPackage(base_dir=base_dir, collection_config=repo_config.collection)
     package.init()
 
@@ -31,8 +35,8 @@ def init(args: List[str]) -> None:
 
     versioned_dataset.write_versioning_files(resource_dir)
 
-    readme = DatasetReadme(Path.cwd(), config=repo_config.collection)
-    readme.write_to_folder(Path.cwd())
+    readme = DatasetReadme(base_dir, config=repo_config.collection)
+    readme.write_to_folder(base_dir)
 
     tagged_repo = get_remote_repo_from_config(repo_config.collection.data_remote)
     tagged_repo.upload_collection(versioned_dataset)

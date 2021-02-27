@@ -226,13 +226,13 @@ def test_repo_prompt(monkeypatch):
     assert config1 == expected_output
 
 
-def test_repo_read_write(monkeypatch):
+def test_repo_read_write():
     config_file = get_temp_file()
     _, config = get_repo_sequence()
     config.write(config_file)
 
     assert config.read(config_file) == config
-    temp_dir = get_temp_path()
+    temp_dir = get_temp_path(prefix="test_repo_read_write")
     package = PythonPackage(base_dir=temp_dir, collection_config=config.collection)
 
     config.write_to_package(package)

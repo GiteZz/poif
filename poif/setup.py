@@ -31,5 +31,14 @@ setuptools.setup(
         "awscli",
         "flask",
         "pandas",
+        "numpy",
+        "tqdm",
+        "requests",
+        "fusepy",
+        "boto3",
+        "gitpython",
     ],
+    extras_require={
+        "test": ["black==20.8b1", "isort==5.7.0", "mypy==0.800", "pytest==6.2.2", "autoflake==1.4", "docker"]
+    },
 )

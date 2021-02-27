@@ -77,10 +77,14 @@ def add_git_credential(username, password, url):
     url_without_http = url.split("/")[-1]
     url_http_part = url.split(":")[0]
 
-    new_line = f"{url_http_part}://{username}:{password}@{url_without_http}"
+    new_line = f"{url_http_part}://{username}:{password}@{url_without_http}\n"
 
-    with open(git_credential_file, "a") as f:
-        f.write(new_line)
+    with open(git_credential_file, "r") as f:
+        existing_lines = f.readlines()
+
+    if new_line not in existing_lines:
+        with open(git_credential_file, "a") as f:
+            f.write(new_line)
 
 
 def headers_from_config(config: GitlabConfig):
