@@ -18,6 +18,9 @@ from poif.versioning.file import VersionedFile
 
 
 class VersionedCollection(ABC):
+    def __init__(self):
+        super().__init__()
+
     @abstractmethod
     def get_files(self) -> List[TaggedData]:
         pass
@@ -39,6 +42,7 @@ class FromDiskVersionedCollection(VersionedCollection, FileCreatorMixin):
     files: List[VersionedFile] = field(default_factory=list)
 
     def __post_init__(self):
+        super().__init__()
         for directory in self.config.folders:
             actual_directory = self.base_dir / directory
             self.directories.append(VersionedDirectory(base_dir=self.base_dir, data_dir=actual_directory))

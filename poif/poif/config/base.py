@@ -11,6 +11,9 @@ from poif.config import poif_config_folder
 @dataclass_json
 @dataclass
 class Config:
+    def __post_init__(self):
+        super().__init__()
+
     @classmethod
     def read(cls, file: Path):
         with open(file, "r") as f:

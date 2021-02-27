@@ -13,6 +13,8 @@ class ReadmeSection:
         self._content = content
         self._subsections = []
 
+        super().__init__()
+
     @property
     def title(self):
         return self._title
