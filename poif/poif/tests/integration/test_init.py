@@ -1,25 +1,11 @@
-import uuid
-
-from poif.cli.commands.init import configured_init
 from poif.git.repo import GitRepo
-from poif.tests.integration.gitlab.tools import create_repo
-from poif.tests.integration.setup import setup
-from poif.tests.repo import create_data_repo
-from poif.utils import FileIterator, get_relative_path
+from poif.utils import get_relative_path
 from poif.versioning.dataset import GitRepoCollection
+from poif.versioning.tests.utils import setup_test_package
 
 
 def test_init():
-    minio_config, gitlab_config = setup()
-
-    base_dir, repo_config = create_data_repo(minio_config)
-
-    original_files = list(FileIterator(base_dir))  # list() is done to capture the original state
-
-    repo_name = str(uuid.uuid4())
-    git_url = create_repo(gitlab_config, repo_name)
-
-    configured_init(base_dir, repo_config, git_url)
+    base_dir, git_url, original_files = setup_test_package()
 
     repo = GitRepo(base_dir=base_dir, init=False)
     latest_commit = repo.get_latest_hash()

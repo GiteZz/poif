@@ -1,11 +1,14 @@
-check:
+lint:
     autoflake --remove-all-unused-imports --recursive --remove-unused-variables --in-place .
     cd ./poif && isort --profile black --line-length 119 .
     cd ./poif && black --line-length 119 .
     cd ./poif && mypy --ignore-missing-imports .
 
-pre-commit: check
+test:
     cd ./poif && pytest .
+
+check: lint test
+
 
 setup-test-minio:
     python ./poif/poif/tests/integration/minio/setup.py

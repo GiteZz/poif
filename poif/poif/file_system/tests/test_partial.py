@@ -16,7 +16,7 @@ class MockBinary(StringBinaryData):
         return super().get()
 
 
-class TestPartial(PartialGetWrapper):
+class MockTestPartialGetWrapper(PartialGetWrapper):
     def __init__(self, size=50, grace_period: float = 1.0):
         self.data = MockBinary(size)
         super().__init__(grace_period=grace_period, data=self.data)
@@ -24,7 +24,7 @@ class TestPartial(PartialGetWrapper):
 
 def test_partial():
     size = 50
-    data_object = TestPartial(size=size, grace_period=5)
+    data_object = MockTestPartialGetWrapper(size=size, grace_period=5)
 
     for _ in range(1000):
         random_index = random.randint(0, size - 1)
@@ -37,7 +37,7 @@ def test_partial():
 size = 50
 grace_period = 0.0001
 thread_count = 10
-data_object = TestPartial(size=size, grace_period=0.0001)
+data_object = MockTestPartialGetWrapper(size=size, grace_period=0.0001)
 
 
 def random_access(index):

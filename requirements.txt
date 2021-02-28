@@ -1,8 +1,0 @@
-tqdm
-fuse
-pydantic
-numpy
-requests
--e poif/interface
--e poif/data_cache
--e dvc/dataset_cli
