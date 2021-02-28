@@ -46,9 +46,9 @@ def execute_gitlab_api_call(
         RequestType.POST: requests.post,
         RequestType.DELETE: requests.delete,
     }
-    method = methods[method]
+    request_method = methods[method]
 
-    r = method(api_url, headers=headers_from_config(config), params=params)
+    r = request_method(api_url, headers=headers_from_config(config), params=params)
 
     return r.json()
 

@@ -3,6 +3,7 @@ from typing import List
 
 import boto3
 from botocore.config import Config
+from botocore.exceptions import ClientError
 
 from poif.tests.integration.minio.config import MinioConfig
 
@@ -22,7 +23,7 @@ def create_buckets(config: MinioConfig, bucket_names: List[str]):
     for bucket_name in bucket_names:
         try:
             s3.create_bucket(Bucket=bucket_name)
-        except Exception as e:
+        except ClientError as e:
             if not e.response["Error"]["Code"] == "BucketAlreadyOwnedByYou":
                 raise e
 

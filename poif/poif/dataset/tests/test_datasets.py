@@ -33,7 +33,7 @@ def test_different_input():
 
 @pytest.fixture
 def classification_dataset(imgs_per_set=10, amount_categories=5) -> List[TaggedData]:
-    data_points = []
+    data_points: List[TaggedData] = []
     sub_datasets = ["train", "val", "test"]
     labels = [f"cat{i}" for i in range(amount_categories)]
 
@@ -53,7 +53,7 @@ def classification_dataset(imgs_per_set=10, amount_categories=5) -> List[TaggedD
 def mask_dataset(imgs_per_set=10, sub_datasets=None) -> List[TaggedData]:
     if sub_datasets is None:
         sub_datasets = ["train", "val", "test"]
-    data_points = []
+    data_points: List[TaggedData] = []
 
     for sub_dataset in sub_datasets:
         data_points.extend([MockTaggedData(f"{sub_dataset}/mask_{i}.jpg", get_img()) for i in range(imgs_per_set)])

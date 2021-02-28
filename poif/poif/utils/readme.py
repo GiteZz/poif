@@ -11,7 +11,7 @@ class ReadmeSection:
     def __init__(self, title: str, content: Optional[str] = None):
         self._title = title
         self._content = content
-        self._subsections = []
+        self._subsections: List["ReadmeSection"] = []
 
         super().__init__()
 

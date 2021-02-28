@@ -2,6 +2,7 @@ import pytest
 
 from poif.cli.tools.interface import render_template_path, strip_jinja_extension
 from poif.config.collection import DataCollectionConfig
+from poif.config.remote.base import RemoteConfig, RemoteType
 from poif.config.remote.s3 import S3Config
 from poif.packaging.python_package import PythonPackage
 from poif.tests import get_temp_path
@@ -17,9 +18,9 @@ def test_strip_jinja_extension():
 
 @pytest.fixture
 def dummy_config() -> DataCollectionConfig:
-    # TODO remove the type, no idea why it is required
     dummy_s3_config = S3Config(url="", profile="", bucket="")
-    dummy_ds_config = DataCollectionConfig(name="dummy", data_remote=dummy_s3_config, files=[], folders=[])
+    dummy_remote_config = RemoteConfig(config=dummy_s3_config, data_folder="data", remote_type=RemoteType.S3)
+    dummy_ds_config = DataCollectionConfig(name="dummy", data_remote=dummy_remote_config, files=[], folders=[])
 
     return dummy_ds_config
 

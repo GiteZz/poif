@@ -37,6 +37,7 @@ class S3Config(Config, CreateRemoteMixin):
 
         return S3Config(url=url, profile=profile, bucket=bucket)
 
+    @classmethod
     def get_write_exclusions(cls) -> Set[str]:
         base_excludes = super(S3Config, cls).get_write_exclusions()
         base_excludes.add("remote")

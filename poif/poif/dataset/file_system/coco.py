@@ -12,6 +12,9 @@ class COCOFileSystem(FileSystemCreator):
     def create(self, dataset: MultiDataset, base_dir: Path, daemon=True):
         dataset_dir = Directory()
 
+        if dataset.meta.index_to_label is None:
+            raise Exception("Index to label mapping is not provided in the dataset meta")
+
         for subset in dataset.available_sub_datasets:
             annotation_dict = detection_collection_to_coco_dict(
                 dataset.splits[subset].objects, dataset.meta.index_to_label
