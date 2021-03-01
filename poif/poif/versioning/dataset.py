@@ -12,6 +12,7 @@ from poif.repo.base import TaggedRepo
 from poif.repo.file_remote import FileRemoteTaggedRepo, get_remote_repo_from_config
 from poif.tagged_data.base import TaggedData
 from poif.tagged_data.repo import RepoData
+from poif.typing import FileHash, RelFilePath
 from poif.utils import get_file_name_from_path
 from poif.versioning.directory import VersionedDirectory
 from poif.versioning.file import VersionedFile
@@ -102,6 +103,7 @@ class ResourceDirCollection(VersionedCollection):
     _resource_dir: Path = field(init=False)
 
     def __init__(self, resource_dir: Path):
+        super().__init__()
         self._resource_dir = resource_dir
         collection_config = DataCollectionConfig.read(self._resource_dir / "collection_config.json")
 
@@ -109,8 +111,6 @@ class ResourceDirCollection(VersionedCollection):
         data_folder = collection_config.data_remote.data_folder
 
         self._tagged_repo = FileRemoteTaggedRepo(remote=file_remote, data_folder=data_folder)
-
-        self.retrieve_mappings()
 
         self.retrieve_mappings()
 
@@ -128,13 +128,16 @@ class ResourceDirCollection(VersionedCollection):
             with open(vdir_file, "r") as f:
                 vdir_content = json.load(f)
 
-            mapping = RepoData(
-                relative_path=vdir_content["data_folder"] + ".mapping",
-                repo=self._tagged_repo,
-                tag=vdir_content["tag"],
-            )
+            mapping = self.create_repo_file(vdir_content["data_folder"] + ".mapping", vdir_content["tag"])
 
             self._mappings.append(mapping)
+
+    def create_repo_file(self, relative_path: RelFilePath, tag: FileHash) -> RepoData:
+        return RepoData(
+            relative_path=relative_path,
+            repo=self._tagged_repo,
+            tag=tag,
+        )
 
     def retrieve_files(self):
         self._files = []
@@ -143,11 +146,8 @@ class ResourceDirCollection(VersionedCollection):
         for vfile in vfiles:
             with open(vfile, "r") as f:
                 vfile_content = json.load(f)
-            file = RepoData(
-                relative_path=vfile_content["path"],
-                repo=self._tagged_repo,
-                tag=vfile_content["tag"],
-            )
+
+            file = self.create_repo_file(vfile_content["path"], vfile_content["tag"])
             self._files.append(file)
 
     def get_files_from_mappings(self):

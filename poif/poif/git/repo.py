@@ -46,6 +46,9 @@ class GitRepo:
     def get_latest_hash(self):
         return self.repo.head.object.hexsha
 
+    def has_remote(self) -> bool:
+        return len(self.repo.remotes) > 0
+
     def push(self):
         print("pushing")
         self.repo.remotes.origin.push(refspec="master:master")

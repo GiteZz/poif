@@ -132,18 +132,18 @@ class MonkeyPatchSequence:
 
 class MockFileRemote(FileRemote):
     def __init__(self):
-        self.uploaded_files = []
+        self.uploaded_files = {}
         self.downloaded_files = []
 
     def download(self, remote_source: str) -> bytes:
         self.downloaded_files.append(remote_source)
-        return bytes("Hello")
+        return self.uploaded_files[remote_source]
 
     def get_object_size(self, file_name: str):
         return 0
 
     def upload(self, source: bytes, remote_dest: str):
-        self.uploaded_files.append(remote_dest)
+        self.uploaded_files[remote_dest] = source
 
 
 class MockTaggedRepo(FileRemoteTaggedRepo):

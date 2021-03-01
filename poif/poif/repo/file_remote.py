@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from tqdm import tqdm
 
 from poif.repo.base import TaggedRepo
+from poif.typing import FileHash
 
 if typing.TYPE_CHECKING:
     from poif.config.remote.base import RemoteConfig
@@ -30,9 +31,14 @@ class FileRemoteTaggedRepo(TaggedRepo):
     def upload(self, data: "TaggedData"):
         self.remote.upload(data.get(), self.get_remote_name(data.tag))
 
-    def upload_collection(self, collection: "VersionedCollection"):
+    def upload_collection(
+        self, collection: "VersionedCollection", excluded_tags: typing.Optional[typing.List[FileHash]] = None
+    ):
+        if excluded_tags is None:
+            excluded_tags = []
         for tagged_data in tqdm(collection.get_tagged_data(), desc="Uploading files"):
-            self.upload(tagged_data)
+            if tagged_data.tag not in excluded_tags:
+                self.upload(tagged_data)
 
 
 def get_remote_repo_from_config(remote_config: "RemoteConfig"):
