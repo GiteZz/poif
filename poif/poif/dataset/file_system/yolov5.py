@@ -32,7 +32,7 @@ class Yolov5MetaFile:
 
 
 class Yolov5FileSystem(FileSystemCreator):
-    def create(self, dataset: MultiDataset, base_dir: Path, daemon=True):
+    def create(self, dataset: MultiDataset, base_dir: Path) -> Directory:
         dataset_dir = Directory()
 
         data_folder = {"train": base_dir / "images" / "train", "val": base_dir / "images" / "val"}
@@ -61,4 +61,4 @@ class Yolov5FileSystem(FileSystemCreator):
                 label_name = str(label_folder[subset] / f"{object_index}.txt")
                 dataset_dir.add_data(label_name, StringBinaryData(label))
 
-        dataset_dir.setup_as_filesystem(base_dir, daemon=daemon)
+        return dataset_dir

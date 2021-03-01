@@ -9,7 +9,7 @@ from poif.dataset.operation.transform.base import Transformation
 
 class DetectionToClassification(Transformation):
     def transform_single_object(self, dataset_object: DataSetObject) -> List[DataSetObject]:
-        new_objects = []
+        new_objects: List[DataSetObject] = []
         for annotation in dataset_object.annotations:
             if isinstance(annotation, BoundingBox):
                 transformation = Crop(

@@ -1,12 +1,11 @@
-from typing import TYPE_CHECKING, Union
+import errno
+from typing import Union
 
 from fuse import FuseOSError, Operations
 
-if TYPE_CHECKING:
-    from poif.file_system.directory import Directory
-    from poif.file_system.file import File
-
-import errno
+from poif.file_system.directory import Directory
+from poif.file_system.file import File
+from poif.tagged_data.base import StringBinaryData
 
 
 class DataSetFileSystem(Operations):
@@ -16,6 +15,7 @@ class DataSetFileSystem(Operations):
 
     def __init__(self, root_dir: "Directory"):
         self.root_dir = root_dir
+        self.root_dir.add_data("__test_file", StringBinaryData(""))
 
     def path_to_object(self, path: str) -> Union["Directory", "File"]:
         path_parts = path.split("/")

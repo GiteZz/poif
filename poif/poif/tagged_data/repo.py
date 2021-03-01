@@ -4,8 +4,6 @@ from poif.typing import FileHash
 
 
 class RepoData(TaggedData):
-    repo: TaggedRepo
-
     def __init__(self, relative_path: str, repo: TaggedRepo, tag: FileHash = None):
         super().__init__(relative_path, tag=tag)
         self.repo = repo

@@ -16,3 +16,5 @@ class SplitByBin(Splitter):
 
         for ds_object in objects:
             items_per_bin[self.bin_creator(ds_object)].append(ds_object)
+
+        return items_per_bin

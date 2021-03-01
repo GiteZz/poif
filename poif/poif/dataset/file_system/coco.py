@@ -9,7 +9,7 @@ from poif.utils.coco import detection_collection_to_coco_dict
 
 
 class COCOFileSystem(FileSystemCreator):
-    def create(self, dataset: MultiDataset, base_dir: Path, daemon=True):
+    def create(self, dataset: MultiDataset, base_dir: Path) -> Directory:
         dataset_dir = Directory()
 
         if dataset.meta.index_to_label is None:
@@ -26,4 +26,4 @@ class COCOFileSystem(FileSystemCreator):
             for ds_object in dataset.splits[subset].objects:
                 dataset_dir.add_data(ds_object.relative_path, ds_object)
 
-        dataset_dir.setup_as_filesystem(base_dir, daemon=daemon)
+        return dataset_dir

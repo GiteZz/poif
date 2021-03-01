@@ -7,9 +7,6 @@ from poif.utils import get_file_name_from_path, get_relative_path
 
 
 class VersionedFile(DiskData):
-    base_dir: Path
-    file_path: Path
-
     def __init__(self, base_dir: Path, file_path: Path, tag: FileHash = None):
         relative_path = get_relative_path(base_dir, file_path)
         super().__init__(file_path, relative_path, tag=tag)

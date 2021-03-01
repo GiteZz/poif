@@ -1,13 +1,23 @@
+import time
 from abc import ABC, abstractmethod
+from multiprocessing import Process
 from pathlib import Path
 from typing import List
 
+from fuse import FUSE
+
 from poif.dataset.base import MultiDataset
+from poif.file_system.base import DataSetFileSystem
+from poif.file_system.directory import Directory
 
 
 class FileSystemCreator(ABC):
+    def __call__(self, dataset: MultiDataset, base_dir: Path, daemon=True):
+        root_dir = self.create(dataset, base_dir)
+        setup_as_filesystem(root_dir, base_dir, daemon)
+
     @abstractmethod
-    def create(self, dataset: MultiDataset, base_dir: Path, daemon=True):
+    def create(self, dataset: MultiDataset, base_dir: Path) -> Directory:
         pass
 
     def get_classes_sorted_by_id(self, dataset: MultiDataset) -> List[str]:
@@ -20,3 +30,28 @@ class FileSystemCreator(ABC):
             sorted_ids[category_id] = category_name
 
         return sorted_ids
+
+
+def setup_as_filesystem(root_dir: Directory, base_dir: Path, daemon=False):
+    file_system = DataSetFileSystem(root_dir)
+
+    p = Process(target=setup_filesystem, args=(file_system, base_dir), daemon=daemon)
+    p.start()
+
+    start_waiting = time.time()
+    while not (base_dir / "__test_file").exists():
+        if time.time() - start_waiting > 30:
+            p.terminate()
+            raise Exception("FUSE filesystem did not start correctly")
+        time.sleep(0.02)
+
+    return p
+
+
+def setup_filesystem(file_system: DataSetFileSystem, system_path: Path):
+    fuse_handler = FUSE(  # noqa
+        file_system,
+        str(system_path),
+        foreground=False,
+        allow_other=False,
+    )

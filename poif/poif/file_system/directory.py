@@ -1,14 +1,8 @@
-import time
-from multiprocessing import Process
-from pathlib import Path
 from stat import S_IFDIR
 from typing import Dict, List, Union
 
-from fuse import FUSE
-
-from poif.file_system.base import DataSetFileSystem
 from poif.file_system.file import File
-from poif.tagged_data.base import BinaryData, StringBinaryData
+from poif.tagged_data.base import BinaryData
 from poif.typing import RelFilePath
 
 
@@ -18,8 +12,6 @@ class Directory:
             self.contents = {}
         else:
             self.contents = contents
-
-        self.add_data("__test_file", StringBinaryData(""))
 
     def mkdir(self, path: str):
         """
@@ -62,27 +54,3 @@ class Directory:
 
     def get_attr(self):
         return dict(st_mode=(S_IFDIR | 0o555), st_nlink=2)
-
-    def setup_as_filesystem(self, system_path: Path, daemon=False):
-        file_system = DataSetFileSystem(root_dir=self)
-
-        p = Process(target=setup_filesystem, args=(file_system, system_path), daemon=daemon)
-        p.start()
-
-        start_waiting = time.time()
-        while not (system_path / "__test_file").exists():
-            if time.time() - start_waiting > 120:
-                p.terminate()
-                raise Exception("FUSE filesystem did not start correctly")
-            time.sleep(0.02)
-
-        return p
-
-
-def setup_filesystem(filesystem: DataSetFileSystem, system_path: Path):
-    fuse_handler = FUSE(  # noqa
-        filesystem,
-        str(system_path),
-        foreground=False,
-        allow_other=False,
-    )

@@ -29,10 +29,7 @@ class StringBinaryData(BinaryData):
 
 
 class TaggedData(BinaryData, ParseMixin, ABC):
-    _tag: Optional[FileHash] = None
-    _relative_path: Optional[str] = None
-
-    def __init__(self, relative_path: str, tag: FileHash = None):
+    def __init__(self, relative_path: str, tag: Optional[FileHash] = None):
         super().__init__()
         self._tag = tag
         self._relative_path = relative_path
