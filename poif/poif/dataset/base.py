@@ -32,7 +32,7 @@ class BaseDataset(ABC):
         return self.objects[idx].output()
 
 
-class MultiDataset(BaseDataset):
+class Dataset(BaseDataset):
     def __init__(
         self, operations: List[Operation] = None, output_function: Optional[DataSetObjectOutputFunction] = None
     ):
@@ -50,7 +50,7 @@ class MultiDataset(BaseDataset):
 
         self.meta = MetaCollection()
 
-    def __getattr__(self, item) -> Union[BaseDataset, "MultiDataset"]:
+    def __getattr__(self, item) -> Union[BaseDataset, "Dataset"]:
         if item in self.available_sub_datasets:
             return self.splits[item]
         else:
@@ -117,8 +117,8 @@ class MultiDataset(BaseDataset):
 
         self.initial_split_performed = True
 
-    def create_child_dataset(self) -> "MultiDataset":
-        new_ds = MultiDataset()
+    def create_child_dataset(self) -> "Dataset":
+        new_ds = Dataset()
         new_ds.output_function = self.output_function
         new_ds.meta = self.meta
 
@@ -144,9 +144,9 @@ class MultiDataset(BaseDataset):
         value = self.objects[idx].output()
         return value
 
-    def __add__(self, other: "MultiDataset") -> "MultiDataset":
+    def __add__(self, other: "Dataset") -> "Dataset":
         total_objects = self.objects + other.objects
-        new_ds = MultiDataset()
+        new_ds = Dataset()
         new_ds.objects = total_objects
 
         new_meta = self.meta + other.meta

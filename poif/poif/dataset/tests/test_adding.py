@@ -1,4 +1,4 @@
-from poif.dataset.base import MultiDataset
+from poif.dataset.base import Dataset
 from poif.dataset.object.output import classification_output
 from poif.dataset.operation.split.template import SplitByTemplate
 from poif.tagged_data.tests.mock import MockTaggedData
@@ -17,7 +17,7 @@ def test_adding():
     split_into_subset = SplitByTemplate(template=template)
 
     operations = [split_into_subset]
-    ds = MultiDataset(operations=operations, output_function=classification_output)
+    ds = Dataset(operations=operations, output_function=classification_output)
     ds.form(ds_tagged_data)
 
     assert len(ds) == len(ds.train + ds.val)

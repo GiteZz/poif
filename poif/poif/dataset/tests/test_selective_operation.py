@@ -1,4 +1,4 @@
-from poif.dataset.base import MultiDataset
+from poif.dataset.base import Dataset
 from poif.dataset.object.output import classification_output
 from poif.dataset.operation import SelectiveSubsetOperation
 from poif.dataset.operation.split.template import SplitByTemplate
@@ -29,7 +29,7 @@ def test_selective_operation():
     limit_both = SelectiveSubsetOperation({"train": limit_train, "val": limit_val})
 
     operations = [split_into_subset, add_label, limit_both]
-    ds = MultiDataset(operations=operations, output_function=classification_output)
+    ds = Dataset(operations=operations, output_function=classification_output)
     ds.form(ds_tagged_data)
 
     assert len(ds.train) == 50 * 10

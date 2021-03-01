@@ -3,7 +3,7 @@ from typing import List
 import numpy as np
 import pytest
 
-from poif.dataset.base import MultiDataset
+from poif.dataset.base import Dataset
 from poif.dataset.object.base import DataSetObject
 from poif.dataset.object.output import single_mask_output
 from poif.dataset.operation.split.template import SplitByTemplate
@@ -21,7 +21,7 @@ def triple_output(ds_object: DataSetObject) -> int:
 
 def test_different_input():
     ds_tagged_data = [MockTaggedData(f"{i}.png", i) for i in range(10)]
-    ds = MultiDataset(output_function=triple_output)
+    ds = Dataset(output_function=triple_output)
 
     ds.form(ds_tagged_data)
 
@@ -66,7 +66,7 @@ def test_combining_mask_img(mask_dataset):
     mask_template = MaskTemplate(image="{{subset}}/image_{{img_id}}.jpg", mask="{{subset}}/mask_{{img_id}}.jpg")
     operation_list = [MaskByTemplate(mask_template)]
 
-    ds = MultiDataset(operations=operation_list, output_function=single_mask_output)
+    ds = Dataset(operations=operation_list, output_function=single_mask_output)
     ds.form(mask_dataset)
 
     assert len(ds.objects) == len(mask_dataset) // 2
@@ -91,7 +91,7 @@ def test_combining_mask_img(mask_dataset):
 def test_dropping(mask_dataset):
     operation_list = [DropByTemplate("*/mask*.jpg")]
 
-    ds = MultiDataset(operations=operation_list)
+    ds = Dataset(operations=operation_list)
     ds.form(mask_dataset)
 
     assert len(ds) * 2 == len(mask_dataset)
@@ -103,7 +103,7 @@ def test_dropping(mask_dataset):
 def test_splitting(mask_dataset):
     operation_list = [SplitByTemplate("{{ subset }}/*")]
 
-    ds = MultiDataset(operations=operation_list)
+    ds = Dataset(operations=operation_list)
     ds.form(mask_dataset)
 
     assert len(ds.train) + len(ds.test) + len(ds.val) == len(ds)
@@ -117,7 +117,7 @@ def test_splitting_and_combining(mask_dataset):
         MaskByTemplate(mask_template),
     ]
 
-    ds1 = MultiDataset(operations=operation_list)
+    ds1 = Dataset(operations=operation_list)
     ds1.form(mask_dataset)
 
     assert (len(ds1.train) + len(ds1.test) + len(ds1.val)) * 2 == len(ds1)

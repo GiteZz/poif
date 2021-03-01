@@ -6,21 +6,21 @@ from typing import List
 
 from fuse import FUSE
 
-from poif.dataset.base import MultiDataset
+from poif.dataset.base import Dataset
 from poif.file_system.base import DataSetFileSystem
 from poif.file_system.directory import Directory
 
 
 class FileSystemCreator(ABC):
-    def __call__(self, dataset: MultiDataset, base_dir: Path, daemon=True):
+    def __call__(self, dataset: Dataset, base_dir: Path, daemon=True):
         root_dir = self.create(dataset, base_dir)
         setup_as_filesystem(root_dir, base_dir, daemon)
 
     @abstractmethod
-    def create(self, dataset: MultiDataset, base_dir: Path) -> Directory:
+    def create(self, dataset: Dataset, base_dir: Path) -> Directory:
         pass
 
-    def get_classes_sorted_by_id(self, dataset: MultiDataset) -> List[str]:
+    def get_classes_sorted_by_id(self, dataset: Dataset) -> List[str]:
         ids = list(dataset.meta.index_to_label.keys())
         assert max(ids) == len(ids) - 1
 

@@ -4,7 +4,7 @@ from typing import List
 
 import yaml
 
-from poif.dataset.base import MultiDataset
+from poif.dataset.base import Dataset
 from poif.dataset.detection.base import detection_input_to_yolo_annotation
 from poif.dataset.file_system.base import FileSystemCreator
 from poif.file_system.directory import Directory
@@ -32,7 +32,7 @@ class Yolov5MetaFile:
 
 
 class Yolov5FileSystem(FileSystemCreator):
-    def create(self, dataset: MultiDataset, base_dir: Path) -> Directory:
+    def create(self, dataset: Dataset, base_dir: Path) -> Directory:
         dataset_dir = Directory()
 
         data_folder = {"train": base_dir / "images" / "train", "val": base_dir / "images" / "val"}

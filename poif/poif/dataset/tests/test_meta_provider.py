@@ -1,4 +1,4 @@
-from poif.dataset.base import MultiDataset
+from poif.dataset.base import Dataset
 from poif.dataset.object.output import classification_output
 from poif.dataset.operation.meta_provider.label_to_index import LabelToIndex
 from poif.dataset.operation.split.template import SplitByTemplate
@@ -24,7 +24,7 @@ def test_meta_provider():
     label_to_index = LabelToIndex()
 
     operations = [split_into_subset, add_label, label_to_index]
-    ds = MultiDataset(operations=operations, output_function=classification_output)
+    ds = Dataset(operations=operations, output_function=classification_output)
     ds.form(ds_tagged_data)
 
     ds_mapping = ds.meta.index_to_label

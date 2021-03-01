@@ -1,6 +1,6 @@
 import numpy as np
 
-from poif.dataset.base import MultiDataset
+from poif.dataset.base import Dataset
 from poif.dataset.object.annotations import Mask
 from poif.dataset.object.base import DataSetObject
 from poif.dataset.object.output import single_mask_output
@@ -18,7 +18,7 @@ def test_mask():
     image_ds_object = DataSetObject(image_data, output_function=single_mask_output)
     image_ds_object.annotations.append(Mask(mask_data))
 
-    ds = MultiDataset()
+    ds = Dataset()
     ds.form_from_ds_objects([image_ds_object])
 
     img_output, mask_output = ds[0]

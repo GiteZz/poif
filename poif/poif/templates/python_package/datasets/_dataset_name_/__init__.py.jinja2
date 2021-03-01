@@ -1,6 +1,6 @@
 from pathlib import Path
 from poif.versioning.dataset import ResourceDirCollection
-from poif.dataset.base import MultiDataset
+from poif.dataset.base import Dataset
 
 
 def get_resource_dir():
@@ -13,5 +13,5 @@ versioned_collection = ResourceDirCollection(get_resource_dir())
 {{data.dataset_name}}_files = versioned_collection.get_files()
 
 
-{{data.dataset_name}} = MultiDataset()
+{{data.dataset_name}} = Dataset()
 {{data.dataset_name}}.form({{data.dataset_name}}_files)

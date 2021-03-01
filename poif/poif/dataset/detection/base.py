@@ -2,7 +2,7 @@ from abc import ABC
 from enum import Enum
 from typing import List
 
-from poif.dataset.base import MultiDataset
+from poif.dataset.base import Dataset
 from poif.dataset.object.annotations import BoundingBox
 from poif.dataset.object.base import DataSetObject
 
@@ -34,7 +34,7 @@ def detection_input_to_yolo_annotation(ds_object: DataSetObject):
     return output_str
 
 
-class DetectionDataset(MultiDataset, ABC):
+class DetectionDataset(Dataset, ABC):
     def __init__(self):
         super().__init__()
 
