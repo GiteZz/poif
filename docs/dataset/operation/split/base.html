@@ -38,6 +38,12 @@ SplitterDict = Dict[SubSetName, List[DataSetObject]]
 
 
 class Splitter(Operation):
+    &#34;&#34;&#34;
+    A Splitter operation is used to split up the dataset into subsets. This is done similarly as in the Transformation
+    operation whereby there exist a single and a list function. Here the split_single_input assigns one
+    DataSetObject to a subset, while the split_input_list split the entire list into subsets.
+    &#34;&#34;&#34;
+
     def split_single_input(self, ds_input: DataSetObject) -&gt; Optional[SubSetName]:
         raise Exception(&#34;Single object transform was not defined.&#34;)
 
@@ -55,6 +61,13 @@ class Splitter(Operation):
 
 
 class RandomSplitter(Splitter):
+    &#34;&#34;&#34;
+    Randomly splits into subsets.
+
+    Percentage dict example: {&#39;train&#39;: 0.7, &#39;val&#39;: 0.15, &#39;test&#34;: 0.15} means that 70% of the data will be in
+    ds.train etc.
+    &#34;&#34;&#34;
+
     def __init__(self, percentage_dict: Dict[SubSetName, float]):
         super().__init__()
         self.percentage_dict = percentage_dict
@@ -64,6 +77,19 @@ class RandomSplitter(Splitter):
 
 
 class GroupSplitter(RandomSplitter):
+    &#34;&#34;&#34;
+    The group Splitter is a splitter that ensures that items of the same group will be in the same subset and not
+    split across multiple subsets. For example: person1 will only be in train dataset and not in val or test.
+
+    Percentage dict example: {&#39;train&#39;: 0.7, &#39;val&#39;: 0.15, &#39;test&#34;: 0.15} means that 70% of the data will be in
+    ds.train etc.
+
+    The group_extractor is function that extracts a subset from a DataSetObject. An example of this is
+    lambda ds_object: ds_object.relative_path.split(&#34;_&#34;)[1] . This examples split the path and takes the
+    first item. This is useful if your relative path is vid01_frame01.png and you dont&#39;t want to have
+    frames from the same video across subsets.
+    &#34;&#34;&#34;
+
     def __init__(self, percentage_dict: Dict[SubSetName, float], group_extractor: Callable[[DataSetObject], str]):
         super().__init__(percentage_dict)
         self.group_extractor = group_extractor
@@ -127,12 +153,32 @@ class GroupSplitter(RandomSplitter):
 <span>(</span><span>percentage_dict: Dict[str, float], group_extractor: Callable[[<a title="poif.dataset.object.base.DataSetObject" href="../../object/base.html#poif.dataset.object.base.DataSetObject">DataSetObject</a>], str])</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The group Splitter is a splitter that ensures that items of the same group will be in the same subset and not
+split across multiple subsets. For example: person1 will only be in train dataset and not in val or test.</p>
+<p>Percentage dict example: {'train': 0.7, 'val': 0.15, 'test": 0.15} means that 70% of the data will be in
+ds.train etc.</p>
+<p>The group_extractor is function that extracts a subset from a DataSetObject. An example of this is
+lambda ds_object: ds_object.relative_path.split("_")[1] . This examples split the path and takes the
+first item. This is useful if your relative path is vid01_frame01.png and you dont't want to have
+frames from the same video across subsets.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class GroupSplitter(RandomSplitter):
+    &#34;&#34;&#34;
+    The group Splitter is a splitter that ensures that items of the same group will be in the same subset and not
+    split across multiple subsets. For example: person1 will only be in train dataset and not in val or test.
+
+    Percentage dict example: {&#39;train&#39;: 0.7, &#39;val&#39;: 0.15, &#39;test&#34;: 0.15} means that 70% of the data will be in
+    ds.train etc.
+
+    The group_extractor is function that extracts a subset from a DataSetObject. An example of this is
+    lambda ds_object: ds_object.relative_path.split(&#34;_&#34;)[1] . This examples split the path and takes the
+    first item. This is useful if your relative path is vid01_frame01.png and you dont&#39;t want to have
+    frames from the same video across subsets.
+    &#34;&#34;&#34;
+
     def __init__(self, percentage_dict: Dict[SubSetName, float], group_extractor: Callable[[DataSetObject], str]):
         super().__init__(percentage_dict)
         self.group_extractor = group_extractor
@@ -250,12 +296,21 @@ class GroupSplitter(RandomSplitter):
 <span>(</span><span>percentage_dict: Dict[str, float])</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Randomly splits into subsets.</p>
+<p>Percentage dict example: {'train': 0.7, 'val': 0.15, 'test": 0.15} means that 70% of the data will be in
+ds.train etc.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class RandomSplitter(Splitter):
+    &#34;&#34;&#34;
+    Randomly splits into subsets.
+
+    Percentage dict example: {&#39;train&#39;: 0.7, &#39;val&#39;: 0.15, &#39;test&#34;: 0.15} means that 70% of the data will be in
+    ds.train etc.
+    &#34;&#34;&#34;
+
     def __init__(self, percentage_dict: Dict[SubSetName, float]):
         super().__init__()
         self.percentage_dict = percentage_dict
@@ -293,12 +348,20 @@ class GroupSplitter(RandomSplitter):
 <span>class <span class="ident">Splitter</span></span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>A Splitter operation is used to split up the dataset into subsets. This is done similarly as in the Transformation
+operation whereby there exist a single and a list function. Here the split_single_input assigns one
+DataSetObject to a subset, while the split_input_list split the entire list into subsets.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Splitter(Operation):
+    &#34;&#34;&#34;
+    A Splitter operation is used to split up the dataset into subsets. This is done similarly as in the Transformation
+    operation whereby there exist a single and a list function. Here the split_single_input assigns one
+    DataSetObject to a subset, while the split_input_list split the entire list into subsets.
+    &#34;&#34;&#34;
+
     def split_single_input(self, ds_input: DataSetObject) -&gt; Optional[SubSetName]:
         raise Exception(&#34;Single object transform was not defined.&#34;)
 

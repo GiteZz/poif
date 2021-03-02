@@ -8,7 +8,14 @@ from poif.dataset.operation.base import Operation
 
 class Transformation(Operation):
     """
-    This Operation is meant to
+    This Operation is meant to change the DataSetObjects in the Dataset. Therefore two functions are created.
+    The transform_single_object is used for transformations that only need access to one DataSetObject, an example of
+    this is adding labels from the objects relative path. For this no information outside that single input is needed.
+    The single_object function will by default be called from the transform_object_list function. This means that
+    either you have to override the transform_single_object of override the transform_object_list. The
+    transform_object_list is used for transformations where the entire dataset is needed. An example of this
+    is reading a COCO annotation file, hereby the annotation file first need to be found and then used. Another
+    example is evenly limiting the amount of samples per bin.
     """
 
     def transform_single_object(self, dataset_object: DataSetObject) -> List[DataSetObject]:

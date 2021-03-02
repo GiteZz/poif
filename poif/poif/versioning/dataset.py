@@ -19,6 +19,11 @@ from poif.versioning.file import VersionedFile
 
 
 class VersionedCollection(ABC):
+    """
+    This class is used to contain a collection of TaggedData. The get_files() is the most important function
+    since this retrieves the TaggedData that can be use to construct a Dataset.
+    """
+
     def __init__(self):
         super().__init__()
 
@@ -27,11 +32,11 @@ class VersionedCollection(ABC):
         pass
 
     @abstractmethod
-    def get_mappings(self) -> List[TaggedData]:
+    def _get_mappings(self) -> List[TaggedData]:
         pass
 
     def get_tagged_data(self) -> List[TaggedData]:
-        return self.get_mappings() + self.get_files()
+        return self._get_mappings() + self.get_files()
 
 
 @dataclass
@@ -61,7 +66,7 @@ class FromDiskVersionedCollection(VersionedCollection, FileCreatorMixin):
             file_list.extend(directory.files)
         return file_list
 
-    def get_mappings(self) -> List[TaggedData]:
+    def _get_mappings(self) -> List[TaggedData]:
         return self.directories
 
     def write_versioning_files(self, save_directory: Path):
@@ -151,7 +156,7 @@ class ResourceDirCollection(VersionedCollection):
             self._files.append(file)
 
     def get_files_from_mappings(self):
-        mappings = self.get_mappings()
+        mappings = self._get_mappings()
         files = []
 
         for mapping in mappings:
@@ -168,7 +173,7 @@ class ResourceDirCollection(VersionedCollection):
 
         return self._files + self.get_files_from_mappings()
 
-    def get_mappings(self) -> List[TaggedData]:
+    def _get_mappings(self) -> List[TaggedData]:
         if self._mappings is None:
             self.retrieve_mappings()
         return self._mappings
@@ -176,6 +181,11 @@ class ResourceDirCollection(VersionedCollection):
 
 @dataclass
 class GitRepoCollection(ResourceDirCollection):
+    """
+    VersionedCollection that is initialized from a git repository and commit. With these two variables
+    all references from the original collection can be retrieved.
+    """
+
     _mappings: List[TaggedData] = None
     _files: List[TaggedData] = None
     _tagged_repo: TaggedRepo = field(init=False)

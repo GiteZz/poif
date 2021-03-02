@@ -15,6 +15,10 @@ if typing.TYPE_CHECKING:
 
 @dataclass
 class FileRemoteTaggedRepo(TaggedRepo):
+    """
+    Retrieves TaggedData from a FileRemote, a FileRemote is defined as a remote that support storing/downloading files.
+    """
+
     remote: "FileRemote"
     data_folder: str
 

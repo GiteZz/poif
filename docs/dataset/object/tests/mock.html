@@ -57,8 +57,14 @@ class MockDataSetObject(DataSetObject):
 <span>(</span><span>rel_path: str, data: Any)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Helper class that provides a standard way to create an ABC using
-inheritance.</p></div>
+<div class="desc"><p>A DataSetObject is essentially a TaggedData object with additional meta information. On piece of additional meta
+is the addition of a label and tags. These attributes don't have to have a value and are initiated as None. The
+other additional meta_information is the annotation list. An annotation could be anything but a the moment
+common objects such as a BoundingBox, Point etc. are provided. These two additional types of information allow
+for transforming a piece of data into a useful dataset object.</p>
+<p>The class also defines the output function, this function takes as input the object itself and then returns
+how it should be presented. An example of this is the classification output which return the parsed data and
+the associated label combined in a tuple.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -91,8 +97,14 @@ inheritance.</p></div>
 <span>(</span><span>tagged_data: <a title="poif.tagged_data.base.TaggedData" href="../../../tagged_data/base.html#poif.tagged_data.base.TaggedData">TaggedData</a>, output_function: Union[Callable[[_ForwardRef('DataSetObject')], Any], NoneType] = None)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Helper class that provides a standard way to create an ABC using
-inheritance.</p></div>
+<div class="desc"><p>A DataSetObject is essentially a TaggedData object with additional meta information. On piece of additional meta
+is the addition of a label and tags. These attributes don't have to have a value and are initiated as None. The
+other additional meta_information is the annotation list. An annotation could be anything but a the moment
+common objects such as a BoundingBox, Point etc. are provided. These two additional types of information allow
+for transforming a piece of data into a useful dataset object.</p>
+<p>The class also defines the output function, this function takes as input the object itself and then returns
+how it should be presented. An example of this is the classification output which return the parsed data and
+the associated label combined in a tuple.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>

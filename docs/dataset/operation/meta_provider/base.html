@@ -37,6 +37,12 @@ MetaName = str
 
 
 class MetaProvider(Operation, ABC):
+    &#34;&#34;&#34;
+    The MetaProvider operation is used to transform the original MetaCollection as well as transforming
+    objects that could be influenced by changing the meta. An example of this is changing the actual label to
+    and integer. This adds the mapping to the meta as well as changes the objects.
+    &#34;&#34;&#34;
+
     @abstractmethod
     def provide_meta(self, objects: List[DataSetObject], original_meta: MetaCollection) -&gt; MetaCollection:
         pass</code></pre>
@@ -55,13 +61,20 @@ class MetaProvider(Operation, ABC):
 <span>class <span class="ident">MetaProvider</span></span>
 </code></dt>
 <dd>
-<div class="desc"><p>Helper class that provides a standard way to create an ABC using
-inheritance.</p></div>
+<div class="desc"><p>The MetaProvider operation is used to transform the original MetaCollection as well as transforming
+objects that could be influenced by changing the meta. An example of this is changing the actual label to
+and integer. This adds the mapping to the meta as well as changes the objects.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class MetaProvider(Operation, ABC):
+    &#34;&#34;&#34;
+    The MetaProvider operation is used to transform the original MetaCollection as well as transforming
+    objects that could be influenced by changing the meta. An example of this is changing the actual label to
+    and integer. This adds the mapping to the meta as well as changes the objects.
+    &#34;&#34;&#34;
+
     @abstractmethod
     def provide_meta(self, objects: List[DataSetObject], original_meta: MetaCollection) -&gt; MetaCollection:
         pass</code></pre>

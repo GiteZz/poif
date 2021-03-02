@@ -8,6 +8,11 @@ from poif.typing import SubSetName
 
 
 class TransformAndSplit(Operation):
+    """
+    TransformAndSplit does the same as a splitter and transformation combined. This is useful if your project
+    has one large metafile that adds annotations to data and contains the subset.
+    """
+
     def single(self, ds_input: DataSetObject) -> Tuple[SubSetName, List[DataSetObject]]:
         raise Exception("Single object transform was not defined.")
 

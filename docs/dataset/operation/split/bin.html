@@ -63,7 +63,9 @@ class SplitByBin(Splitter):
 <span>(</span><span>bins: Dict[str, List[Any]], bin_creator: Callable[[<a title="poif.dataset.object.base.DataSetObject" href="../../object/base.html#poif.dataset.object.base.DataSetObject">DataSetObject</a>], Any])</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>A Splitter operation is used to split up the dataset into subsets. This is done similarly as in the Transformation
+operation whereby there exist a single and a list function. Here the split_single_input assigns one
+DataSetObject to a subset, while the split_input_list split the entire list into subsets.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>

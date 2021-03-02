@@ -11,6 +11,18 @@ from poif.tagged_data.base import TaggedData, TaggedPassthrough
 
 
 class DataSetObject(TaggedPassthrough, MetaInfoMixin):
+    """
+    A DataSetObject is essentially a TaggedData object with additional meta information. On piece of additional meta
+    is the addition of a label and tags. These attributes don't have to have a value and are initiated as None. The
+    other additional meta_information is the annotation list. An annotation could be anything but a the moment
+    common objects such as a BoundingBox, Point etc. are provided. These two additional types of information allow
+    for transforming a piece of data into a useful dataset object.
+
+    The class also defines the output function, this function takes as input the object itself and then returns
+    how it should be presented. An example of this is the classification output which return the parsed data and
+    the associated label combined in a tuple.
+    """
+
     def __init__(
         self,
         tagged_data: TaggedData,
@@ -20,8 +32,6 @@ class DataSetObject(TaggedPassthrough, MetaInfoMixin):
 
         self.annotations: List[DataSetAnnotation] = []
         self.named_annotations: Dict[str, DataSetAnnotation] = {}
-
-        self.future_transforms: List[DataTransform] = []
 
         self.output_function = output_function
 
@@ -91,6 +101,14 @@ class DataSetObject(TaggedPassthrough, MetaInfoMixin):
 
 
 class TransformedDataSetObject(DataSetObject):
+    """
+    This class is a DataSetObject with an added transformation. This means that this class has a pointer to
+    its parent_object. When the get_parsed() function is called the parent is parsed and then the operation is
+    executed on that parsed parent. An example of this is transforming a detection dataset to a classification
+    dataset. In this example the parent would be the original detection image and the transformation would be
+    the crop.
+    """
+
     def __init__(
         self, parent_object: DataSetObject, transformation: DataTransform, output_function: DataSetObjectOutputFunction
     ):

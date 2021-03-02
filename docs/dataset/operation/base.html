@@ -32,6 +32,10 @@ from poif.dataset.meta import MetaCollection
 
 
 class Operation:
+    &#34;&#34;&#34;
+    This is the base Dataset Operation class, this class is only used to provide the interface for other operations.
+    &#34;&#34;&#34;
+
     def __init__(self):
         super().__init__()
         self._dataset_meta: Optional[MetaCollection] = None
@@ -56,12 +60,16 @@ class Operation:
 <span>class <span class="ident">Operation</span></span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>This is the base Dataset Operation class, this class is only used to provide the interface for other operations.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Operation:
+    &#34;&#34;&#34;
+    This is the base Dataset Operation class, this class is only used to provide the interface for other operations.
+    &#34;&#34;&#34;
+
     def __init__(self):
         super().__init__()
         self._dataset_meta: Optional[MetaCollection] = None

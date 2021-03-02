@@ -17,6 +17,10 @@ class BinaryData(ABC):
 
 
 class StringBinaryData(BinaryData):
+    """
+    Tagged data in the form of a string.
+    """
+
     def __init__(self, data_str: str):
         self.data = data_str
 
@@ -29,6 +33,17 @@ class StringBinaryData(BinaryData):
 
 
 class TaggedData(BinaryData, ParseMixin, ABC):
+    """
+    This class provides the interface how a piece of data is represented in poif. The data is retrieved via the
+    get() function, this function return the raw bytes from the original location (disk or remote). get_parsed() on
+    the other hand takes those bytes and transforms them into python type. This is done by Parsers, a Parser looks
+    at the original extension and the uses that data to create the appropriate type. .json files will be transformed
+    into dict, image files will be transformed into np.ndarray and .csv files into pandas DataFrame.
+
+    The tag is an MD5 hash calculated over the original bytes. This is useful to uniquely represent a piece of data,
+    this allows for automated checking if the data has not changed since the last time.
+    """
+
     def __init__(self, relative_path: str, tag: Optional[FileHash] = None):
         super().__init__()
         self._tag = tag

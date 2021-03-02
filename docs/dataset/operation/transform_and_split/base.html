@@ -36,6 +36,11 @@ from poif.typing import SubSetName
 
 
 class TransformAndSplit(Operation):
+    &#34;&#34;&#34;
+    TransformAndSplit does the same as a splitter and transformation combined. This is useful if your project
+    has one large metafile that adds annotations to data and contains the subset.
+    &#34;&#34;&#34;
+
     def single(self, ds_input: DataSetObject) -&gt; Tuple[SubSetName, List[DataSetObject]]:
         raise Exception(&#34;Single object transform was not defined.&#34;)
 
@@ -64,12 +69,18 @@ class TransformAndSplit(Operation):
 <span>class <span class="ident">TransformAndSplit</span></span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>TransformAndSplit does the same as a splitter and transformation combined. This is useful if your project
+has one large metafile that adds annotations to data and contains the subset.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class TransformAndSplit(Operation):
+    &#34;&#34;&#34;
+    TransformAndSplit does the same as a splitter and transformation combined. This is useful if your project
+    has one large metafile that adds annotations to data and contains the subset.
+    &#34;&#34;&#34;
+
     def single(self, ds_input: DataSetObject) -&gt; Tuple[SubSetName, List[DataSetObject]]:
         raise Exception(&#34;Single object transform was not defined.&#34;)
 

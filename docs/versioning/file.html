@@ -73,8 +73,13 @@ class VersionedFile(DiskData):
 <span>(</span><span>base_dir: pathlib.Path, file_path: pathlib.Path, tag: str = None)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Helper class that provides a standard way to create an ABC using
-inheritance.</p></div>
+<div class="desc"><p>This class provides the interface how a piece of data is represented in poif. The data is retrieved via the
+get() function, this function return the raw bytes from the original location (disk or remote). get_parsed() on
+the other hand takes those bytes and transforms them into python type. This is done by Parsers, a Parser looks
+at the original extension and the uses that data to create the appropriate type. .json files will be transformed
+into dict, image files will be transformed into np.ndarray and .csv files into pandas DataFrame.</p>
+<p>The tag is an MD5 hash calculated over the original bytes. This is useful to uniquely represent a piece of data,
+this allows for automated checking if the data has not changed since the last time.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>

@@ -12,6 +12,11 @@ from poif.file_system.directory import Directory
 
 
 class FileSystemCreator(ABC):
+    """
+    The FileSystemCreator class is meant to transform a dataset into an actual filesystem. This could be useful
+    to test new algorithms without actually copying and transforming your original dataset.
+    """
+
     def __call__(self, dataset: Dataset, base_dir: Path, daemon=True):
         root_dir = self.create(dataset, base_dir)
         setup_as_filesystem(root_dir, base_dir, daemon)

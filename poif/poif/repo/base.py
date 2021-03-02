@@ -6,6 +6,11 @@ if typing.TYPE_CHECKING:
 
 
 class TaggedRepo:
+    """
+    Class that is used to upload/download tagged data. This class is meant to be subclassed where then a
+    reference to a remote can be used to retrieve the files.
+    """
+
     @abstractmethod
     def get_from_tag(self, tag: str):
         pass

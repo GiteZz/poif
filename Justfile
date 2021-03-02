@@ -8,6 +8,7 @@ test:
     cd ./poif && pytest .
 
 generate_doc:
+    rm -r ./docs
     cd ./poif && pdoc --html --force poif --html-dir ./../pdoc
     mv ./pdoc/poif ./docs
     rm -r ./pdoc

@@ -40,6 +40,11 @@ from poif.file_system.directory import Directory
 
 
 class FileSystemCreator(ABC):
+    &#34;&#34;&#34;
+    The FileSystemCreator class is meant to transform a dataset into an actual filesystem. This could be useful
+    to test new algorithms without actually copying and transforming your original dataset.
+    &#34;&#34;&#34;
+
     def __call__(self, dataset: Dataset, base_dir: Path, daemon=True):
         root_dir = self.create(dataset, base_dir)
         setup_as_filesystem(root_dir, base_dir, daemon)
@@ -144,13 +149,18 @@ def setup_filesystem(file_system: DataSetFileSystem, system_path: Path):
 <span>class <span class="ident">FileSystemCreator</span></span>
 </code></dt>
 <dd>
-<div class="desc"><p>Helper class that provides a standard way to create an ABC using
-inheritance.</p></div>
+<div class="desc"><p>The FileSystemCreator class is meant to transform a dataset into an actual filesystem. This could be useful
+to test new algorithms without actually copying and transforming your original dataset.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class FileSystemCreator(ABC):
+    &#34;&#34;&#34;
+    The FileSystemCreator class is meant to transform a dataset into an actual filesystem. This could be useful
+    to test new algorithms without actually copying and transforming your original dataset.
+    &#34;&#34;&#34;
+
     def __call__(self, dataset: Dataset, base_dir: Path, daemon=True):
         root_dir = self.create(dataset, base_dir)
         setup_as_filesystem(root_dir, base_dir, daemon)

@@ -10,6 +10,12 @@ SplitterDict = Dict[SubSetName, List[DataSetObject]]
 
 
 class Splitter(Operation):
+    """
+    A Splitter operation is used to split up the dataset into subsets. This is done similarly as in the Transformation
+    operation whereby there exist a single and a list function. Here the split_single_input assigns one
+    DataSetObject to a subset, while the split_input_list split the entire list into subsets.
+    """
+
     def split_single_input(self, ds_input: DataSetObject) -> Optional[SubSetName]:
         raise Exception("Single object transform was not defined.")
 
@@ -27,6 +33,13 @@ class Splitter(Operation):
 
 
 class RandomSplitter(Splitter):
+    """
+    Randomly splits into subsets.
+
+    Percentage dict example: {'train': 0.7, 'val': 0.15, 'test": 0.15} means that 70% of the data will be in
+    ds.train etc.
+    """
+
     def __init__(self, percentage_dict: Dict[SubSetName, float]):
         super().__init__()
         self.percentage_dict = percentage_dict
@@ -36,6 +49,19 @@ class RandomSplitter(Splitter):
 
 
 class GroupSplitter(RandomSplitter):
+    """
+    The group Splitter is a splitter that ensures that items of the same group will be in the same subset and not
+    split across multiple subsets. For example: person1 will only be in train dataset and not in val or test.
+
+    Percentage dict example: {'train': 0.7, 'val': 0.15, 'test": 0.15} means that 70% of the data will be in
+    ds.train etc.
+
+    The group_extractor is function that extracts a subset from a DataSetObject. An example of this is
+    lambda ds_object: ds_object.relative_path.split("_")[1] . This examples split the path and takes the
+    first item. This is useful if your relative path is vid01_frame01.png and you dont't want to have
+    frames from the same video across subsets.
+    """
+
     def __init__(self, percentage_dict: Dict[SubSetName, float], group_extractor: Callable[[DataSetObject], str]):
         super().__init__(percentage_dict)
         self.group_extractor = group_extractor
