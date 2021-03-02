@@ -8,7 +8,9 @@ test:
     cd ./poif && pytest .
 
 generate_doc:
-    cd ./poif && pdoc --html --force poif --html-dir ./../docs
+    cd ./poif && pdoc --html --force poif --html-dir ./../pdoc
+    mv ./pdoc/poif ./docs
+    rm -r ./pdoc
 
 
 check: lint test generate_doc
