@@ -1,0 +1,725 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>poif.tests API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>poif.tests</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import json
+import random
+import tempfile
+from pathlib import Path
+from typing import List
+
+import cv2
+import numpy as np
+
+from poif.git.file import FileCreatorMixin
+from poif.remote.base import FileRemote
+from poif.repo.file_remote import FileRemoteTaggedRepo
+from poif.typing import RelFilePath
+
+
+def get_img(height: int = 200, width: int = 200, bw: bool = False) -&gt; np.ndarray:
+    middle_x = width // 2
+    middle_y = height // 2
+
+    if not bw:
+        img = np.zeros((height, width, 3)).astype(np.uint8)
+
+        random_rgb = lambda: [random.randint(0, 255) for _ in range(3)]
+
+        img[:middle_y, :middle_x] = random_rgb()
+        img[middle_y:, :middle_x] = random_rgb()
+        img[:middle_y, middle_x:] = random_rgb()
+        img[middle_y:, middle_x:] = random_rgb()
+
+        return img
+    else:
+        img = np.zeros((height, width)).astype(np.uint8)
+
+        random_bw = lambda: random.randint(0, 255)
+
+        img[:middle_y, :middle_x] = random_bw()
+        img[middle_y:, :middle_x] = random_bw()
+        img[:middle_y, middle_x:] = random_bw()
+        img[middle_y:, middle_x:] = random_bw()
+
+        return img
+
+
+def get_img_file(extension=&#34;png&#34;) -&gt; Path:
+    img_file = Path(tempfile.mkstemp(suffix=f&#34;.{extension}&#34;)[1])
+    write_image_in_file(img_file)
+
+    return img_file
+
+
+def write_image_in_file(file: Path):
+    img = get_img()
+    cv2.imwrite(str(file), img)
+
+
+def write_json_in_file(file: Path):
+    json_content = {&#34;test&#34;: &#34;test&#34;}
+
+    with open(file, &#34;w&#34;) as f:
+        json.dump(json_content, f)
+
+
+def create_data_folder(folder: Path):
+    folder.mkdir(exist_ok=True, parents=True)
+
+    for i in range(10):
+        write_image_in_file(folder / (str(i) + &#34;.png&#34;))
+
+
+def assert_image_nearly_equal(original_img: np.ndarray, new_img: np.ndarray):
+    h, w, c = original_img.shape
+    abs_map = np.abs(original_img.astype(np.int16) - new_img.astype(np.int16))
+    av_pixel_diff = np.sum(abs_map) / (w * h * 3)
+    # some extension are lossy so we can&#39;t be sure that the image will be exactly the same
+    assert av_pixel_diff &lt; 5
+
+
+# TODO unify with create_realistic_folder_structure in repo tests
+def get_standard_folder_template() -&gt; List[RelFilePath]:
+    files = [f&#34;0{i}.jpg&#34; for i in range(10)]
+    base_folders = [&#34;train&#34;, &#34;val&#34;, &#34;test&#34;]
+    sub_folders = [&#34;image&#34;, &#34;mask&#34;]
+
+    files_to_create = []
+
+    additional_files = [
+        &#34;meta.json&#34;,
+        &#34;train/train_meta.json&#34;,
+        &#34;val/val_meta.json&#34;,
+        &#34;test/test_meta.json&#34;,
+    ]
+
+    for base_folder in base_folders:
+        for sub_folder in sub_folders:
+            for file in files:
+                files_to_create.append(f&#34;{base_folder}/{sub_folder}/{file}&#34;)
+
+    for file in additional_files:
+        files_to_create.append(file)
+
+    return files_to_create
+
+
+def create_standard_folder_structure():
+    t = tempfile.mkdtemp()
+    temp_dir = Path(t)
+
+    template = get_standard_folder_template()
+    for file in template:
+        file_path = temp_dir / file
+        file_path.parent.mkdir(exist_ok=True, parents=True)
+        file_path.touch()
+
+    return temp_dir
+
+
+def get_temp_path(prefix: str = &#34;&#34;) -&gt; Path:
+    return Path(tempfile.mkdtemp(prefix=&#34;poif_&#34; + prefix + &#34;_&#34;))
+
+
+def get_temp_file() -&gt; Path:
+    return Path(tempfile.mkstemp()[1])
+
+
+class MonkeyPatchSequence:
+    def __init__(self, values: list):
+        self.values = values
+
+    def __call__(self):
+        return self.values.pop(0)
+
+
+class MockFileRemote(FileRemote):
+    def __init__(self):
+        self.uploaded_files = {}
+        self.downloaded_files = []
+
+    def download(self, remote_source: str) -&gt; bytes:
+        self.downloaded_files.append(remote_source)
+        return self.uploaded_files[remote_source]
+
+    def get_object_size(self, file_name: str):
+        return 0
+
+    def upload(self, source: bytes, remote_dest: str):
+        self.uploaded_files[remote_dest] = source
+
+
+class MockTaggedRepo(FileRemoteTaggedRepo):
+    def __init__(self):
+        self.remote = MockFileRemote()
+        self.data_folder = &#34;data&#34;
+
+
+class MockGitRepo:
+    def __init__(self, base_dir: str, init=True):
+        self.tracked_files = []
+
+    def add_files(self, files: List[Path]):
+        for file in files:
+            self.tracked_files.append(file)
+
+    def add_remote(self, remote: str):
+        pass
+
+    def commit(self, message: str):
+        pass
+
+    def push(self):
+        pass
+
+    def add_file_creator(self, creator: FileCreatorMixin):
+        pass</code></pre>
+</details>
+</section>
+<section>
+<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+<dl>
+<dt><code class="name"><a title="poif.tests.inheritance" href="inheritance.html">poif.tests.inheritance</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="poif.tests.integration" href="integration/index.html">poif.tests.integration</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="poif.tests.repo" href="repo.html">poif.tests.repo</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="poif.tests.assert_image_nearly_equal"><code class="name flex">
+<span>def <span class="ident">assert_image_nearly_equal</span></span>(<span>original_img: numpy.ndarray, new_img: numpy.ndarray)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def assert_image_nearly_equal(original_img: np.ndarray, new_img: np.ndarray):
+    h, w, c = original_img.shape
+    abs_map = np.abs(original_img.astype(np.int16) - new_img.astype(np.int16))
+    av_pixel_diff = np.sum(abs_map) / (w * h * 3)
+    # some extension are lossy so we can&#39;t be sure that the image will be exactly the same
+    assert av_pixel_diff &lt; 5</code></pre>
+</details>
+</dd>
+<dt id="poif.tests.create_data_folder"><code class="name flex">
+<span>def <span class="ident">create_data_folder</span></span>(<span>folder: pathlib.Path)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_data_folder(folder: Path):
+    folder.mkdir(exist_ok=True, parents=True)
+
+    for i in range(10):
+        write_image_in_file(folder / (str(i) + &#34;.png&#34;))</code></pre>
+</details>
+</dd>
+<dt id="poif.tests.create_standard_folder_structure"><code class="name flex">
+<span>def <span class="ident">create_standard_folder_structure</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_standard_folder_structure():
+    t = tempfile.mkdtemp()
+    temp_dir = Path(t)
+
+    template = get_standard_folder_template()
+    for file in template:
+        file_path = temp_dir / file
+        file_path.parent.mkdir(exist_ok=True, parents=True)
+        file_path.touch()
+
+    return temp_dir</code></pre>
+</details>
+</dd>
+<dt id="poif.tests.get_img"><code class="name flex">
+<span>def <span class="ident">get_img</span></span>(<span>height: int = 200, width: int = 200, bw: bool = False) ‑> numpy.ndarray</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_img(height: int = 200, width: int = 200, bw: bool = False) -&gt; np.ndarray:
+    middle_x = width // 2
+    middle_y = height // 2
+
+    if not bw:
+        img = np.zeros((height, width, 3)).astype(np.uint8)
+
+        random_rgb = lambda: [random.randint(0, 255) for _ in range(3)]
+
+        img[:middle_y, :middle_x] = random_rgb()
+        img[middle_y:, :middle_x] = random_rgb()
+        img[:middle_y, middle_x:] = random_rgb()
+        img[middle_y:, middle_x:] = random_rgb()
+
+        return img
+    else:
+        img = np.zeros((height, width)).astype(np.uint8)
+
+        random_bw = lambda: random.randint(0, 255)
+
+        img[:middle_y, :middle_x] = random_bw()
+        img[middle_y:, :middle_x] = random_bw()
+        img[:middle_y, middle_x:] = random_bw()
+        img[middle_y:, middle_x:] = random_bw()
+
+        return img</code></pre>
+</details>
+</dd>
+<dt id="poif.tests.get_img_file"><code class="name flex">
+<span>def <span class="ident">get_img_file</span></span>(<span>extension='png') ‑> pathlib.Path</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_img_file(extension=&#34;png&#34;) -&gt; Path:
+    img_file = Path(tempfile.mkstemp(suffix=f&#34;.{extension}&#34;)[1])
+    write_image_in_file(img_file)
+
+    return img_file</code></pre>
+</details>
+</dd>
+<dt id="poif.tests.get_standard_folder_template"><code class="name flex">
+<span>def <span class="ident">get_standard_folder_template</span></span>(<span>) ‑> List[str]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_standard_folder_template() -&gt; List[RelFilePath]:
+    files = [f&#34;0{i}.jpg&#34; for i in range(10)]
+    base_folders = [&#34;train&#34;, &#34;val&#34;, &#34;test&#34;]
+    sub_folders = [&#34;image&#34;, &#34;mask&#34;]
+
+    files_to_create = []
+
+    additional_files = [
+        &#34;meta.json&#34;,
+        &#34;train/train_meta.json&#34;,
+        &#34;val/val_meta.json&#34;,
+        &#34;test/test_meta.json&#34;,
+    ]
+
+    for base_folder in base_folders:
+        for sub_folder in sub_folders:
+            for file in files:
+                files_to_create.append(f&#34;{base_folder}/{sub_folder}/{file}&#34;)
+
+    for file in additional_files:
+        files_to_create.append(file)
+
+    return files_to_create</code></pre>
+</details>
+</dd>
+<dt id="poif.tests.get_temp_file"><code class="name flex">
+<span>def <span class="ident">get_temp_file</span></span>(<span>) ‑> pathlib.Path</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_temp_file() -&gt; Path:
+    return Path(tempfile.mkstemp()[1])</code></pre>
+</details>
+</dd>
+<dt id="poif.tests.get_temp_path"><code class="name flex">
+<span>def <span class="ident">get_temp_path</span></span>(<span>prefix: str = '') ‑> pathlib.Path</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_temp_path(prefix: str = &#34;&#34;) -&gt; Path:
+    return Path(tempfile.mkdtemp(prefix=&#34;poif_&#34; + prefix + &#34;_&#34;))</code></pre>
+</details>
+</dd>
+<dt id="poif.tests.write_image_in_file"><code class="name flex">
+<span>def <span class="ident">write_image_in_file</span></span>(<span>file: pathlib.Path)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def write_image_in_file(file: Path):
+    img = get_img()
+    cv2.imwrite(str(file), img)</code></pre>
+</details>
+</dd>
+<dt id="poif.tests.write_json_in_file"><code class="name flex">
+<span>def <span class="ident">write_json_in_file</span></span>(<span>file: pathlib.Path)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def write_json_in_file(file: Path):
+    json_content = {&#34;test&#34;: &#34;test&#34;}
+
+    with open(file, &#34;w&#34;) as f:
+        json.dump(json_content, f)</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="poif.tests.MockFileRemote"><code class="flex name class">
+<span>class <span class="ident">MockFileRemote</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>This is meant for remotes where data is stored as files (e.g. object stores)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class MockFileRemote(FileRemote):
+    def __init__(self):
+        self.uploaded_files = {}
+        self.downloaded_files = []
+
+    def download(self, remote_source: str) -&gt; bytes:
+        self.downloaded_files.append(remote_source)
+        return self.uploaded_files[remote_source]
+
+    def get_object_size(self, file_name: str):
+        return 0
+
+    def upload(self, source: bytes, remote_dest: str):
+        self.uploaded_files[remote_dest] = source</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="poif.remote.base.FileRemote" href="../remote/base.html#poif.remote.base.FileRemote">FileRemote</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="poif.tests.MockFileRemote.download"><code class="name flex">
+<span>def <span class="ident">download</span></span>(<span>self, remote_source: str) ‑> bytes</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def download(self, remote_source: str) -&gt; bytes:
+    self.downloaded_files.append(remote_source)
+    return self.uploaded_files[remote_source]</code></pre>
+</details>
+</dd>
+<dt id="poif.tests.MockFileRemote.get_object_size"><code class="name flex">
+<span>def <span class="ident">get_object_size</span></span>(<span>self, file_name: str)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_object_size(self, file_name: str):
+    return 0</code></pre>
+</details>
+</dd>
+<dt id="poif.tests.MockFileRemote.upload"><code class="name flex">
+<span>def <span class="ident">upload</span></span>(<span>self, source: bytes, remote_dest: str)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def upload(self, source: bytes, remote_dest: str):
+    self.uploaded_files[remote_dest] = source</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="poif.tests.MockGitRepo"><code class="flex name class">
+<span>class <span class="ident">MockGitRepo</span></span>
+<span>(</span><span>base_dir: str, init=True)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class MockGitRepo:
+    def __init__(self, base_dir: str, init=True):
+        self.tracked_files = []
+
+    def add_files(self, files: List[Path]):
+        for file in files:
+            self.tracked_files.append(file)
+
+    def add_remote(self, remote: str):
+        pass
+
+    def commit(self, message: str):
+        pass
+
+    def push(self):
+        pass
+
+    def add_file_creator(self, creator: FileCreatorMixin):
+        pass</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="poif.tests.MockGitRepo.add_file_creator"><code class="name flex">
+<span>def <span class="ident">add_file_creator</span></span>(<span>self, creator: <a title="poif.git.file.FileCreatorMixin" href="../git/file.html#poif.git.file.FileCreatorMixin">FileCreatorMixin</a>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_file_creator(self, creator: FileCreatorMixin):
+    pass</code></pre>
+</details>
+</dd>
+<dt id="poif.tests.MockGitRepo.add_files"><code class="name flex">
+<span>def <span class="ident">add_files</span></span>(<span>self, files: List[pathlib.Path])</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_files(self, files: List[Path]):
+    for file in files:
+        self.tracked_files.append(file)</code></pre>
+</details>
+</dd>
+<dt id="poif.tests.MockGitRepo.add_remote"><code class="name flex">
+<span>def <span class="ident">add_remote</span></span>(<span>self, remote: str)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_remote(self, remote: str):
+    pass</code></pre>
+</details>
+</dd>
+<dt id="poif.tests.MockGitRepo.commit"><code class="name flex">
+<span>def <span class="ident">commit</span></span>(<span>self, message: str)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def commit(self, message: str):
+    pass</code></pre>
+</details>
+</dd>
+<dt id="poif.tests.MockGitRepo.push"><code class="name flex">
+<span>def <span class="ident">push</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def push(self):
+    pass</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="poif.tests.MockTaggedRepo"><code class="flex name class">
+<span>class <span class="ident">MockTaggedRepo</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>FileRemoteTaggedRepo(remote:'FileRemote', data_folder:str)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class MockTaggedRepo(FileRemoteTaggedRepo):
+    def __init__(self):
+        self.remote = MockFileRemote()
+        self.data_folder = &#34;data&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="poif.repo.file_remote.FileRemoteTaggedRepo" href="../repo/file_remote.html#poif.repo.file_remote.FileRemoteTaggedRepo">FileRemoteTaggedRepo</a></li>
+<li><a title="poif.repo.base.TaggedRepo" href="../repo/base.html#poif.repo.base.TaggedRepo">TaggedRepo</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="poif.tests.MockTaggedRepo.data_folder"><code class="name">var <span class="ident">data_folder</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="poif.tests.MockTaggedRepo.remote"><code class="name">var <span class="ident">remote</span> : FileRemote</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="poif.tests.MonkeyPatchSequence"><code class="flex name class">
+<span>class <span class="ident">MonkeyPatchSequence</span></span>
+<span>(</span><span>values: list)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class MonkeyPatchSequence:
+    def __init__(self, values: list):
+        self.values = values
+
+    def __call__(self):
+        return self.values.pop(0)</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="poif" href="../index.html">poif</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<ul>
+<li><code><a title="poif.tests.inheritance" href="inheritance.html">poif.tests.inheritance</a></code></li>
+<li><code><a title="poif.tests.integration" href="integration/index.html">poif.tests.integration</a></code></li>
+<li><code><a title="poif.tests.repo" href="repo.html">poif.tests.repo</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="poif.tests.assert_image_nearly_equal" href="#poif.tests.assert_image_nearly_equal">assert_image_nearly_equal</a></code></li>
+<li><code><a title="poif.tests.create_data_folder" href="#poif.tests.create_data_folder">create_data_folder</a></code></li>
+<li><code><a title="poif.tests.create_standard_folder_structure" href="#poif.tests.create_standard_folder_structure">create_standard_folder_structure</a></code></li>
+<li><code><a title="poif.tests.get_img" href="#poif.tests.get_img">get_img</a></code></li>
+<li><code><a title="poif.tests.get_img_file" href="#poif.tests.get_img_file">get_img_file</a></code></li>
+<li><code><a title="poif.tests.get_standard_folder_template" href="#poif.tests.get_standard_folder_template">get_standard_folder_template</a></code></li>
+<li><code><a title="poif.tests.get_temp_file" href="#poif.tests.get_temp_file">get_temp_file</a></code></li>
+<li><code><a title="poif.tests.get_temp_path" href="#poif.tests.get_temp_path">get_temp_path</a></code></li>
+<li><code><a title="poif.tests.write_image_in_file" href="#poif.tests.write_image_in_file">write_image_in_file</a></code></li>
+<li><code><a title="poif.tests.write_json_in_file" href="#poif.tests.write_json_in_file">write_json_in_file</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="poif.tests.MockFileRemote" href="#poif.tests.MockFileRemote">MockFileRemote</a></code></h4>
+<ul class="">
+<li><code><a title="poif.tests.MockFileRemote.download" href="#poif.tests.MockFileRemote.download">download</a></code></li>
+<li><code><a title="poif.tests.MockFileRemote.get_object_size" href="#poif.tests.MockFileRemote.get_object_size">get_object_size</a></code></li>
+<li><code><a title="poif.tests.MockFileRemote.upload" href="#poif.tests.MockFileRemote.upload">upload</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="poif.tests.MockGitRepo" href="#poif.tests.MockGitRepo">MockGitRepo</a></code></h4>
+<ul class="">
+<li><code><a title="poif.tests.MockGitRepo.add_file_creator" href="#poif.tests.MockGitRepo.add_file_creator">add_file_creator</a></code></li>
+<li><code><a title="poif.tests.MockGitRepo.add_files" href="#poif.tests.MockGitRepo.add_files">add_files</a></code></li>
+<li><code><a title="poif.tests.MockGitRepo.add_remote" href="#poif.tests.MockGitRepo.add_remote">add_remote</a></code></li>
+<li><code><a title="poif.tests.MockGitRepo.commit" href="#poif.tests.MockGitRepo.commit">commit</a></code></li>
+<li><code><a title="poif.tests.MockGitRepo.push" href="#poif.tests.MockGitRepo.push">push</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="poif.tests.MockTaggedRepo" href="#poif.tests.MockTaggedRepo">MockTaggedRepo</a></code></h4>
+<ul class="">
+<li><code><a title="poif.tests.MockTaggedRepo.data_folder" href="#poif.tests.MockTaggedRepo.data_folder">data_folder</a></code></li>
+<li><code><a title="poif.tests.MockTaggedRepo.remote" href="#poif.tests.MockTaggedRepo.remote">remote</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="poif.tests.MonkeyPatchSequence" href="#poif.tests.MonkeyPatchSequence">MonkeyPatchSequence</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>

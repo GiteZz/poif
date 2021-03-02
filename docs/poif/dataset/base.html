@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>poif.dataset.base API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>poif.dataset.base</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import copy
+from abc import ABC, abstractmethod
+from typing import List, Optional, Union
+
+from poif.dataset.meta import MetaCollection
+from poif.dataset.object.base import DataSetObject
+from poif.dataset.object.output import DataSetObjectOutputFunction
+from poif.dataset.operation.base import Operation
+from poif.dataset.operation.meta_provider.base import MetaProvider
+from poif.dataset.operation.selective import SelectiveSubsetOperation
+from poif.dataset.operation.split.base import Splitter
+from poif.dataset.operation.transform.base import Transformation
+from poif.dataset.operation.transform_and_split.base import TransformAndSplit
+from poif.tagged_data.base import TaggedData
+
+
+class BaseDataset(ABC):
+    &#34;&#34;&#34;
+    Provide base dataset functionality similarly to torch.utils.data.Dataset. The __getitem__ wil return the
+    result of the .output() function on the DataSetObject at that index. This class is used as an interface,
+    not intended to be instantiated.
+    &#34;&#34;&#34;
+
+    def __init__(self):
+        self.objects = []
+
+    @abstractmethod
+    def form(self, data: List[TaggedData]):
+        pass
+
+    def __len__(self):
+        len(self.objects)
+
+    def __getitem__(self, idx: int):
+        return self.objects[idx].output()
+
+
+class Dataset(BaseDataset):
+    &#34;&#34;&#34;
+    This implements the standard pytorch dataset interface combined with some nice extras. Notably the option to
+    perform dataset operations. An operation is meant to change the dataset and/or its contents. If a Splitter
+    operation (poif.dataset.operation.base.Splitter) is used, the subdatasets (also Dataset type)
+    can simply be accessed with the &#39;.&#39; on the dataset name.
+
+    birds_ds = Dataset()
+
+    train_val_splitter = Splitter()
+
+    bird_ds.apply_operation(train_val_splitter)
+
+
+
+    bird_ds.train -&gt; Contains training data
+
+    bird_ds.val -&gt; Contains validation data
+
+
+    The Transformation is meant to change the internal DataSet objects. An example of this could be
+    adding the labels from the original path. Another example is removing specific samples of limiting the
+    amout of samples.
+
+    The MetaProvider is meant to add or transform the metadata of the dataset. The metadata is
+    accessible via the .meta on the dataset and will return a MetaCollection dataset.
+
+    The TransformAndSplit combines the Splitter and Transformation. This is useful with datasets where
+    the split and additional data is located in one metafile.
+
+    The last operation is the SelectiveSubsetOperation, this operation simply allows for using operation on a
+    selective subset. This could be used to limit the samples in train and validation by a different amount.
+    &#34;&#34;&#34;
+
+    def __init__(
+        self, operations: List[Operation] = None, output_function: Optional[DataSetObjectOutputFunction] = None
+    ):
+
+        super().__init__()
+        self.splits = {}
+        if operations is not None:
+            self.operations = copy.deepcopy(operations)
+        else:
+            self.operations = []
+
+        self.output_function = output_function
+
+        self.initial_split_performed = False
+
+        self._meta = MetaCollection()
+
+    def __getattr__(self, item) -&gt; Union[BaseDataset, &#34;Dataset&#34;]:
+        if item in self.available_sub_datasets:
+            return self.splits[item]
+        else:
+            raise AttributeError
+
+    @property
+    def meta(self) -&gt; MetaCollection:
+        return self._meta
+
+    @property
+    def available_sub_datasets(self) -&gt; List[str]:
+        return list(self.splits.keys())
+
+    def form(self, data: List[TaggedData]):
+        inputs = [DataSetObject(tagged_data, output_function=self.output_function) for tagged_data in data]
+        self.form_from_ds_objects(inputs)
+
+    def _set_ds_objects(self, objects: List[DataSetObject]):
+        self.objects = objects
+
+    def form_from_ds_objects(self, objects: List[DataSetObject]):
+        # TODO maybe remove and integrate into self.form
+        self.objects = objects
+        self._next_operation()
+
+    def _next_operation(self):
+        if self.operations is None or len(self.operations) == 0:
+            return
+        current_operation = self.operations.pop(0)
+        self.apply_operation(current_operation)
+        self._next_operation()
+
+    def apply_operation(self, operation: Operation):
+        if len(self.splits) != 0:
+            if isinstance(operation, SelectiveSubsetOperation):
+                for subset, sub_ds in self.splits.items():
+                    if subset in operation.subsets:
+                        sub_ds.apply_operation(operation[subset])
+                    else:
+                        sub_ds.apply_operation(operation)
+            else:
+                for sub_ds in self.splits.values():
+                    sub_ds.apply_operation(operation)
+        else:
+            operation.set_meta(self.meta)
+            if self._is_splitter(operation):
+                self._apply_splitter(operation)
+            elif self._is_tranformation(operation):
+                self._apply_transformation(operation)
+            elif isinstance(operation, MetaProvider):
+                self._apply_meta_provider(operation)
+            else:
+                raise Exception(&#34;Unknown type of operation&#34;)
+
+    def _is_splitter(self, operation: Operation) -&gt; bool:
+        return isinstance(operation, Splitter) or isinstance(operation, TransformAndSplit)
+
+    def _is_tranformation(self, operation: Operation) -&gt; bool:
+        return isinstance(operation, Transformation)
+
+    def _apply_meta_provider(self, meta_provider: MetaProvider):
+        new_meta = meta_provider.provide_meta(self.objects, self._meta)
+        self._meta = new_meta
+
+    def _apply_splitter(self, splitter: Splitter):
+        splitter_dict = splitter(self.objects)
+
+        self._add_splitter_dict(splitter_dict)
+
+        self.initial_split_performed = True
+
+    def _create_child_dataset(self) -&gt; &#34;Dataset&#34;:
+        new_ds = Dataset()
+        new_ds.output_function = self.output_function
+        new_ds._meta = self._meta
+
+        return new_ds
+
+    def _add_splitter_dict(self, splitter_dict):
+        for subset_name, objects in splitter_dict.items():
+            new_dataset = self._create_child_dataset()
+            new_dataset._set_ds_objects(objects)
+
+            self.splits[subset_name] = new_dataset
+
+    def _apply_transformation(self, transformation: Transformation):
+        self.objects = transformation(self.objects)
+
+    def __len__(self):
+        return len(self.objects)
+
+    def __getitem__(self, idx: int):
+        value = self.objects[idx].output()
+        return value
+
+    def __add__(self, other: &#34;Dataset&#34;) -&gt; &#34;Dataset&#34;:
+        total_objects = self.objects + other.objects
+        new_ds = Dataset()
+        new_ds.objects = total_objects
+
+        new_meta = self._meta + other._meta
+        new_ds._meta = new_meta
+
+        return new_ds</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="poif.dataset.base.BaseDataset"><code class="flex name class">
+<span>class <span class="ident">BaseDataset</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Provide base dataset functionality similarly to torch.utils.data.Dataset. The <strong>getitem</strong> wil return the
+result of the .output() function on the DataSetObject at that index. This class is used as an interface,
+not intended to be instantiated.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class BaseDataset(ABC):
+    &#34;&#34;&#34;
+    Provide base dataset functionality similarly to torch.utils.data.Dataset. The __getitem__ wil return the
+    result of the .output() function on the DataSetObject at that index. This class is used as an interface,
+    not intended to be instantiated.
+    &#34;&#34;&#34;
+
+    def __init__(self):
+        self.objects = []
+
+    @abstractmethod
+    def form(self, data: List[TaggedData]):
+        pass
+
+    def __len__(self):
+        len(self.objects)
+
+    def __getitem__(self, idx: int):
+        return self.objects[idx].output()</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>abc.ABC</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="poif.dataset.base.Dataset" href="#poif.dataset.base.Dataset">Dataset</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="poif.dataset.base.BaseDataset.form"><code class="name flex">
+<span>def <span class="ident">form</span></span>(<span>self, data: List[<a title="poif.tagged_data.base.TaggedData" href="../tagged_data/base.html#poif.tagged_data.base.TaggedData">TaggedData</a>])</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@abstractmethod
+def form(self, data: List[TaggedData]):
+    pass</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="poif.dataset.base.Dataset"><code class="flex name class">
+<span>class <span class="ident">Dataset</span></span>
+<span>(</span><span>operations: List[<a title="poif.dataset.operation.base.Operation" href="operation/base.html#poif.dataset.operation.base.Operation">Operation</a>] = None, output_function: Union[Callable[[_ForwardRef('DataSetObject')], Any], NoneType] = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>This implements the standard pytorch dataset interface combined with some nice extras. Notably the option to
+perform dataset operations. An operation is meant to change the dataset and/or its contents. If a Splitter
+operation (poif.dataset.operation.base.Splitter) is used, the subdatasets (also Dataset type)
+can simply be accessed with the '.' on the dataset name.</p>
+<p>birds_ds = Dataset()</p>
+<p>train_val_splitter = Splitter()</p>
+<p>bird_ds.apply_operation(train_val_splitter)</p>
+<p>bird_ds.train -&gt; Contains training data</p>
+<p>bird_ds.val -&gt; Contains validation data</p>
+<p>The Transformation is meant to change the internal DataSet objects. An example of this could be
+adding the labels from the original path. Another example is removing specific samples of limiting the
+amout of samples.</p>
+<p>The MetaProvider is meant to add or transform the metadata of the dataset. The metadata is
+accessible via the .meta on the dataset and will return a MetaCollection dataset.</p>
+<p>The TransformAndSplit combines the Splitter and Transformation. This is useful with datasets where
+the split and additional data is located in one metafile.</p>
+<p>The last operation is the SelectiveSubsetOperation, this operation simply allows for using operation on a
+selective subset. This could be used to limit the samples in train and validation by a different amount.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Dataset(BaseDataset):
+    &#34;&#34;&#34;
+    This implements the standard pytorch dataset interface combined with some nice extras. Notably the option to
+    perform dataset operations. An operation is meant to change the dataset and/or its contents. If a Splitter
+    operation (poif.dataset.operation.base.Splitter) is used, the subdatasets (also Dataset type)
+    can simply be accessed with the &#39;.&#39; on the dataset name.
+
+    birds_ds = Dataset()
+
+    train_val_splitter = Splitter()
+
+    bird_ds.apply_operation(train_val_splitter)
+
+
+
+    bird_ds.train -&gt; Contains training data
+
+    bird_ds.val -&gt; Contains validation data
+
+
+    The Transformation is meant to change the internal DataSet objects. An example of this could be
+    adding the labels from the original path. Another example is removing specific samples of limiting the
+    amout of samples.
+
+    The MetaProvider is meant to add or transform the metadata of the dataset. The metadata is
+    accessible via the .meta on the dataset and will return a MetaCollection dataset.
+
+    The TransformAndSplit combines the Splitter and Transformation. This is useful with datasets where
+    the split and additional data is located in one metafile.
+
+    The last operation is the SelectiveSubsetOperation, this operation simply allows for using operation on a
+    selective subset. This could be used to limit the samples in train and validation by a different amount.
+    &#34;&#34;&#34;
+
+    def __init__(
+        self, operations: List[Operation] = None, output_function: Optional[DataSetObjectOutputFunction] = None
+    ):
+
+        super().__init__()
+        self.splits = {}
+        if operations is not None:
+            self.operations = copy.deepcopy(operations)
+        else:
+            self.operations = []
+
+        self.output_function = output_function
+
+        self.initial_split_performed = False
+
+        self._meta = MetaCollection()
+
+    def __getattr__(self, item) -&gt; Union[BaseDataset, &#34;Dataset&#34;]:
+        if item in self.available_sub_datasets:
+            return self.splits[item]
+        else:
+            raise AttributeError
+
+    @property
+    def meta(self) -&gt; MetaCollection:
+        return self._meta
+
+    @property
+    def available_sub_datasets(self) -&gt; List[str]:
+        return list(self.splits.keys())
+
+    def form(self, data: List[TaggedData]):
+        inputs = [DataSetObject(tagged_data, output_function=self.output_function) for tagged_data in data]
+        self.form_from_ds_objects(inputs)
+
+    def _set_ds_objects(self, objects: List[DataSetObject]):
+        self.objects = objects
+
+    def form_from_ds_objects(self, objects: List[DataSetObject]):
+        # TODO maybe remove and integrate into self.form
+        self.objects = objects
+        self._next_operation()
+
+    def _next_operation(self):
+        if self.operations is None or len(self.operations) == 0:
+            return
+        current_operation = self.operations.pop(0)
+        self.apply_operation(current_operation)
+        self._next_operation()
+
+    def apply_operation(self, operation: Operation):
+        if len(self.splits) != 0:
+            if isinstance(operation, SelectiveSubsetOperation):
+                for subset, sub_ds in self.splits.items():
+                    if subset in operation.subsets:
+                        sub_ds.apply_operation(operation[subset])
+                    else:
+                        sub_ds.apply_operation(operation)
+            else:
+                for sub_ds in self.splits.values():
+                    sub_ds.apply_operation(operation)
+        else:
+            operation.set_meta(self.meta)
+            if self._is_splitter(operation):
+                self._apply_splitter(operation)
+            elif self._is_tranformation(operation):
+                self._apply_transformation(operation)
+            elif isinstance(operation, MetaProvider):
+                self._apply_meta_provider(operation)
+            else:
+                raise Exception(&#34;Unknown type of operation&#34;)
+
+    def _is_splitter(self, operation: Operation) -&gt; bool:
+        return isinstance(operation, Splitter) or isinstance(operation, TransformAndSplit)
+
+    def _is_tranformation(self, operation: Operation) -&gt; bool:
+        return isinstance(operation, Transformation)
+
+    def _apply_meta_provider(self, meta_provider: MetaProvider):
+        new_meta = meta_provider.provide_meta(self.objects, self._meta)
+        self._meta = new_meta
+
+    def _apply_splitter(self, splitter: Splitter):
+        splitter_dict = splitter(self.objects)
+
+        self._add_splitter_dict(splitter_dict)
+
+        self.initial_split_performed = True
+
+    def _create_child_dataset(self) -&gt; &#34;Dataset&#34;:
+        new_ds = Dataset()
+        new_ds.output_function = self.output_function
+        new_ds._meta = self._meta
+
+        return new_ds
+
+    def _add_splitter_dict(self, splitter_dict):
+        for subset_name, objects in splitter_dict.items():
+            new_dataset = self._create_child_dataset()
+            new_dataset._set_ds_objects(objects)
+
+            self.splits[subset_name] = new_dataset
+
+    def _apply_transformation(self, transformation: Transformation):
+        self.objects = transformation(self.objects)
+
+    def __len__(self):
+        return len(self.objects)
+
+    def __getitem__(self, idx: int):
+        value = self.objects[idx].output()
+        return value
+
+    def __add__(self, other: &#34;Dataset&#34;) -&gt; &#34;Dataset&#34;:
+        total_objects = self.objects + other.objects
+        new_ds = Dataset()
+        new_ds.objects = total_objects
+
+        new_meta = self._meta + other._meta
+        new_ds._meta = new_meta
+
+        return new_ds</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="poif.dataset.base.BaseDataset" href="#poif.dataset.base.BaseDataset">BaseDataset</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="poif.dataset.detection.base.DetectionDataset" href="detection/base.html#poif.dataset.detection.base.DetectionDataset">DetectionDataset</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="poif.dataset.base.Dataset.available_sub_datasets"><code class="name">var <span class="ident">available_sub_datasets</span> : List[str]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def available_sub_datasets(self) -&gt; List[str]:
+    return list(self.splits.keys())</code></pre>
+</details>
+</dd>
+<dt id="poif.dataset.base.Dataset.meta"><code class="name">var <span class="ident">meta</span> : <a title="poif.dataset.meta.MetaCollection" href="meta.html#poif.dataset.meta.MetaCollection">MetaCollection</a></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def meta(self) -&gt; MetaCollection:
+    return self._meta</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="poif.dataset.base.Dataset.apply_operation"><code class="name flex">
+<span>def <span class="ident">apply_operation</span></span>(<span>self, operation: <a title="poif.dataset.operation.base.Operation" href="operation/base.html#poif.dataset.operation.base.Operation">Operation</a>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def apply_operation(self, operation: Operation):
+    if len(self.splits) != 0:
+        if isinstance(operation, SelectiveSubsetOperation):
+            for subset, sub_ds in self.splits.items():
+                if subset in operation.subsets:
+                    sub_ds.apply_operation(operation[subset])
+                else:
+                    sub_ds.apply_operation(operation)
+        else:
+            for sub_ds in self.splits.values():
+                sub_ds.apply_operation(operation)
+    else:
+        operation.set_meta(self.meta)
+        if self._is_splitter(operation):
+            self._apply_splitter(operation)
+        elif self._is_tranformation(operation):
+            self._apply_transformation(operation)
+        elif isinstance(operation, MetaProvider):
+            self._apply_meta_provider(operation)
+        else:
+            raise Exception(&#34;Unknown type of operation&#34;)</code></pre>
+</details>
+</dd>
+<dt id="poif.dataset.base.Dataset.form"><code class="name flex">
+<span>def <span class="ident">form</span></span>(<span>self, data: List[<a title="poif.tagged_data.base.TaggedData" href="../tagged_data/base.html#poif.tagged_data.base.TaggedData">TaggedData</a>])</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def form(self, data: List[TaggedData]):
+    inputs = [DataSetObject(tagged_data, output_function=self.output_function) for tagged_data in data]
+    self.form_from_ds_objects(inputs)</code></pre>
+</details>
+</dd>
+<dt id="poif.dataset.base.Dataset.form_from_ds_objects"><code class="name flex">
+<span>def <span class="ident">form_from_ds_objects</span></span>(<span>self, objects: List[<a title="poif.dataset.object.base.DataSetObject" href="object/base.html#poif.dataset.object.base.DataSetObject">DataSetObject</a>])</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def form_from_ds_objects(self, objects: List[DataSetObject]):
+    # TODO maybe remove and integrate into self.form
+    self.objects = objects
+    self._next_operation()</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="poif.dataset" href="index.html">poif.dataset</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="poif.dataset.base.BaseDataset" href="#poif.dataset.base.BaseDataset">BaseDataset</a></code></h4>
+<ul class="">
+<li><code><a title="poif.dataset.base.BaseDataset.form" href="#poif.dataset.base.BaseDataset.form">form</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="poif.dataset.base.Dataset" href="#poif.dataset.base.Dataset">Dataset</a></code></h4>
+<ul class="">
+<li><code><a title="poif.dataset.base.Dataset.apply_operation" href="#poif.dataset.base.Dataset.apply_operation">apply_operation</a></code></li>
+<li><code><a title="poif.dataset.base.Dataset.available_sub_datasets" href="#poif.dataset.base.Dataset.available_sub_datasets">available_sub_datasets</a></code></li>
+<li><code><a title="poif.dataset.base.Dataset.form" href="#poif.dataset.base.Dataset.form">form</a></code></li>
+<li><code><a title="poif.dataset.base.Dataset.form_from_ds_objects" href="#poif.dataset.base.Dataset.form_from_ds_objects">form_from_ds_objects</a></code></li>
+<li><code><a title="poif.dataset.base.Dataset.meta" href="#poif.dataset.base.Dataset.meta">meta</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>

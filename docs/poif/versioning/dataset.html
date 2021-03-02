@@ -1,0 +1,904 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>poif.versioning.dataset API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>poif.versioning.dataset</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import json
+from abc import ABC, abstractmethod
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import List
+
+from poif.config.collection import DataCollectionConfig
+from poif.config.repo import DataRepoConfig
+from poif.git.file import FileCreatorMixin
+from poif.git.repo import GitRepo
+from poif.repo.base import TaggedRepo
+from poif.repo.file_remote import FileRemoteTaggedRepo, get_remote_repo_from_config
+from poif.tagged_data.base import TaggedData
+from poif.tagged_data.repo import RepoData
+from poif.typing import FileHash, RelFilePath
+from poif.utils import get_file_name_from_path
+from poif.versioning.directory import VersionedDirectory
+from poif.versioning.file import VersionedFile
+
+
+class VersionedCollection(ABC):
+    def __init__(self):
+        super().__init__()
+
+    @abstractmethod
+    def get_files(self) -&gt; List[TaggedData]:
+        pass
+
+    @abstractmethod
+    def get_mappings(self) -&gt; List[TaggedData]:
+        pass
+
+    def get_tagged_data(self) -&gt; List[TaggedData]:
+        return self.get_mappings() + self.get_files()
+
+
+@dataclass
+class FromDiskVersionedCollection(VersionedCollection, FileCreatorMixin):
+    base_dir: Path
+    config: DataCollectionConfig
+
+    directories: List[VersionedDirectory] = field(default_factory=list)
+    files: List[VersionedFile] = field(default_factory=list)
+
+    def __post_init__(self):
+        super().__init__()
+        for directory in self.config.folders:
+            actual_directory = self.base_dir / directory
+            self.directories.append(VersionedDirectory(base_dir=self.base_dir, data_dir=actual_directory))
+
+        for file in self.config.files:
+            actual_file = self.base_dir / file
+            self.files.append(VersionedFile(base_dir=self.base_dir, file_path=actual_file))
+
+    def get_files(self) -&gt; List[TaggedData]:
+        return self.files + self.files_from_directory()
+
+    def files_from_directory(self) -&gt; List[TaggedData]:
+        file_list = []
+        for directory in self.directories:
+            file_list.extend(directory.files)
+        return file_list
+
+    def get_mappings(self) -&gt; List[TaggedData]:
+        return self.directories
+
+    def write_versioning_files(self, save_directory: Path):
+        self.write_directories_versioning_files(save_directory)
+        self.write_files_versioning_files(save_directory)
+
+    def write_directories_versioning_files(self, save_directory: Path):
+        for directory in self.directories:
+            created_file = directory.write_vdir_to_folder(save_directory)
+
+            self.add_created_file(created_file)
+
+    def write_files_versioning_files(self, save_directory: Path):
+        for file in self.files:
+            created_file = file.write_vfile_to_folder(save_directory)
+
+            self.add_created_file(created_file)
+
+    def add_vdir_file(self, file: Path):
+        filename = get_file_name_from_path(file)
+        self.get_dir_with_filename(filename)
+        # TODO
+
+    def get_dir_with_filename(self, filename: str) -&gt; VersionedDirectory:
+        for directory in self.directories:
+            if directory.get_vdir_name() == filename:
+                return directory
+        raise Exception(&#34;Directory with filename not found&#34;)
+
+    def add_vfile(self, file: Path):
+        # TODO
+        pass
+
+
+class ResourceDirCollection(VersionedCollection):
+    _mappings: List[TaggedData] = None
+    _files: List[TaggedData] = None
+    _tagged_repo: TaggedRepo = field(init=False)
+    _resource_dir: Path = field(init=False)
+
+    def __init__(self, resource_dir: Path):
+        super().__init__()
+        self._resource_dir = resource_dir
+        collection_config = DataCollectionConfig.read(self._resource_dir / &#34;collection_config.json&#34;)
+
+        file_remote = collection_config.data_remote.config.get_configured_remote()
+        data_folder = collection_config.data_remote.data_folder
+
+        self._tagged_repo = FileRemoteTaggedRepo(remote=file_remote, data_folder=data_folder)
+
+        self.retrieve_mappings()
+
+    def get_versioned_files(self, resource_dir: Path) -&gt; List[Path]:
+        return list(resource_dir.glob(&#34;*.vfile&#34;))
+
+    def get_versioned_directories(self, resource_dir: Path) -&gt; List[Path]:
+        return list(resource_dir.glob(&#34;*.vdir&#34;))
+
+    def retrieve_mappings(self):
+        self._mappings = []
+        vdirs = self.get_versioned_directories(self._resource_dir)
+
+        for vdir_file in vdirs:
+            with open(vdir_file, &#34;r&#34;) as f:
+                vdir_content = json.load(f)
+
+            mapping = self.create_repo_file(vdir_content[&#34;data_folder&#34;] + &#34;.mapping&#34;, vdir_content[&#34;tag&#34;])
+
+            self._mappings.append(mapping)
+
+    def create_repo_file(self, relative_path: RelFilePath, tag: FileHash) -&gt; RepoData:
+        return RepoData(
+            relative_path=relative_path,
+            repo=self._tagged_repo,
+            tag=tag,
+        )
+
+    def retrieve_files(self):
+        self._files = []
+        vfiles = self.get_versioned_files(self._resource_dir)
+
+        for vfile in vfiles:
+            with open(vfile, &#34;r&#34;) as f:
+                vfile_content = json.load(f)
+
+            file = self.create_repo_file(vfile_content[&#34;path&#34;], vfile_content[&#34;tag&#34;])
+            self._files.append(file)
+
+    def get_files_from_mappings(self):
+        mappings = self.get_mappings()
+        files = []
+
+        for mapping in mappings:
+            mapping_content = mapping.get_parsed()
+            for tag, path in mapping_content.items():
+                file = RepoData(relative_path=path, repo=self._tagged_repo, tag=tag)
+
+                files.append(file)
+        return files
+
+    def get_files(self) -&gt; List[TaggedData]:
+        if self._files is None:
+            self.retrieve_files()
+
+        return self._files + self.get_files_from_mappings()
+
+    def get_mappings(self) -&gt; List[TaggedData]:
+        if self._mappings is None:
+            self.retrieve_mappings()
+        return self._mappings
+
+
+@dataclass
+class GitRepoCollection(ResourceDirCollection):
+    _mappings: List[TaggedData] = None
+    _files: List[TaggedData] = None
+    _tagged_repo: TaggedRepo = field(init=False)
+    _resource_dir: Path = field(init=False)
+
+    def __init__(self, git_url: str, git_commit: str):
+        repo = GitRepo(git_url=git_url, git_commit=git_commit)
+
+        resource_dir_link = repo.base_dir / &#34;.resource_folder&#34;
+        with open(resource_dir_link, &#34;r&#34;) as f:
+            relative_resource_dir = f.read()
+
+        self._resource_dir = repo.base_dir / relative_resource_dir
+
+        super().__init__(self._resource_dir)
+
+        config = DataRepoConfig.read_from_package(repo.base_dir)
+        self._tagged_repo = get_remote_repo_from_config(config.collection.data_remote)
+
+        self.retrieve_mappings()
+
+
+if __name__ == &#34;__main__&#34;:
+    repo = GitRepoCollection(
+        git_url=&#34;https://github.ugent.be/gballege/minimal_pneumonia.git&#34;,
+        git_commit=&#34;85d749fd6422af1a178013c45c304576939d3b4c&#34;,
+    )
+
+    all_files = repo.get_files()
+    a = 5</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="poif.versioning.dataset.FromDiskVersionedCollection"><code class="flex name class">
+<span>class <span class="ident">FromDiskVersionedCollection</span></span>
+<span>(</span><span>base_dir: pathlib.Path, config: <a title="poif.config.collection.DataCollectionConfig" href="../config/collection.html#poif.config.collection.DataCollectionConfig">DataCollectionConfig</a>, directories: List[<a title="poif.versioning.directory.VersionedDirectory" href="directory.html#poif.versioning.directory.VersionedDirectory">VersionedDirectory</a>] = &lt;factory&gt;, files: List[<a title="poif.versioning.file.VersionedFile" href="file.html#poif.versioning.file.VersionedFile">VersionedFile</a>] = &lt;factory&gt;)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>FromDiskVersionedCollection(base_dir:pathlib.Path, config:poif.config.collection.DataCollectionConfig, directories:List[poif.versioning.directory.VersionedDirectory]=<factory>, files:List[poif.versioning.file.VersionedFile]=<factory>)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class FromDiskVersionedCollection(VersionedCollection, FileCreatorMixin):
+    base_dir: Path
+    config: DataCollectionConfig
+
+    directories: List[VersionedDirectory] = field(default_factory=list)
+    files: List[VersionedFile] = field(default_factory=list)
+
+    def __post_init__(self):
+        super().__init__()
+        for directory in self.config.folders:
+            actual_directory = self.base_dir / directory
+            self.directories.append(VersionedDirectory(base_dir=self.base_dir, data_dir=actual_directory))
+
+        for file in self.config.files:
+            actual_file = self.base_dir / file
+            self.files.append(VersionedFile(base_dir=self.base_dir, file_path=actual_file))
+
+    def get_files(self) -&gt; List[TaggedData]:
+        return self.files + self.files_from_directory()
+
+    def files_from_directory(self) -&gt; List[TaggedData]:
+        file_list = []
+        for directory in self.directories:
+            file_list.extend(directory.files)
+        return file_list
+
+    def get_mappings(self) -&gt; List[TaggedData]:
+        return self.directories
+
+    def write_versioning_files(self, save_directory: Path):
+        self.write_directories_versioning_files(save_directory)
+        self.write_files_versioning_files(save_directory)
+
+    def write_directories_versioning_files(self, save_directory: Path):
+        for directory in self.directories:
+            created_file = directory.write_vdir_to_folder(save_directory)
+
+            self.add_created_file(created_file)
+
+    def write_files_versioning_files(self, save_directory: Path):
+        for file in self.files:
+            created_file = file.write_vfile_to_folder(save_directory)
+
+            self.add_created_file(created_file)
+
+    def add_vdir_file(self, file: Path):
+        filename = get_file_name_from_path(file)
+        self.get_dir_with_filename(filename)
+        # TODO
+
+    def get_dir_with_filename(self, filename: str) -&gt; VersionedDirectory:
+        for directory in self.directories:
+            if directory.get_vdir_name() == filename:
+                return directory
+        raise Exception(&#34;Directory with filename not found&#34;)
+
+    def add_vfile(self, file: Path):
+        # TODO
+        pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="poif.versioning.dataset.VersionedCollection" href="#poif.versioning.dataset.VersionedCollection">VersionedCollection</a></li>
+<li>abc.ABC</li>
+<li><a title="poif.git.file.FileCreatorMixin" href="../git/file.html#poif.git.file.FileCreatorMixin">FileCreatorMixin</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="poif.versioning.dataset.FromDiskVersionedCollection.base_dir"><code class="name">var <span class="ident">base_dir</span> : pathlib.Path</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="poif.versioning.dataset.FromDiskVersionedCollection.config"><code class="name">var <span class="ident">config</span> : <a title="poif.config.collection.DataCollectionConfig" href="../config/collection.html#poif.config.collection.DataCollectionConfig">DataCollectionConfig</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="poif.versioning.dataset.FromDiskVersionedCollection.directories"><code class="name">var <span class="ident">directories</span> : List[<a title="poif.versioning.directory.VersionedDirectory" href="directory.html#poif.versioning.directory.VersionedDirectory">VersionedDirectory</a>]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="poif.versioning.dataset.FromDiskVersionedCollection.files"><code class="name">var <span class="ident">files</span> : List[<a title="poif.versioning.file.VersionedFile" href="file.html#poif.versioning.file.VersionedFile">VersionedFile</a>]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="poif.versioning.dataset.FromDiskVersionedCollection.add_vdir_file"><code class="name flex">
+<span>def <span class="ident">add_vdir_file</span></span>(<span>self, file: pathlib.Path)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_vdir_file(self, file: Path):
+    filename = get_file_name_from_path(file)
+    self.get_dir_with_filename(filename)</code></pre>
+</details>
+</dd>
+<dt id="poif.versioning.dataset.FromDiskVersionedCollection.add_vfile"><code class="name flex">
+<span>def <span class="ident">add_vfile</span></span>(<span>self, file: pathlib.Path)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_vfile(self, file: Path):
+    # TODO
+    pass</code></pre>
+</details>
+</dd>
+<dt id="poif.versioning.dataset.FromDiskVersionedCollection.files_from_directory"><code class="name flex">
+<span>def <span class="ident">files_from_directory</span></span>(<span>self) ‑> List[<a title="poif.tagged_data.base.TaggedData" href="../tagged_data/base.html#poif.tagged_data.base.TaggedData">TaggedData</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def files_from_directory(self) -&gt; List[TaggedData]:
+    file_list = []
+    for directory in self.directories:
+        file_list.extend(directory.files)
+    return file_list</code></pre>
+</details>
+</dd>
+<dt id="poif.versioning.dataset.FromDiskVersionedCollection.get_dir_with_filename"><code class="name flex">
+<span>def <span class="ident">get_dir_with_filename</span></span>(<span>self, filename: str) ‑> <a title="poif.versioning.directory.VersionedDirectory" href="directory.html#poif.versioning.directory.VersionedDirectory">VersionedDirectory</a></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_dir_with_filename(self, filename: str) -&gt; VersionedDirectory:
+    for directory in self.directories:
+        if directory.get_vdir_name() == filename:
+            return directory
+    raise Exception(&#34;Directory with filename not found&#34;)</code></pre>
+</details>
+</dd>
+<dt id="poif.versioning.dataset.FromDiskVersionedCollection.get_files"><code class="name flex">
+<span>def <span class="ident">get_files</span></span>(<span>self) ‑> List[<a title="poif.tagged_data.base.TaggedData" href="../tagged_data/base.html#poif.tagged_data.base.TaggedData">TaggedData</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_files(self) -&gt; List[TaggedData]:
+    return self.files + self.files_from_directory()</code></pre>
+</details>
+</dd>
+<dt id="poif.versioning.dataset.FromDiskVersionedCollection.get_mappings"><code class="name flex">
+<span>def <span class="ident">get_mappings</span></span>(<span>self) ‑> List[<a title="poif.tagged_data.base.TaggedData" href="../tagged_data/base.html#poif.tagged_data.base.TaggedData">TaggedData</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_mappings(self) -&gt; List[TaggedData]:
+    return self.directories</code></pre>
+</details>
+</dd>
+<dt id="poif.versioning.dataset.FromDiskVersionedCollection.write_directories_versioning_files"><code class="name flex">
+<span>def <span class="ident">write_directories_versioning_files</span></span>(<span>self, save_directory: pathlib.Path)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def write_directories_versioning_files(self, save_directory: Path):
+    for directory in self.directories:
+        created_file = directory.write_vdir_to_folder(save_directory)
+
+        self.add_created_file(created_file)</code></pre>
+</details>
+</dd>
+<dt id="poif.versioning.dataset.FromDiskVersionedCollection.write_files_versioning_files"><code class="name flex">
+<span>def <span class="ident">write_files_versioning_files</span></span>(<span>self, save_directory: pathlib.Path)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def write_files_versioning_files(self, save_directory: Path):
+    for file in self.files:
+        created_file = file.write_vfile_to_folder(save_directory)
+
+        self.add_created_file(created_file)</code></pre>
+</details>
+</dd>
+<dt id="poif.versioning.dataset.FromDiskVersionedCollection.write_versioning_files"><code class="name flex">
+<span>def <span class="ident">write_versioning_files</span></span>(<span>self, save_directory: pathlib.Path)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def write_versioning_files(self, save_directory: Path):
+    self.write_directories_versioning_files(save_directory)
+    self.write_files_versioning_files(save_directory)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="poif.versioning.dataset.GitRepoCollection"><code class="flex name class">
+<span>class <span class="ident">GitRepoCollection</span></span>
+<span>(</span><span>git_url: str, git_commit: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>GitRepoCollection(git_url:str, git_commit:str)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class GitRepoCollection(ResourceDirCollection):
+    _mappings: List[TaggedData] = None
+    _files: List[TaggedData] = None
+    _tagged_repo: TaggedRepo = field(init=False)
+    _resource_dir: Path = field(init=False)
+
+    def __init__(self, git_url: str, git_commit: str):
+        repo = GitRepo(git_url=git_url, git_commit=git_commit)
+
+        resource_dir_link = repo.base_dir / &#34;.resource_folder&#34;
+        with open(resource_dir_link, &#34;r&#34;) as f:
+            relative_resource_dir = f.read()
+
+        self._resource_dir = repo.base_dir / relative_resource_dir
+
+        super().__init__(self._resource_dir)
+
+        config = DataRepoConfig.read_from_package(repo.base_dir)
+        self._tagged_repo = get_remote_repo_from_config(config.collection.data_remote)
+
+        self.retrieve_mappings()</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="poif.versioning.dataset.ResourceDirCollection" href="#poif.versioning.dataset.ResourceDirCollection">ResourceDirCollection</a></li>
+<li><a title="poif.versioning.dataset.VersionedCollection" href="#poif.versioning.dataset.VersionedCollection">VersionedCollection</a></li>
+<li>abc.ABC</li>
+</ul>
+</dd>
+<dt id="poif.versioning.dataset.ResourceDirCollection"><code class="flex name class">
+<span>class <span class="ident">ResourceDirCollection</span></span>
+<span>(</span><span>resource_dir: pathlib.Path)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Helper class that provides a standard way to create an ABC using
+inheritance.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ResourceDirCollection(VersionedCollection):
+    _mappings: List[TaggedData] = None
+    _files: List[TaggedData] = None
+    _tagged_repo: TaggedRepo = field(init=False)
+    _resource_dir: Path = field(init=False)
+
+    def __init__(self, resource_dir: Path):
+        super().__init__()
+        self._resource_dir = resource_dir
+        collection_config = DataCollectionConfig.read(self._resource_dir / &#34;collection_config.json&#34;)
+
+        file_remote = collection_config.data_remote.config.get_configured_remote()
+        data_folder = collection_config.data_remote.data_folder
+
+        self._tagged_repo = FileRemoteTaggedRepo(remote=file_remote, data_folder=data_folder)
+
+        self.retrieve_mappings()
+
+    def get_versioned_files(self, resource_dir: Path) -&gt; List[Path]:
+        return list(resource_dir.glob(&#34;*.vfile&#34;))
+
+    def get_versioned_directories(self, resource_dir: Path) -&gt; List[Path]:
+        return list(resource_dir.glob(&#34;*.vdir&#34;))
+
+    def retrieve_mappings(self):
+        self._mappings = []
+        vdirs = self.get_versioned_directories(self._resource_dir)
+
+        for vdir_file in vdirs:
+            with open(vdir_file, &#34;r&#34;) as f:
+                vdir_content = json.load(f)
+
+            mapping = self.create_repo_file(vdir_content[&#34;data_folder&#34;] + &#34;.mapping&#34;, vdir_content[&#34;tag&#34;])
+
+            self._mappings.append(mapping)
+
+    def create_repo_file(self, relative_path: RelFilePath, tag: FileHash) -&gt; RepoData:
+        return RepoData(
+            relative_path=relative_path,
+            repo=self._tagged_repo,
+            tag=tag,
+        )
+
+    def retrieve_files(self):
+        self._files = []
+        vfiles = self.get_versioned_files(self._resource_dir)
+
+        for vfile in vfiles:
+            with open(vfile, &#34;r&#34;) as f:
+                vfile_content = json.load(f)
+
+            file = self.create_repo_file(vfile_content[&#34;path&#34;], vfile_content[&#34;tag&#34;])
+            self._files.append(file)
+
+    def get_files_from_mappings(self):
+        mappings = self.get_mappings()
+        files = []
+
+        for mapping in mappings:
+            mapping_content = mapping.get_parsed()
+            for tag, path in mapping_content.items():
+                file = RepoData(relative_path=path, repo=self._tagged_repo, tag=tag)
+
+                files.append(file)
+        return files
+
+    def get_files(self) -&gt; List[TaggedData]:
+        if self._files is None:
+            self.retrieve_files()
+
+        return self._files + self.get_files_from_mappings()
+
+    def get_mappings(self) -&gt; List[TaggedData]:
+        if self._mappings is None:
+            self.retrieve_mappings()
+        return self._mappings</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="poif.versioning.dataset.VersionedCollection" href="#poif.versioning.dataset.VersionedCollection">VersionedCollection</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="poif.versioning.dataset.GitRepoCollection" href="#poif.versioning.dataset.GitRepoCollection">GitRepoCollection</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="poif.versioning.dataset.ResourceDirCollection.create_repo_file"><code class="name flex">
+<span>def <span class="ident">create_repo_file</span></span>(<span>self, relative_path: str, tag: str) ‑> <a title="poif.tagged_data.repo.RepoData" href="../tagged_data/repo.html#poif.tagged_data.repo.RepoData">RepoData</a></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_repo_file(self, relative_path: RelFilePath, tag: FileHash) -&gt; RepoData:
+    return RepoData(
+        relative_path=relative_path,
+        repo=self._tagged_repo,
+        tag=tag,
+    )</code></pre>
+</details>
+</dd>
+<dt id="poif.versioning.dataset.ResourceDirCollection.get_files"><code class="name flex">
+<span>def <span class="ident">get_files</span></span>(<span>self) ‑> List[<a title="poif.tagged_data.base.TaggedData" href="../tagged_data/base.html#poif.tagged_data.base.TaggedData">TaggedData</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_files(self) -&gt; List[TaggedData]:
+    if self._files is None:
+        self.retrieve_files()
+
+    return self._files + self.get_files_from_mappings()</code></pre>
+</details>
+</dd>
+<dt id="poif.versioning.dataset.ResourceDirCollection.get_files_from_mappings"><code class="name flex">
+<span>def <span class="ident">get_files_from_mappings</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_files_from_mappings(self):
+    mappings = self.get_mappings()
+    files = []
+
+    for mapping in mappings:
+        mapping_content = mapping.get_parsed()
+        for tag, path in mapping_content.items():
+            file = RepoData(relative_path=path, repo=self._tagged_repo, tag=tag)
+
+            files.append(file)
+    return files</code></pre>
+</details>
+</dd>
+<dt id="poif.versioning.dataset.ResourceDirCollection.get_mappings"><code class="name flex">
+<span>def <span class="ident">get_mappings</span></span>(<span>self) ‑> List[<a title="poif.tagged_data.base.TaggedData" href="../tagged_data/base.html#poif.tagged_data.base.TaggedData">TaggedData</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_mappings(self) -&gt; List[TaggedData]:
+    if self._mappings is None:
+        self.retrieve_mappings()
+    return self._mappings</code></pre>
+</details>
+</dd>
+<dt id="poif.versioning.dataset.ResourceDirCollection.get_versioned_directories"><code class="name flex">
+<span>def <span class="ident">get_versioned_directories</span></span>(<span>self, resource_dir: pathlib.Path) ‑> List[pathlib.Path]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_versioned_directories(self, resource_dir: Path) -&gt; List[Path]:
+    return list(resource_dir.glob(&#34;*.vdir&#34;))</code></pre>
+</details>
+</dd>
+<dt id="poif.versioning.dataset.ResourceDirCollection.get_versioned_files"><code class="name flex">
+<span>def <span class="ident">get_versioned_files</span></span>(<span>self, resource_dir: pathlib.Path) ‑> List[pathlib.Path]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_versioned_files(self, resource_dir: Path) -&gt; List[Path]:
+    return list(resource_dir.glob(&#34;*.vfile&#34;))</code></pre>
+</details>
+</dd>
+<dt id="poif.versioning.dataset.ResourceDirCollection.retrieve_files"><code class="name flex">
+<span>def <span class="ident">retrieve_files</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def retrieve_files(self):
+    self._files = []
+    vfiles = self.get_versioned_files(self._resource_dir)
+
+    for vfile in vfiles:
+        with open(vfile, &#34;r&#34;) as f:
+            vfile_content = json.load(f)
+
+        file = self.create_repo_file(vfile_content[&#34;path&#34;], vfile_content[&#34;tag&#34;])
+        self._files.append(file)</code></pre>
+</details>
+</dd>
+<dt id="poif.versioning.dataset.ResourceDirCollection.retrieve_mappings"><code class="name flex">
+<span>def <span class="ident">retrieve_mappings</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def retrieve_mappings(self):
+    self._mappings = []
+    vdirs = self.get_versioned_directories(self._resource_dir)
+
+    for vdir_file in vdirs:
+        with open(vdir_file, &#34;r&#34;) as f:
+            vdir_content = json.load(f)
+
+        mapping = self.create_repo_file(vdir_content[&#34;data_folder&#34;] + &#34;.mapping&#34;, vdir_content[&#34;tag&#34;])
+
+        self._mappings.append(mapping)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="poif.versioning.dataset.VersionedCollection"><code class="flex name class">
+<span>class <span class="ident">VersionedCollection</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Helper class that provides a standard way to create an ABC using
+inheritance.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class VersionedCollection(ABC):
+    def __init__(self):
+        super().__init__()
+
+    @abstractmethod
+    def get_files(self) -&gt; List[TaggedData]:
+        pass
+
+    @abstractmethod
+    def get_mappings(self) -&gt; List[TaggedData]:
+        pass
+
+    def get_tagged_data(self) -&gt; List[TaggedData]:
+        return self.get_mappings() + self.get_files()</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>abc.ABC</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="poif.versioning.dataset.FromDiskVersionedCollection" href="#poif.versioning.dataset.FromDiskVersionedCollection">FromDiskVersionedCollection</a></li>
+<li><a title="poif.versioning.dataset.ResourceDirCollection" href="#poif.versioning.dataset.ResourceDirCollection">ResourceDirCollection</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="poif.versioning.dataset.VersionedCollection.get_files"><code class="name flex">
+<span>def <span class="ident">get_files</span></span>(<span>self) ‑> List[<a title="poif.tagged_data.base.TaggedData" href="../tagged_data/base.html#poif.tagged_data.base.TaggedData">TaggedData</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@abstractmethod
+def get_files(self) -&gt; List[TaggedData]:
+    pass</code></pre>
+</details>
+</dd>
+<dt id="poif.versioning.dataset.VersionedCollection.get_mappings"><code class="name flex">
+<span>def <span class="ident">get_mappings</span></span>(<span>self) ‑> List[<a title="poif.tagged_data.base.TaggedData" href="../tagged_data/base.html#poif.tagged_data.base.TaggedData">TaggedData</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@abstractmethod
+def get_mappings(self) -&gt; List[TaggedData]:
+    pass</code></pre>
+</details>
+</dd>
+<dt id="poif.versioning.dataset.VersionedCollection.get_tagged_data"><code class="name flex">
+<span>def <span class="ident">get_tagged_data</span></span>(<span>self) ‑> List[<a title="poif.tagged_data.base.TaggedData" href="../tagged_data/base.html#poif.tagged_data.base.TaggedData">TaggedData</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_tagged_data(self) -&gt; List[TaggedData]:
+    return self.get_mappings() + self.get_files()</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="poif.versioning" href="index.html">poif.versioning</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="poif.versioning.dataset.FromDiskVersionedCollection" href="#poif.versioning.dataset.FromDiskVersionedCollection">FromDiskVersionedCollection</a></code></h4>
+<ul class="">
+<li><code><a title="poif.versioning.dataset.FromDiskVersionedCollection.add_vdir_file" href="#poif.versioning.dataset.FromDiskVersionedCollection.add_vdir_file">add_vdir_file</a></code></li>
+<li><code><a title="poif.versioning.dataset.FromDiskVersionedCollection.add_vfile" href="#poif.versioning.dataset.FromDiskVersionedCollection.add_vfile">add_vfile</a></code></li>
+<li><code><a title="poif.versioning.dataset.FromDiskVersionedCollection.base_dir" href="#poif.versioning.dataset.FromDiskVersionedCollection.base_dir">base_dir</a></code></li>
+<li><code><a title="poif.versioning.dataset.FromDiskVersionedCollection.config" href="#poif.versioning.dataset.FromDiskVersionedCollection.config">config</a></code></li>
+<li><code><a title="poif.versioning.dataset.FromDiskVersionedCollection.directories" href="#poif.versioning.dataset.FromDiskVersionedCollection.directories">directories</a></code></li>
+<li><code><a title="poif.versioning.dataset.FromDiskVersionedCollection.files" href="#poif.versioning.dataset.FromDiskVersionedCollection.files">files</a></code></li>
+<li><code><a title="poif.versioning.dataset.FromDiskVersionedCollection.files_from_directory" href="#poif.versioning.dataset.FromDiskVersionedCollection.files_from_directory">files_from_directory</a></code></li>
+<li><code><a title="poif.versioning.dataset.FromDiskVersionedCollection.get_dir_with_filename" href="#poif.versioning.dataset.FromDiskVersionedCollection.get_dir_with_filename">get_dir_with_filename</a></code></li>
+<li><code><a title="poif.versioning.dataset.FromDiskVersionedCollection.get_files" href="#poif.versioning.dataset.FromDiskVersionedCollection.get_files">get_files</a></code></li>
+<li><code><a title="poif.versioning.dataset.FromDiskVersionedCollection.get_mappings" href="#poif.versioning.dataset.FromDiskVersionedCollection.get_mappings">get_mappings</a></code></li>
+<li><code><a title="poif.versioning.dataset.FromDiskVersionedCollection.write_directories_versioning_files" href="#poif.versioning.dataset.FromDiskVersionedCollection.write_directories_versioning_files">write_directories_versioning_files</a></code></li>
+<li><code><a title="poif.versioning.dataset.FromDiskVersionedCollection.write_files_versioning_files" href="#poif.versioning.dataset.FromDiskVersionedCollection.write_files_versioning_files">write_files_versioning_files</a></code></li>
+<li><code><a title="poif.versioning.dataset.FromDiskVersionedCollection.write_versioning_files" href="#poif.versioning.dataset.FromDiskVersionedCollection.write_versioning_files">write_versioning_files</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="poif.versioning.dataset.GitRepoCollection" href="#poif.versioning.dataset.GitRepoCollection">GitRepoCollection</a></code></h4>
+</li>
+<li>
+<h4><code><a title="poif.versioning.dataset.ResourceDirCollection" href="#poif.versioning.dataset.ResourceDirCollection">ResourceDirCollection</a></code></h4>
+<ul class="">
+<li><code><a title="poif.versioning.dataset.ResourceDirCollection.create_repo_file" href="#poif.versioning.dataset.ResourceDirCollection.create_repo_file">create_repo_file</a></code></li>
+<li><code><a title="poif.versioning.dataset.ResourceDirCollection.get_files" href="#poif.versioning.dataset.ResourceDirCollection.get_files">get_files</a></code></li>
+<li><code><a title="poif.versioning.dataset.ResourceDirCollection.get_files_from_mappings" href="#poif.versioning.dataset.ResourceDirCollection.get_files_from_mappings">get_files_from_mappings</a></code></li>
+<li><code><a title="poif.versioning.dataset.ResourceDirCollection.get_mappings" href="#poif.versioning.dataset.ResourceDirCollection.get_mappings">get_mappings</a></code></li>
+<li><code><a title="poif.versioning.dataset.ResourceDirCollection.get_versioned_directories" href="#poif.versioning.dataset.ResourceDirCollection.get_versioned_directories">get_versioned_directories</a></code></li>
+<li><code><a title="poif.versioning.dataset.ResourceDirCollection.get_versioned_files" href="#poif.versioning.dataset.ResourceDirCollection.get_versioned_files">get_versioned_files</a></code></li>
+<li><code><a title="poif.versioning.dataset.ResourceDirCollection.retrieve_files" href="#poif.versioning.dataset.ResourceDirCollection.retrieve_files">retrieve_files</a></code></li>
+<li><code><a title="poif.versioning.dataset.ResourceDirCollection.retrieve_mappings" href="#poif.versioning.dataset.ResourceDirCollection.retrieve_mappings">retrieve_mappings</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="poif.versioning.dataset.VersionedCollection" href="#poif.versioning.dataset.VersionedCollection">VersionedCollection</a></code></h4>
+<ul class="">
+<li><code><a title="poif.versioning.dataset.VersionedCollection.get_files" href="#poif.versioning.dataset.VersionedCollection.get_files">get_files</a></code></li>
+<li><code><a title="poif.versioning.dataset.VersionedCollection.get_mappings" href="#poif.versioning.dataset.VersionedCollection.get_mappings">get_mappings</a></code></li>
+<li><code><a title="poif.versioning.dataset.VersionedCollection.get_tagged_data" href="#poif.versioning.dataset.VersionedCollection.get_tagged_data">get_tagged_data</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>
