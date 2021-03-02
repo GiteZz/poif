@@ -1,10 +1,12 @@
-## Port ranges
+## PO-IF
 
-- MLFlow (301xx)
-    - Server 30100
-    - Minio 30110
-- DVC (302xx)
-    - Minio 30210
-    - Gitlab 30220 (http), 30221 (https), 30222 (ssh)
-- PyPi (303xx)
-    - Server 30310
+Po-if is toolset used for handling and interpreting data. 
+The project can be split up into two parts, one that handles versioning and storing data on a remote. 
+While the second part is aimed at creating tools that interpret that data 
+
+
+### Interpreting data
+
+#### Tagged Data
+
+Tagged data is the base component of the entire system. This is essentially a piece of data with an associated hash.

@@ -8,6 +8,7 @@ from poif.utils.template import extract_values
 
 class SplitByTemplate(Splitter):
     def __init__(self, template: str, subset_tag="subset"):
+        super().__init__()
         self.template = template
         self.subset_tag = subset_tag
 

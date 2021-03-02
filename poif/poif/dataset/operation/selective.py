@@ -1,13 +1,12 @@
-from typing import TYPE_CHECKING, Dict, List
+from typing import Dict, List
 
-if TYPE_CHECKING:
-    from poif.dataset.operation import Operation
-
+from poif.dataset.operation.base import Operation
 from poif.typing import SubSetName
 
 
-class SelectiveSubsetOperation:
+class SelectiveSubsetOperation(Operation):
     def __init__(self, operations: Dict[SubSetName, "Operation"]):
+        super().__init__()
         self.operations = operations
 
     @property

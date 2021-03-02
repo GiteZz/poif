@@ -2,13 +2,14 @@ from collections import defaultdict
 from typing import Callable, Dict, List, Optional
 
 from poif.dataset.object.base import DataSetObject
+from poif.dataset.operation.base import Operation
 from poif.typing import SubSetName
 from poif.utils.splitting import random_split
 
 SplitterDict = Dict[SubSetName, List[DataSetObject]]
 
 
-class Splitter:
+class Splitter(Operation):
     def split_single_input(self, ds_input: DataSetObject) -> Optional[SubSetName]:
         raise Exception("Single object transform was not defined.")
 

@@ -20,7 +20,7 @@ def test_python_package():
 
     subprocess.run([str(python_loc), "-m", "pip", "install", str(base_dir)], check=True)
 
-    download_script = Path(__file__).parent / "python_package" / "download_to_folder.py"
+    download_script = Path(__file__).parent / "python_package" / "download_to_folder.py_test"
     download_to_folder = get_temp_path(prefix="download_to_folder")
     print(download_to_folder)
 

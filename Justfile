@@ -7,7 +7,11 @@ lint:
 test:
     cd ./poif && pytest .
 
-check: lint test
+generate_doc:
+    cd ./poif && pdoc --html --force poif
+
+
+check: lint test generate_doc
 
 
 setup-test-minio:

@@ -1,6 +1,6 @@
-from poif.tests.integration.gitlab.config import GitlabConfig
-from poif.tests.integration.gitlab.tools import create_repo, delete_all_projects
-
-delete_all_projects(GitlabConfig())
-
-print(create_repo(GitlabConfig(), "test"))
+# from poif.tests.integration.gitlab.config import GitlabConfig
+# from poif.tests.integration.gitlab.tools import create_repo, delete_all_projects
+#
+# delete_all_projects(GitlabConfig())
+#
+# print(create_repo(GitlabConfig(), "test"))

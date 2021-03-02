@@ -1,6 +1,6 @@
 from poif.dataset.base import Dataset
 from poif.dataset.object.output import classification_output
-from poif.dataset.operation import SelectiveSubsetOperation
+from poif.dataset.operation.selective import SelectiveSubsetOperation
 from poif.dataset.operation.split.template import SplitByTemplate
 from poif.dataset.operation.transform.sampler import LimitSamplesByBin
 from poif.dataset.operation.transform.template import ClassificationByTemplate

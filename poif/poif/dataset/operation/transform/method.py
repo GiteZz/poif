@@ -11,6 +11,7 @@ CallableDataSetTransformation = Callable[[List[DataSetObject]], List[DataSetObje
 
 class SingleMethodTransformation(Transformation):
     def __init__(self, transform: CallableDataPointTransformation):
+        super().__init__()
         self.transform = transform
 
     def transform_single_input(self, ds_input: DataSetObject) -> List[DataSetObject]:
@@ -19,6 +20,7 @@ class SingleMethodTransformation(Transformation):
 
 class MultiMethodTransformation(Transformation):
     def __init__(self, transform: CallableDataSetTransformation):
+        super().__init__()
         self.transform = transform
 
     def transform_input_list(self, inputs: List[DataSetObject]) -> List[DataSetObject]:

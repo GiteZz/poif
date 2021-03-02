@@ -8,6 +8,7 @@ from poif.dataset.operation.transform.sampler import BinCreator
 
 class SplitByBin(Splitter):
     def __init__(self, bins: Dict[str, List[Any]], bin_creator: BinCreator):
+        super().__init__()
         self.bins = bins
         self.bin_creator = bin_creator
 

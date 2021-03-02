@@ -38,7 +38,7 @@ def execute_gitlab_api_call(
     config: GitlabConfig,
     params=None,
     method: RequestType = RequestType.GET,
-):
+) -> Dict:
     api_url = git_api_url_from_config(config) + api_route
 
     methods: Dict[RequestType, Callable] = {
@@ -53,12 +53,12 @@ def execute_gitlab_api_call(
     return r.json()
 
 
-def delete_all_projects(config: GitlabConfig):
-    all_projects = execute_gitlab_api_call("projects", config)
-
-    for project in all_projects:
-        project_id = project["id"]
-        execute_gitlab_api_call(f"projects/{project_id}", config, method=RequestType.DELETE)
+# def delete_all_projects(config: GitlabConfig):
+#     all_projects = execute_gitlab_api_call("projects", config)
+#
+#     for project in all_projects:
+#         project_id = project["id"]
+#         execute_gitlab_api_call(f"projects/{project_id}", config, method=RequestType.DELETE)
 
 
 def get_existing_credentials():

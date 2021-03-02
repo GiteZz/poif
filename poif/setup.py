@@ -36,6 +36,14 @@ setuptools.setup(
         "gitpython==3.1.13",
     ],
     extras_require={
-        "test": ["black==20.8b1", "isort==5.7.0", "mypy==0.800", "pytest==6.2.2", "autoflake==1.4", "docker==4.4.4"]
+        "test": [
+            "black==20.8b1",
+            "isort==5.7.0",
+            "mypy==0.800",
+            "pytest==6.2.2",
+            "autoflake==1.4",
+            "docker==4.4.4",
+            "pdoc3==0.9.2",
+        ]
     },
 )

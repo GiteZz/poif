@@ -10,6 +10,7 @@ from poif.utils.dataset import tagged_data_to_rel_file_mapping
 
 class SingleCoco(Transformation):
     def __init__(self, annotation_file: RelFilePath, data_folder: RelFilePath):
+        super().__init__()
         self.annotation_file = annotation_file
         self.data_folder = data_folder
 

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any, Optional
 
-from poif.parser.base import ParseMixin
+from poif.parser.mixin import ParseMixin
 from poif.typing import FileHash
 
 

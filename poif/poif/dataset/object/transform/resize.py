@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from poif.dataset.object.data_transform.base import DataTransform
+from poif.dataset.object.transform.base import DataTransform
 from poif.utils import ResizeMethod, resize_img
 
 

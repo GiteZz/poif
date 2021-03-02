@@ -16,6 +16,7 @@ class MaskTemplate:
 
 class MaskByTemplate(Transformation):
     def __init__(self, template: MaskTemplate):
+        super().__init__()
         self.template = template
 
     def is_mask_match(self, relative_path: str) -> bool:

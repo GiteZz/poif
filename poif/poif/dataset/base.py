@@ -1,13 +1,13 @@
 import copy
 from abc import ABC, abstractmethod
-from pathlib import Path
 from typing import List, Optional, Union
 
 from poif.dataset.meta import MetaCollection
 from poif.dataset.object.base import DataSetObject
 from poif.dataset.object.output import DataSetObjectOutputFunction
-from poif.dataset.operation import Operation, SelectiveSubsetOperation
+from poif.dataset.operation.base import Operation
 from poif.dataset.operation.meta_provider.base import MetaProvider
+from poif.dataset.operation.selective import SelectiveSubsetOperation
 from poif.dataset.operation.split.base import Splitter
 from poif.dataset.operation.transform.base import Transformation
 from poif.dataset.operation.transform_and_split.base import TransformAndSplit
@@ -15,11 +15,14 @@ from poif.tagged_data.base import TaggedData
 
 
 class BaseDataset(ABC):
+    """
+    Provide base dataset functionality similarly to torch.utils.data.Dataset. The __getitem__ wil return the
+    result of the .output() function on the DataSetObject at that index. This class is used as an interface,
+    not intended to be instantiated.
+    """
+
     def __init__(self):
         self.objects = []
-
-    def create_file_system(self, data_format: str, base_folder: Path):
-        raise Exception("File system not supported for this dataset")
 
     @abstractmethod
     def form(self, data: List[TaggedData]):
@@ -33,6 +36,39 @@ class BaseDataset(ABC):
 
 
 class Dataset(BaseDataset):
+    """
+    This implements the standard pytorch dataset interface combined with some nice extras. Notably the option to
+    perform dataset operations. An operation is meant to change the dataset and/or its contents. If a Splitter
+    operation (poif.dataset.operation.base.Splitter) is used, the subdatasets (also Dataset type)
+    can simply be accessed with the '.' on the dataset name.
+
+    birds_ds = Dataset()
+
+    train_val_splitter = Splitter()
+
+    bird_ds.apply_operation(train_val_splitter)
+
+
+
+    bird_ds.train -> Contains training data
+
+    bird_ds.val -> Contains validation data
+
+
+    The Transformation is meant to change the internal DataSet objects. An example of this could be
+    adding the labels from the original path. Another example is removing specific samples of limiting the
+    amout of samples.
+
+    The MetaProvider is meant to add or transform the metadata of the dataset. The metadata is
+    accessible via the .meta on the dataset and will return a MetaCollection dataset.
+
+    The TransformAndSplit combines the Splitter and Transformation. This is useful with datasets where
+    the split and additional data is located in one metafile.
+
+    The last operation is the SelectiveSubsetOperation, this operation simply allows for using operation on a
+    selective subset. This could be used to limit the samples in train and validation by a different amount.
+    """
+
     def __init__(
         self, operations: List[Operation] = None, output_function: Optional[DataSetObjectOutputFunction] = None
     ):
@@ -48,7 +84,7 @@ class Dataset(BaseDataset):
 
         self.initial_split_performed = False
 
-        self.meta = MetaCollection()
+        self._meta = MetaCollection()
 
     def __getattr__(self, item) -> Union[BaseDataset, "Dataset"]:
         if item in self.available_sub_datasets:
@@ -57,27 +93,31 @@ class Dataset(BaseDataset):
             raise AttributeError
 
     @property
-    def available_sub_datasets(self):
+    def meta(self) -> MetaCollection:
+        return self._meta
+
+    @property
+    def available_sub_datasets(self) -> List[str]:
         return list(self.splits.keys())
 
     def form(self, data: List[TaggedData]):
         inputs = [DataSetObject(tagged_data, output_function=self.output_function) for tagged_data in data]
         self.form_from_ds_objects(inputs)
 
-    def set_ds_objects(self, objects: List[DataSetObject]):
+    def _set_ds_objects(self, objects: List[DataSetObject]):
         self.objects = objects
 
     def form_from_ds_objects(self, objects: List[DataSetObject]):
         # TODO maybe remove and integrate into self.form
         self.objects = objects
-        self.next_operation()
+        self._next_operation()
 
-    def next_operation(self):
+    def _next_operation(self):
         if self.operations is None or len(self.operations) == 0:
             return
         current_operation = self.operations.pop(0)
         self.apply_operation(current_operation)
-        self.next_operation()
+        self._next_operation()
 
     def apply_operation(self, operation: Operation):
         if len(self.splits) != 0:
@@ -91,51 +131,49 @@ class Dataset(BaseDataset):
                 for sub_ds in self.splits.values():
                     sub_ds.apply_operation(operation)
         else:
-            if self.is_splitter(operation):
-                self.apply_splitter(operation)
-            elif self.is_tranformation(operation):
-                self.apply_transformation(operation)
+            operation.set_meta(self.meta)
+            if self._is_splitter(operation):
+                self._apply_splitter(operation)
+            elif self._is_tranformation(operation):
+                self._apply_transformation(operation)
             elif isinstance(operation, MetaProvider):
-                self.apply_meta_provider(operation)
+                self._apply_meta_provider(operation)
             else:
                 raise Exception("Unknown type of operation")
 
-    def is_splitter(self, operation: Operation) -> bool:
+    def _is_splitter(self, operation: Operation) -> bool:
         return isinstance(operation, Splitter) or isinstance(operation, TransformAndSplit)
 
-    def is_tranformation(self, operation: Operation) -> bool:
+    def _is_tranformation(self, operation: Operation) -> bool:
         return isinstance(operation, Transformation)
 
-    def apply_meta_provider(self, meta_provider: MetaProvider):
-        new_meta = meta_provider.provide_meta(self.objects, self.meta)
-        self.meta = new_meta
+    def _apply_meta_provider(self, meta_provider: MetaProvider):
+        new_meta = meta_provider.provide_meta(self.objects, self._meta)
+        self._meta = new_meta
 
-    def apply_splitter(self, splitter: Splitter):
+    def _apply_splitter(self, splitter: Splitter):
         splitter_dict = splitter(self.objects)
 
-        self.add_splitter_dict(splitter_dict)
+        self._add_splitter_dict(splitter_dict)
 
         self.initial_split_performed = True
 
-    def create_child_dataset(self) -> "Dataset":
+    def _create_child_dataset(self) -> "Dataset":
         new_ds = Dataset()
         new_ds.output_function = self.output_function
-        new_ds.meta = self.meta
+        new_ds._meta = self._meta
 
         return new_ds
 
-    def add_splitter_dict(self, splitter_dict):
+    def _add_splitter_dict(self, splitter_dict):
         for subset_name, objects in splitter_dict.items():
-            new_dataset = self.create_child_dataset()
-            new_dataset.set_ds_objects(objects)
+            new_dataset = self._create_child_dataset()
+            new_dataset._set_ds_objects(objects)
 
             self.splits[subset_name] = new_dataset
 
-    def apply_transformation(self, transformation: Transformation):
+    def _apply_transformation(self, transformation: Transformation):
         self.objects = transformation(self.objects)
-
-    def add_transformation(self, operation: Operation):
-        self.operations.append(operation)
 
     def __len__(self):
         return len(self.objects)
@@ -149,7 +187,7 @@ class Dataset(BaseDataset):
         new_ds = Dataset()
         new_ds.objects = total_objects
 
-        new_meta = self.meta + other.meta
-        new_ds.meta = new_meta
+        new_meta = self._meta + other._meta
+        new_ds._meta = new_meta
 
         return new_ds

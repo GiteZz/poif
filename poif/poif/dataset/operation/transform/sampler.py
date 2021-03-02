@@ -10,6 +10,7 @@ BinCreator = Callable[[DataSetObject], Any]
 
 class LimitSamplesByBin(Transformation):
     def __init__(self, sample_limit: int, bin_creator: BinCreator):
+        super().__init__()
         self.sample_limit = sample_limit
         self.bin_creator = bin_creator
 

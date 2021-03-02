@@ -8,6 +8,7 @@ from poif.typing import RelFilePath
 
 class CocoMetaProvider(MetaProvider):
     def __init__(self, annotation_file: RelFilePath):
+        super().__init__()
         self.annotation_file = annotation_file
 
     def provide_meta(self, objects: List[DataSetObject], old_meta: MetaCollection) -> MetaCollection:

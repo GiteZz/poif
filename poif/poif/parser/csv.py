@@ -1,6 +1,6 @@
 from io import BytesIO
 
-import pandas as pd
+from pandas import DataFrame, read_csv
 
 from poif.parser.base import Parser
 
@@ -9,7 +9,7 @@ class CsvPandasParser(Parser):
     approved_extensions = ["csv"]
 
     @staticmethod
-    def parse(to_parse: bytes) -> pd.DataFrame:
-        df = pd.read_csv(BytesIO(to_parse))
+    def parse(to_parse: bytes) -> DataFrame:
+        df = read_csv(BytesIO(to_parse))
 
         return df

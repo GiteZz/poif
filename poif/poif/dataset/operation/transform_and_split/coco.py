@@ -9,6 +9,7 @@ from poif.typing import DatasetType, RelFilePath
 
 class MultiCoco(TransformAndSplit):
     def __init__(self, annotation_files: Dict[DatasetType, RelFilePath], data_folders: Dict[DatasetType, RelFilePath]):
+        super().__init__()
         self.annotation_files = annotation_files
         self.data_folders = data_folders
 

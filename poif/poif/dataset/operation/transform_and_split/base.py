@@ -2,11 +2,12 @@ from collections import defaultdict
 from typing import List, Tuple
 
 from poif.dataset.object.base import DataSetObject
+from poif.dataset.operation.base import Operation
 from poif.dataset.operation.split.base import SplitterDict
 from poif.typing import SubSetName
 
 
-class TransformAndSplit:
+class TransformAndSplit(Operation):
     def single(self, ds_input: DataSetObject) -> Tuple[SubSetName, List[DataSetObject]]:
         raise Exception("Single object transform was not defined.")
 
