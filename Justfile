@@ -7,7 +7,7 @@ lint:
 test:
     cd ./poif && pytest .
 
-generate_doc:
+@generate_doc:
     rm -f -r ./docs
     cd ./poif && pdoc --html -c show_type_annotations=True --force poif --html-dir ./../pdoc
     mv ./pdoc/poif ./docs

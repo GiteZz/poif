@@ -63,11 +63,11 @@ class Mapping(LazyLoadedTaggedData, ABC):
         return self._mapping
 
     def set_tag(self):
-        self._tag = self.get_mapping_hash()
+        self._tag = self._get_mapping_hash()
 
-    def get_mapping_hash(self):
+    def _get_mapping_hash(self):
         # Sort the files (Can&#39;t be sure that the file system gives them in order)
-        sorted_tags = self.get_sorted_mapping()
+        sorted_tags = self._get_sorted_mapping()
         intermediate_hash = md5()
 
         for tag in sorted_tags:
@@ -75,7 +75,7 @@ class Mapping(LazyLoadedTaggedData, ABC):
 
         return intermediate_hash.hexdigest()
 
-    def get_sorted_mapping(self) -&gt; List[FileHash]:
+    def _get_sorted_mapping(self) -&gt; List[FileHash]:
         tags = list(self.mapping.keys())
         relative_files = list(self.mapping.values())
 
@@ -195,11 +195,11 @@ this allows for automated checking if the data has not changed since the last ti
         return self._mapping
 
     def set_tag(self):
-        self._tag = self.get_mapping_hash()
+        self._tag = self._get_mapping_hash()
 
-    def get_mapping_hash(self):
+    def _get_mapping_hash(self):
         # Sort the files (Can&#39;t be sure that the file system gives them in order)
-        sorted_tags = self.get_sorted_mapping()
+        sorted_tags = self._get_sorted_mapping()
         intermediate_hash = md5()
 
         for tag in sorted_tags:
@@ -207,7 +207,7 @@ this allows for automated checking if the data has not changed since the last ti
 
         return intermediate_hash.hexdigest()
 
-    def get_sorted_mapping(self) -&gt; List[FileHash]:
+    def _get_sorted_mapping(self) -&gt; List[FileHash]:
         tags = list(self.mapping.keys())
         relative_files = list(self.mapping.values())
 
@@ -285,42 +285,6 @@ def size(self) -&gt; int:
     return json.dumps(self.mapping).encode(&#34;utf-8&#34;)</code></pre>
 </details>
 </dd>
-<dt id="poif.versioning.directory.Mapping.get_mapping_hash"><code class="name flex">
-<span>def <span class="ident">get_mapping_hash</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_mapping_hash(self):
-    # Sort the files (Can&#39;t be sure that the file system gives them in order)
-    sorted_tags = self.get_sorted_mapping()
-    intermediate_hash = md5()
-
-    for tag in sorted_tags:
-        intermediate_hash.update(tag.encode(&#34;utf-8&#34;))
-
-    return intermediate_hash.hexdigest()</code></pre>
-</details>
-</dd>
-<dt id="poif.versioning.directory.Mapping.get_sorted_mapping"><code class="name flex">
-<span>def <span class="ident">get_sorted_mapping</span></span>(<span>self) ‑> List[str]</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_sorted_mapping(self) -&gt; List[FileHash]:
-    tags = list(self.mapping.keys())
-    relative_files = list(self.mapping.values())
-
-    return [tag for _, tag in sorted(zip(relative_files, tags), key=lambda pair: pair[0])]</code></pre>
-</details>
-</dd>
 <dt id="poif.versioning.directory.Mapping.set_mapping"><code class="name flex">
 <span>def <span class="ident">set_mapping</span></span>(<span>self)</span>
 </code></dt>
@@ -345,7 +309,7 @@ def set_mapping(self):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def set_tag(self):
-    self._tag = self.get_mapping_hash()</code></pre>
+    self._tag = self._get_mapping_hash()</code></pre>
 </details>
 </dd>
 </dl>
@@ -586,8 +550,6 @@ def files(self):
 <ul class="two-column">
 <li><code><a title="poif.versioning.directory.Mapping.extension" href="#poif.versioning.directory.Mapping.extension">extension</a></code></li>
 <li><code><a title="poif.versioning.directory.Mapping.get" href="#poif.versioning.directory.Mapping.get">get</a></code></li>
-<li><code><a title="poif.versioning.directory.Mapping.get_mapping_hash" href="#poif.versioning.directory.Mapping.get_mapping_hash">get_mapping_hash</a></code></li>
-<li><code><a title="poif.versioning.directory.Mapping.get_sorted_mapping" href="#poif.versioning.directory.Mapping.get_sorted_mapping">get_sorted_mapping</a></code></li>
 <li><code><a title="poif.versioning.directory.Mapping.mapping" href="#poif.versioning.directory.Mapping.mapping">mapping</a></code></li>
 <li><code><a title="poif.versioning.directory.Mapping.set_mapping" href="#poif.versioning.directory.Mapping.set_mapping">set_mapping</a></code></li>
 <li><code><a title="poif.versioning.directory.Mapping.set_tag" href="#poif.versioning.directory.Mapping.set_tag">set_tag</a></code></li>
