@@ -43,6 +43,10 @@ if typing.TYPE_CHECKING:
 
 @dataclass
 class FileRemoteTaggedRepo(TaggedRepo):
+    &#34;&#34;&#34;
+    Retrieves TaggedData from a FileRemote, a FileRemote is defined as a remote that support storing/downloading files.
+    &#34;&#34;&#34;
+
     remote: &#34;FileRemote&#34;
     data_folder: str
 
@@ -107,12 +111,16 @@ def get_remote_repo_from_config(remote_config: &#34;RemoteConfig&#34;):
 <span>(</span><span>remote: FileRemote, data_folder: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>FileRemoteTaggedRepo(remote:'FileRemote', data_folder:str)</p></div>
+<div class="desc"><p>Retrieves TaggedData from a FileRemote, a FileRemote is defined as a remote that support storing/downloading files.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class FileRemoteTaggedRepo(TaggedRepo):
+    &#34;&#34;&#34;
+    Retrieves TaggedData from a FileRemote, a FileRemote is defined as a remote that support storing/downloading files.
+    &#34;&#34;&#34;
+
     remote: &#34;FileRemote&#34;
     data_folder: str
 

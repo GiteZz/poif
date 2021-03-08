@@ -47,6 +47,11 @@ from poif.versioning.file import VersionedFile
 
 
 class VersionedCollection(ABC):
+    &#34;&#34;&#34;
+    This class is used to contain a collection of TaggedData. The get_files() is the most important function
+    since this retrieves the TaggedData that can be use to construct a Dataset.
+    &#34;&#34;&#34;
+
     def __init__(self):
         super().__init__()
 
@@ -55,11 +60,11 @@ class VersionedCollection(ABC):
         pass
 
     @abstractmethod
-    def get_mappings(self) -&gt; List[TaggedData]:
+    def _get_mappings(self) -&gt; List[TaggedData]:
         pass
 
     def get_tagged_data(self) -&gt; List[TaggedData]:
-        return self.get_mappings() + self.get_files()
+        return self._get_mappings() + self.get_files()
 
 
 @dataclass
@@ -89,7 +94,7 @@ class FromDiskVersionedCollection(VersionedCollection, FileCreatorMixin):
             file_list.extend(directory.files)
         return file_list
 
-    def get_mappings(self) -&gt; List[TaggedData]:
+    def _get_mappings(self) -&gt; List[TaggedData]:
         return self.directories
 
     def write_versioning_files(self, save_directory: Path):
@@ -179,7 +184,7 @@ class ResourceDirCollection(VersionedCollection):
             self._files.append(file)
 
     def get_files_from_mappings(self):
-        mappings = self.get_mappings()
+        mappings = self._get_mappings()
         files = []
 
         for mapping in mappings:
@@ -196,7 +201,7 @@ class ResourceDirCollection(VersionedCollection):
 
         return self._files + self.get_files_from_mappings()
 
-    def get_mappings(self) -&gt; List[TaggedData]:
+    def _get_mappings(self) -&gt; List[TaggedData]:
         if self._mappings is None:
             self.retrieve_mappings()
         return self._mappings
@@ -204,6 +209,11 @@ class ResourceDirCollection(VersionedCollection):
 
 @dataclass
 class GitRepoCollection(ResourceDirCollection):
+    &#34;&#34;&#34;
+    VersionedCollection that is initialized from a git repository and commit. With these two variables
+    all references from the original collection can be retrieved.
+    &#34;&#34;&#34;
+
     _mappings: List[TaggedData] = None
     _files: List[TaggedData] = None
     _tagged_repo: TaggedRepo = field(init=False)
@@ -281,7 +291,7 @@ if __name__ == &#34;__main__&#34;:
             file_list.extend(directory.files)
         return file_list
 
-    def get_mappings(self) -&gt; List[TaggedData]:
+    def _get_mappings(self) -&gt; List[TaggedData]:
         return self.directories
 
     def write_versioning_files(self, save_directory: Path):
@@ -415,19 +425,6 @@ if __name__ == &#34;__main__&#34;:
     return self.files + self.files_from_directory()</code></pre>
 </details>
 </dd>
-<dt id="poif.versioning.dataset.FromDiskVersionedCollection.get_mappings"><code class="name flex">
-<span>def <span class="ident">get_mappings</span></span>(<span>self) ‑> List[<a title="poif.tagged_data.base.TaggedData" href="../tagged_data/base.html#poif.tagged_data.base.TaggedData">TaggedData</a>]</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_mappings(self) -&gt; List[TaggedData]:
-    return self.directories</code></pre>
-</details>
-</dd>
 <dt id="poif.versioning.dataset.FromDiskVersionedCollection.write_directories_versioning_files"><code class="name flex">
 <span>def <span class="ident">write_directories_versioning_files</span></span>(<span>self, save_directory: pathlib.Path)</span>
 </code></dt>
@@ -481,12 +478,18 @@ if __name__ == &#34;__main__&#34;:
 <span>(</span><span>git_url: str, git_commit: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>GitRepoCollection(git_url:str, git_commit:str)</p></div>
+<div class="desc"><p>VersionedCollection that is initialized from a git repository and commit. With these two variables
+all references from the original collection can be retrieved.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class GitRepoCollection(ResourceDirCollection):
+    &#34;&#34;&#34;
+    VersionedCollection that is initialized from a git repository and commit. With these two variables
+    all references from the original collection can be retrieved.
+    &#34;&#34;&#34;
+
     _mappings: List[TaggedData] = None
     _files: List[TaggedData] = None
     _tagged_repo: TaggedRepo = field(init=False)
@@ -520,8 +523,8 @@ if __name__ == &#34;__main__&#34;:
 <span>(</span><span>resource_dir: pathlib.Path)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Helper class that provides a standard way to create an ABC using
-inheritance.</p></div>
+<div class="desc"><p>This class is used to contain a collection of TaggedData. The get_files() is the most important function
+since this retrieves the TaggedData that can be use to construct a Dataset.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -581,7 +584,7 @@ inheritance.</p></div>
             self._files.append(file)
 
     def get_files_from_mappings(self):
-        mappings = self.get_mappings()
+        mappings = self._get_mappings()
         files = []
 
         for mapping in mappings:
@@ -598,7 +601,7 @@ inheritance.</p></div>
 
         return self._files + self.get_files_from_mappings()
 
-    def get_mappings(self) -&gt; List[TaggedData]:
+    def _get_mappings(self) -&gt; List[TaggedData]:
         if self._mappings is None:
             self.retrieve_mappings()
         return self._mappings</code></pre>
@@ -657,7 +660,7 @@ inheritance.</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_files_from_mappings(self):
-    mappings = self.get_mappings()
+    mappings = self._get_mappings()
     files = []
 
     for mapping in mappings:
@@ -667,21 +670,6 @@ inheritance.</p></div>
 
             files.append(file)
     return files</code></pre>
-</details>
-</dd>
-<dt id="poif.versioning.dataset.ResourceDirCollection.get_mappings"><code class="name flex">
-<span>def <span class="ident">get_mappings</span></span>(<span>self) ‑> List[<a title="poif.tagged_data.base.TaggedData" href="../tagged_data/base.html#poif.tagged_data.base.TaggedData">TaggedData</a>]</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_mappings(self) -&gt; List[TaggedData]:
-    if self._mappings is None:
-        self.retrieve_mappings()
-    return self._mappings</code></pre>
 </details>
 </dd>
 <dt id="poif.versioning.dataset.ResourceDirCollection.get_versioned_directories"><code class="name flex">
@@ -759,13 +747,18 @@ inheritance.</p></div>
 <span>class <span class="ident">VersionedCollection</span></span>
 </code></dt>
 <dd>
-<div class="desc"><p>Helper class that provides a standard way to create an ABC using
-inheritance.</p></div>
+<div class="desc"><p>This class is used to contain a collection of TaggedData. The get_files() is the most important function
+since this retrieves the TaggedData that can be use to construct a Dataset.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class VersionedCollection(ABC):
+    &#34;&#34;&#34;
+    This class is used to contain a collection of TaggedData. The get_files() is the most important function
+    since this retrieves the TaggedData that can be use to construct a Dataset.
+    &#34;&#34;&#34;
+
     def __init__(self):
         super().__init__()
 
@@ -774,11 +767,11 @@ inheritance.</p></div>
         pass
 
     @abstractmethod
-    def get_mappings(self) -&gt; List[TaggedData]:
+    def _get_mappings(self) -&gt; List[TaggedData]:
         pass
 
     def get_tagged_data(self) -&gt; List[TaggedData]:
-        return self.get_mappings() + self.get_files()</code></pre>
+        return self._get_mappings() + self.get_files()</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -805,20 +798,6 @@ def get_files(self) -&gt; List[TaggedData]:
     pass</code></pre>
 </details>
 </dd>
-<dt id="poif.versioning.dataset.VersionedCollection.get_mappings"><code class="name flex">
-<span>def <span class="ident">get_mappings</span></span>(<span>self) ‑> List[<a title="poif.tagged_data.base.TaggedData" href="../tagged_data/base.html#poif.tagged_data.base.TaggedData">TaggedData</a>]</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@abstractmethod
-def get_mappings(self) -&gt; List[TaggedData]:
-    pass</code></pre>
-</details>
-</dd>
 <dt id="poif.versioning.dataset.VersionedCollection.get_tagged_data"><code class="name flex">
 <span>def <span class="ident">get_tagged_data</span></span>(<span>self) ‑> List[<a title="poif.tagged_data.base.TaggedData" href="../tagged_data/base.html#poif.tagged_data.base.TaggedData">TaggedData</a>]</span>
 </code></dt>
@@ -829,7 +808,7 @@ def get_mappings(self) -&gt; List[TaggedData]:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_tagged_data(self) -&gt; List[TaggedData]:
-    return self.get_mappings() + self.get_files()</code></pre>
+    return self._get_mappings() + self.get_files()</code></pre>
 </details>
 </dd>
 </dl>
@@ -862,7 +841,6 @@ def get_mappings(self) -&gt; List[TaggedData]:
 <li><code><a title="poif.versioning.dataset.FromDiskVersionedCollection.files_from_directory" href="#poif.versioning.dataset.FromDiskVersionedCollection.files_from_directory">files_from_directory</a></code></li>
 <li><code><a title="poif.versioning.dataset.FromDiskVersionedCollection.get_dir_with_filename" href="#poif.versioning.dataset.FromDiskVersionedCollection.get_dir_with_filename">get_dir_with_filename</a></code></li>
 <li><code><a title="poif.versioning.dataset.FromDiskVersionedCollection.get_files" href="#poif.versioning.dataset.FromDiskVersionedCollection.get_files">get_files</a></code></li>
-<li><code><a title="poif.versioning.dataset.FromDiskVersionedCollection.get_mappings" href="#poif.versioning.dataset.FromDiskVersionedCollection.get_mappings">get_mappings</a></code></li>
 <li><code><a title="poif.versioning.dataset.FromDiskVersionedCollection.write_directories_versioning_files" href="#poif.versioning.dataset.FromDiskVersionedCollection.write_directories_versioning_files">write_directories_versioning_files</a></code></li>
 <li><code><a title="poif.versioning.dataset.FromDiskVersionedCollection.write_files_versioning_files" href="#poif.versioning.dataset.FromDiskVersionedCollection.write_files_versioning_files">write_files_versioning_files</a></code></li>
 <li><code><a title="poif.versioning.dataset.FromDiskVersionedCollection.write_versioning_files" href="#poif.versioning.dataset.FromDiskVersionedCollection.write_versioning_files">write_versioning_files</a></code></li>
@@ -877,7 +855,6 @@ def get_mappings(self) -&gt; List[TaggedData]:
 <li><code><a title="poif.versioning.dataset.ResourceDirCollection.create_repo_file" href="#poif.versioning.dataset.ResourceDirCollection.create_repo_file">create_repo_file</a></code></li>
 <li><code><a title="poif.versioning.dataset.ResourceDirCollection.get_files" href="#poif.versioning.dataset.ResourceDirCollection.get_files">get_files</a></code></li>
 <li><code><a title="poif.versioning.dataset.ResourceDirCollection.get_files_from_mappings" href="#poif.versioning.dataset.ResourceDirCollection.get_files_from_mappings">get_files_from_mappings</a></code></li>
-<li><code><a title="poif.versioning.dataset.ResourceDirCollection.get_mappings" href="#poif.versioning.dataset.ResourceDirCollection.get_mappings">get_mappings</a></code></li>
 <li><code><a title="poif.versioning.dataset.ResourceDirCollection.get_versioned_directories" href="#poif.versioning.dataset.ResourceDirCollection.get_versioned_directories">get_versioned_directories</a></code></li>
 <li><code><a title="poif.versioning.dataset.ResourceDirCollection.get_versioned_files" href="#poif.versioning.dataset.ResourceDirCollection.get_versioned_files">get_versioned_files</a></code></li>
 <li><code><a title="poif.versioning.dataset.ResourceDirCollection.retrieve_files" href="#poif.versioning.dataset.ResourceDirCollection.retrieve_files">retrieve_files</a></code></li>
@@ -888,7 +865,6 @@ def get_mappings(self) -&gt; List[TaggedData]:
 <h4><code><a title="poif.versioning.dataset.VersionedCollection" href="#poif.versioning.dataset.VersionedCollection">VersionedCollection</a></code></h4>
 <ul class="">
 <li><code><a title="poif.versioning.dataset.VersionedCollection.get_files" href="#poif.versioning.dataset.VersionedCollection.get_files">get_files</a></code></li>
-<li><code><a title="poif.versioning.dataset.VersionedCollection.get_mappings" href="#poif.versioning.dataset.VersionedCollection.get_mappings">get_mappings</a></code></li>
 <li><code><a title="poif.versioning.dataset.VersionedCollection.get_tagged_data" href="#poif.versioning.dataset.VersionedCollection.get_tagged_data">get_tagged_data</a></code></li>
 </ul>
 </li>

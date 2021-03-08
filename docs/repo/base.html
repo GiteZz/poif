@@ -34,6 +34,11 @@ if typing.TYPE_CHECKING:
 
 
 class TaggedRepo:
+    &#34;&#34;&#34;
+    Class that is used to upload/download tagged data. This class is meant to be subclassed where then a
+    reference to a remote can be used to retrieve the files.
+    &#34;&#34;&#34;
+
     @abstractmethod
     def get_from_tag(self, tag: str):
         pass
@@ -66,12 +71,18 @@ class TaggedRepo:
 <span>class <span class="ident">TaggedRepo</span></span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Class that is used to upload/download tagged data. This class is meant to be subclassed where then a
+reference to a remote can be used to retrieve the files.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class TaggedRepo:
+    &#34;&#34;&#34;
+    Class that is used to upload/download tagged data. This class is meant to be subclassed where then a
+    reference to a remote can be used to retrieve the files.
+    &#34;&#34;&#34;
+
     @abstractmethod
     def get_from_tag(self, tag: str):
         pass

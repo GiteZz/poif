@@ -8,8 +8,8 @@ test:
     cd ./poif && pytest .
 
 generate_doc:
-    rm -r ./docs
-    cd ./poif && pdoc --html --force poif --html-dir ./../pdoc
+    rm -f -r ./docs
+    cd ./poif && pdoc --html -c show_type_annotations=True --force poif --html-dir ./../pdoc
     mv ./pdoc/poif ./docs
     rm -r ./pdoc
 
