@@ -5,7 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.2" />
 <title>poif.dataset API documentation</title>
-<meta name="description" content="" />
+<meta name="description" content="`poif.dataset.base.Dataset`
+`poif.dataset.base.Dataset` implements the standard pytorch dataset interface combined with some nice extras.
+Notably the …" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -22,6 +24,106 @@
 <h1 class="title">Module <code>poif.dataset</code></h1>
 </header>
 <section id="section-intro">
+<h1 id="dataset"><code><a title="poif.dataset.base.Dataset" href="base.html#poif.dataset.base.Dataset">Dataset</a></code></h1>
+<p><code><a title="poif.dataset.base.Dataset" href="base.html#poif.dataset.base.Dataset">Dataset</a></code> implements the standard pytorch dataset interface combined with some nice extras.
+Notably the option to perform dataset operations.</p>
+<h2 id="operation"><code><a title="poif.dataset.operation.base.Operation" href="operation/base.html#poif.dataset.operation.base.Operation">Operation</a></code></h2>
+<p>An operation on a dataset is meant to change the dataset and/or its contents.
+An operation can be applied via the .apply_operation() method on an existing dataset.
+A list of operation can also be given in the constructor which will then be used over the inputs
+when the dataset is constructed via the form() method.</p>
+<h3 id="splitter"><code><a title="poif.dataset.operation.split.base.Splitter" href="operation/split/base.html#poif.dataset.operation.split.base.Splitter">Splitter</a></code></h3>
+<p>A Splitter operation is meant for creating subdatasets within the dataset.
+These subdatasets (also instance of <code><a title="poif.dataset.base.Dataset" href="base.html#poif.dataset.base.Dataset">Dataset</a></code>) are meanly meant for creating the
+train/val/test split, but can of course be used to your liking.
+The subdatasets can simply be accessed with the '.' on the dataset variable.</p>
+<pre><code>birds_ds = Dataset()
+
+train_val_splitter = Splitter()
+
+bird_ds.apply_operation(train_val_splitter)
+
+
+
+bird_ds.train -&gt; Contains training data
+
+bird_ds.val -&gt; Contains validation data
+</code></pre>
+<h3 id="transformation"><code><a title="poif.dataset.operation.transform.base.Transformation" href="operation/transform/base.html#poif.dataset.operation.transform.base.Transformation">Transformation</a></code></h3>
+<p>The Transformation is meant to change the internal DataSet objects. An example of this could be
+adding the labels from the original path (<code><a title="poif.dataset.operation.transform.template.LabelByTemplate" href="operation/transform/template.html#poif.dataset.operation.transform.template.LabelByTemplate">LabelByTemplate</a></code>).
+Another example is removing specific samples (<code><a title="poif.dataset.operation.transform.template.DropByTemplate" href="operation/transform/template.html#poif.dataset.operation.transform.template.DropByTemplate">DropByTemplate</a></code>).
+or limiting the amount of samples per bin (<code><a title="poif.dataset.operation.transform.sampler.LimitSamplesByBin" href="operation/transform/sampler.html#poif.dataset.operation.transform.sampler.LimitSamplesByBin">LimitSamplesByBin</a></code>).</p>
+<h3 id="metaprovider"><code><a title="poif.dataset.operation.meta_provider.base.MetaProvider" href="operation/meta_provider/base.html#poif.dataset.operation.meta_provider.base.MetaProvider">MetaProvider</a></code></h3>
+<p>The MetaProvider is meant to add or transform the metadata of the dataset. The metadata is
+accessible via the .meta on the dataset and will return a MetaCollection dataset.</p>
+<h3 id="transformandsplit"><code><a title="poif.dataset.operation.transform_and_split.base.TransformAndSplit" href="operation/transform_and_split/base.html#poif.dataset.operation.transform_and_split.base.TransformAndSplit">TransformAndSplit</a></code></h3>
+<p>The TransformAndSplit combines the Splitter and Transformation. This is useful with datasets where
+the split and additional data is located in one metafile.</p>
+<h3 id="selectivesubsetoperation"><code><a title="poif.dataset.operation.selective.SelectiveSubsetOperation" href="operation/selective.html#poif.dataset.operation.selective.SelectiveSubsetOperation">SelectiveSubsetOperation</a></code></h3>
+<p>The last operation is the SelectiveSubsetOperation, this operation simply allows for using operation on a
+selective subset. This could be used to limit the samples in train and validation by a different amount.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+# `poif.dataset.base.Dataset`
+`poif.dataset.base.Dataset` implements the standard pytorch dataset interface combined with some nice extras.
+Notably the option to perform dataset operations.
+
+
+## `poif.dataset.operation.base.Operation`
+
+An operation on a dataset is meant to change the dataset and/or its contents.
+An operation can be applied via the .apply_operation() method on an existing dataset.
+A list of operation can also be given in the constructor which will then be used over the inputs
+when the dataset is constructed via the form() method.
+
+### `poif.dataset.operation.split.base.Splitter`
+
+A Splitter operation is meant for creating subdatasets within the dataset.
+These subdatasets (also instance of `poif.dataset.base.Dataset`) are meanly meant for creating the
+train/val/test split, but can of course be used to your liking.
+The subdatasets can simply be accessed with the &#39;.&#39; on the dataset variable.
+
+```
+birds_ds = Dataset()
+
+train_val_splitter = Splitter()
+
+bird_ds.apply_operation(train_val_splitter)
+
+
+
+bird_ds.train -&gt; Contains training data
+
+bird_ds.val -&gt; Contains validation data
+```
+
+### `poif.dataset.operation.transform.base.Transformation`
+
+The Transformation is meant to change the internal DataSet objects. An example of this could be
+adding the labels from the original path (`poif.dataset.operation.transform.template.LabelByTemplate`).
+Another example is removing specific samples (`poif.dataset.operation.transform.template.DropByTemplate`).
+or limiting the amount of samples per bin (`poif.dataset.operation.transform.sampler.LimitSamplesByBin`).
+
+### `poif.dataset.operation.meta_provider.base.MetaProvider`
+
+The MetaProvider is meant to add or transform the metadata of the dataset. The metadata is
+accessible via the .meta on the dataset and will return a MetaCollection dataset.
+
+### `poif.dataset.operation.transform_and_split.base.TransformAndSplit`
+
+The TransformAndSplit combines the Splitter and Transformation. This is useful with datasets where
+the split and additional data is located in one metafile.
+
+### `poif.dataset.operation.selective.SelectiveSubsetOperation`
+
+The last operation is the SelectiveSubsetOperation, this operation simply allows for using operation on a
+selective subset. This could be used to limit the samples in train and validation by a different amount.
+&#34;&#34;&#34;</code></pre>
+</details>
 </section>
 <section>
 <h2 class="section-title" id="header-submodules">Sub-modules</h2>
@@ -66,7 +168,19 @@
 <nav id="sidebar">
 <h1>Index</h1>
 <div class="toc">
-<ul></ul>
+<ul>
+<li><a href="#poifdatasetbasedataset">poif.dataset.base.Dataset</a><ul>
+<li><a href="#poifdatasetoperationbaseoperation">poif.dataset.operation.base.Operation</a><ul>
+<li><a href="#poifdatasetoperationsplitbasesplitter">poif.dataset.operation.split.base.Splitter</a></li>
+<li><a href="#poifdatasetoperationtransformbasetransformation">poif.dataset.operation.transform.base.Transformation</a></li>
+<li><a href="#poifdatasetoperationmeta_providerbasemetaprovider">poif.dataset.operation.meta_provider.base.MetaProvider</a></li>
+<li><a href="#poifdatasetoperationtransform_and_splitbasetransformandsplit">poif.dataset.operation.transform_and_split.base.TransformAndSplit</a></li>
+<li><a href="#poifdatasetoperationselectiveselectivesubsetoperation">poif.dataset.operation.selective.SelectiveSubsetOperation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 </div>
 <ul id="index">
 <li><h3>Super-module</h3>

@@ -2,7 +2,7 @@ from poif.dataset.base import Dataset
 from poif.dataset.object.output import classification_output
 from poif.dataset.operation.meta_provider.label_to_index import LabelToIndex
 from poif.dataset.operation.split.template import SplitByTemplate
-from poif.dataset.operation.transform.template import ClassificationByTemplate
+from poif.dataset.operation.transform.template import LabelByTemplate
 from poif.tagged_data.tests.mock import MockTaggedData
 
 
@@ -19,7 +19,7 @@ def test_meta_provider():
                 ds_tagged_data.append(new_object)
 
     template = "{{subset}}/{{label}}/*.png"
-    add_label = ClassificationByTemplate(template=template)
+    add_label = LabelByTemplate(template=template)
     split_into_subset = SplitByTemplate(template=template)
     label_to_index = LabelToIndex()
 

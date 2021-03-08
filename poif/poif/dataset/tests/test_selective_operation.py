@@ -3,7 +3,7 @@ from poif.dataset.object.output import classification_output
 from poif.dataset.operation.selective import SelectiveSubsetOperation
 from poif.dataset.operation.split.template import SplitByTemplate
 from poif.dataset.operation.transform.sampler import LimitSamplesByBin
-from poif.dataset.operation.transform.template import ClassificationByTemplate
+from poif.dataset.operation.transform.template import LabelByTemplate
 from poif.tagged_data.tests.mock import MockTaggedData
 
 
@@ -20,7 +20,7 @@ def test_selective_operation():
                 ds_tagged_data.append(new_object)
 
     template = "{{subset}}/{{label}}/*.png"
-    add_label = ClassificationByTemplate(template=template)
+    add_label = LabelByTemplate(template=template)
     split_into_subset = SplitByTemplate(template=template)
 
     limit_train = LimitSamplesByBin(sample_limit=50, bin_creator=lambda x: x.label)

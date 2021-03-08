@@ -51,7 +51,11 @@ class MaskByTemplate(Transformation):
 
 
 class DropByTemplate(Transformation):
+    """
+    If the DataSetObject.relative path matches to the provided template, the sample will be dropped.
+    """
     def __init__(self, template: str):
+        super().__init__()
         self.template = template
 
     def transform_single_object(self, ds_input: DataSetObject) -> List[DataSetObject]:
@@ -61,8 +65,9 @@ class DropByTemplate(Transformation):
             return [ds_input]
 
 
-class ClassificationByTemplate(Transformation):
+class LabelByTemplate(Transformation):
     def __init__(self, template: str, input_item="label", drop_if_no_match=True):
+        super().__init__()
         self.template = template
         self.input_item = input_item
         self.drop_if_no_match = drop_if_no_match

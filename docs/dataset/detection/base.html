@@ -114,24 +114,9 @@ class DetectionDataset(Dataset, ABC):
 <span>class <span class="ident">DetectionDataset</span></span>
 </code></dt>
 <dd>
-<div class="desc"><p>This implements the standard pytorch dataset interface combined with some nice extras. Notably the option to
-perform dataset operations. An operation is meant to change the dataset and/or its contents. If a Splitter
-operation (poif.dataset.operation.base.Splitter) is used, the subdatasets (also Dataset type)
-can simply be accessed with the '.' on the dataset name.</p>
-<p>birds_ds = Dataset()</p>
-<p>train_val_splitter = Splitter()</p>
-<p>bird_ds.apply_operation(train_val_splitter)</p>
-<p>bird_ds.train -&gt; Contains training data</p>
-<p>bird_ds.val -&gt; Contains validation data</p>
-<p>The Transformation is meant to change the internal DataSet objects. An example of this could be
-adding the labels from the original path. Another example is removing specific samples of limiting the
-amout of samples.</p>
-<p>The MetaProvider is meant to add or transform the metadata of the dataset. The metadata is
-accessible via the .meta on the dataset and will return a MetaCollection dataset.</p>
-<p>The TransformAndSplit combines the Splitter and Transformation. This is useful with datasets where
-the split and additional data is located in one metafile.</p>
-<p>The last operation is the SelectiveSubsetOperation, this operation simply allows for using operation on a
-selective subset. This could be used to limit the samples in train and validation by a different amount.</p></div>
+<div class="desc"><p>Provide base dataset functionality similarly to torch.utils.data.Dataset. The <strong>getitem</strong> wil return the
+result of the .output() function on the DataSetObject at that index. This class is used as an interface,
+not intended to be instantiated.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>

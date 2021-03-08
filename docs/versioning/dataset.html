@@ -249,7 +249,7 @@ class GitRepoCollection(ResourceDirCollection):
 <dl>
 <dt id="poif.versioning.dataset.FromDiskVersionedCollection"><code class="flex name class">
 <span>class <span class="ident">FromDiskVersionedCollection</span></span>
-<span>(</span><span>base_dir: pathlib.Path, config: <a title="poif.config.collection.DataCollectionConfig" href="../config/collection.html#poif.config.collection.DataCollectionConfig">DataCollectionConfig</a>, directories: List[<a title="poif.versioning.directory.VersionedDirectory" href="directory.html#poif.versioning.directory.VersionedDirectory">VersionedDirectory</a>] = &lt;factory&gt;, files: List[<a title="poif.versioning.file.VersionedFile" href="file.html#poif.versioning.file.VersionedFile">VersionedFile</a>] = &lt;factory&gt;)</span>
+<span>(</span><span>base_dir: pathlib.Path, config: poif.config.collection.DataCollectionConfig, directories: List[<a title="poif.versioning.directory.VersionedDirectory" href="directory.html#poif.versioning.directory.VersionedDirectory">VersionedDirectory</a>] = &lt;factory&gt;, files: List[<a title="poif.versioning.file.VersionedFile" href="file.html#poif.versioning.file.VersionedFile">VersionedFile</a>] = &lt;factory&gt;)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>FromDiskVersionedCollection(base_dir:pathlib.Path, config:poif.config.collection.DataCollectionConfig, directories:List[poif.versioning.directory.VersionedDirectory]=<factory>, files:List[poif.versioning.file.VersionedFile]=<factory>)</p></div>
@@ -312,7 +312,7 @@ class GitRepoCollection(ResourceDirCollection):
 <ul class="hlist">
 <li><a title="poif.versioning.dataset.VersionedCollection" href="#poif.versioning.dataset.VersionedCollection">VersionedCollection</a></li>
 <li>abc.ABC</li>
-<li><a title="poif.git.file.FileCreatorMixin" href="../git/file.html#poif.git.file.FileCreatorMixin">FileCreatorMixin</a></li>
+<li>poif.git.file.FileCreatorMixin</li>
 </ul>
 <h3>Class variables</h3>
 <dl>
@@ -320,7 +320,7 @@ class GitRepoCollection(ResourceDirCollection):
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="poif.versioning.dataset.FromDiskVersionedCollection.config"><code class="name">var <span class="ident">config</span> : <a title="poif.config.collection.DataCollectionConfig" href="../config/collection.html#poif.config.collection.DataCollectionConfig">DataCollectionConfig</a></code></dt>
+<dt id="poif.versioning.dataset.FromDiskVersionedCollection.config"><code class="name">var <span class="ident">config</span> : poif.config.collection.DataCollectionConfig</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>

@@ -36,39 +36,6 @@ class BaseDataset(ABC):
 
 
 class Dataset(BaseDataset):
-    """
-    This implements the standard pytorch dataset interface combined with some nice extras. Notably the option to
-    perform dataset operations. An operation is meant to change the dataset and/or its contents. If a Splitter
-    operation (poif.dataset.operation.base.Splitter) is used, the subdatasets (also Dataset type)
-    can simply be accessed with the '.' on the dataset name.
-
-    birds_ds = Dataset()
-
-    train_val_splitter = Splitter()
-
-    bird_ds.apply_operation(train_val_splitter)
-
-
-
-    bird_ds.train -> Contains training data
-
-    bird_ds.val -> Contains validation data
-
-
-    The Transformation is meant to change the internal DataSet objects. An example of this could be
-    adding the labels from the original path. Another example is removing specific samples of limiting the
-    amout of samples.
-
-    The MetaProvider is meant to add or transform the metadata of the dataset. The metadata is
-    accessible via the .meta on the dataset and will return a MetaCollection dataset.
-
-    The TransformAndSplit combines the Splitter and Transformation. This is useful with datasets where
-    the split and additional data is located in one metafile.
-
-    The last operation is the SelectiveSubsetOperation, this operation simply allows for using operation on a
-    selective subset. This could be used to limit the samples in train and validation by a different amount.
-    """
-
     def __init__(
         self, operations: List[Operation] = None, output_function: Optional[DataSetObjectOutputFunction] = None
     ):
