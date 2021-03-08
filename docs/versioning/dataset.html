@@ -41,7 +41,6 @@ from poif.repo.file_remote import FileRemoteTaggedRepo, get_remote_repo_from_con
 from poif.tagged_data.base import TaggedData
 from poif.tagged_data.repo import RepoData
 from poif.typing import FileHash, RelFilePath
-from poif.utils import get_file_name_from_path
 from poif.versioning.directory import VersionedDirectory
 from poif.versioning.file import VersionedFile
 
@@ -57,13 +56,25 @@ class VersionedCollection(ABC):
 
     @abstractmethod
     def get_files(self) -&gt; List[TaggedData]:
-        pass
+        &#34;&#34;&#34;
+        This function retrieves the TaggedData for all the files present in the original dataset. This includes
+        the versioned files and the files in the versioned directories.
+        Returns:
+
+        &#34;&#34;&#34;
 
     @abstractmethod
     def _get_mappings(self) -&gt; List[TaggedData]:
         pass
 
     def get_tagged_data(self) -&gt; List[TaggedData]:
+        &#34;&#34;&#34;
+        This function is used to retrieve all tagged data. This means that the mappings for the versioned
+        directories are included too. The get_files functions only returns the TaggedData for the actual
+        data files in the original dataset.
+        Returns:
+
+        &#34;&#34;&#34;
         return self._get_mappings() + self.get_files()
 
 
@@ -86,9 +97,9 @@ class FromDiskVersionedCollection(VersionedCollection, FileCreatorMixin):
             self.files.append(VersionedFile(base_dir=self.base_dir, file_path=actual_file))
 
     def get_files(self) -&gt; List[TaggedData]:
-        return self.files + self.files_from_directory()
+        return self.files + self._files_from_directory()
 
-    def files_from_directory(self) -&gt; List[TaggedData]:
+    def _files_from_directory(self) -&gt; List[TaggedData]:
         file_list = []
         for directory in self.directories:
             file_list.extend(directory.files)
@@ -98,35 +109,26 @@ class FromDiskVersionedCollection(VersionedCollection, FileCreatorMixin):
         return self.directories
 
     def write_versioning_files(self, save_directory: Path):
-        self.write_directories_versioning_files(save_directory)
-        self.write_files_versioning_files(save_directory)
+        self._write_directories_versioning_files(save_directory)
+        self._write_files_versioning_files(save_directory)
 
-    def write_directories_versioning_files(self, save_directory: Path):
+    def _write_directories_versioning_files(self, save_directory: Path):
         for directory in self.directories:
             created_file = directory.write_vdir_to_folder(save_directory)
 
             self.add_created_file(created_file)
 
-    def write_files_versioning_files(self, save_directory: Path):
+    def _write_files_versioning_files(self, save_directory: Path):
         for file in self.files:
             created_file = file.write_vfile_to_folder(save_directory)
 
             self.add_created_file(created_file)
 
-    def add_vdir_file(self, file: Path):
-        filename = get_file_name_from_path(file)
-        self.get_dir_with_filename(filename)
-        # TODO
-
-    def get_dir_with_filename(self, filename: str) -&gt; VersionedDirectory:
+    def _get_dir_with_filename(self, filename: str) -&gt; VersionedDirectory:
         for directory in self.directories:
             if directory.get_vdir_name() == filename:
                 return directory
         raise Exception(&#34;Directory with filename not found&#34;)
-
-    def add_vfile(self, file: Path):
-        # TODO
-        pass
 
 
 class ResourceDirCollection(VersionedCollection):
@@ -145,45 +147,45 @@ class ResourceDirCollection(VersionedCollection):
 
         self._tagged_repo = FileRemoteTaggedRepo(remote=file_remote, data_folder=data_folder)
 
-        self.retrieve_mappings()
+        self._retrieve_mappings()
 
-    def get_versioned_files(self, resource_dir: Path) -&gt; List[Path]:
-        return list(resource_dir.glob(&#34;*.vfile&#34;))
+    def _get_versioned_files(self) -&gt; List[Path]:
+        return list(self._resource_dir.glob(&#34;*.vfile&#34;))
 
-    def get_versioned_directories(self, resource_dir: Path) -&gt; List[Path]:
-        return list(resource_dir.glob(&#34;*.vdir&#34;))
+    def _get_versioned_directories(self) -&gt; List[Path]:
+        return list(self._resource_dir.glob(&#34;*.vdir&#34;))
 
-    def retrieve_mappings(self):
+    def _retrieve_mappings(self):
         self._mappings = []
-        vdirs = self.get_versioned_directories(self._resource_dir)
+        vdirs = self._get_versioned_directories()
 
         for vdir_file in vdirs:
             with open(vdir_file, &#34;r&#34;) as f:
                 vdir_content = json.load(f)
 
-            mapping = self.create_repo_file(vdir_content[&#34;data_folder&#34;] + &#34;.mapping&#34;, vdir_content[&#34;tag&#34;])
+            mapping = self._create_repo_file(vdir_content[&#34;data_folder&#34;] + &#34;.mapping&#34;, vdir_content[&#34;tag&#34;])
 
             self._mappings.append(mapping)
 
-    def create_repo_file(self, relative_path: RelFilePath, tag: FileHash) -&gt; RepoData:
+    def _create_repo_file(self, relative_path: RelFilePath, tag: FileHash) -&gt; RepoData:
         return RepoData(
             relative_path=relative_path,
             repo=self._tagged_repo,
             tag=tag,
         )
 
-    def retrieve_files(self):
+    def _retrieve_files(self):
         self._files = []
-        vfiles = self.get_versioned_files(self._resource_dir)
+        vfiles = self._get_versioned_files()
 
         for vfile in vfiles:
             with open(vfile, &#34;r&#34;) as f:
                 vfile_content = json.load(f)
 
-            file = self.create_repo_file(vfile_content[&#34;path&#34;], vfile_content[&#34;tag&#34;])
+            file = self._create_repo_file(vfile_content[&#34;path&#34;], vfile_content[&#34;tag&#34;])
             self._files.append(file)
 
-    def get_files_from_mappings(self):
+    def _get_files_from_mappings(self):
         mappings = self._get_mappings()
         files = []
 
@@ -197,13 +199,13 @@ class ResourceDirCollection(VersionedCollection):
 
     def get_files(self) -&gt; List[TaggedData]:
         if self._files is None:
-            self.retrieve_files()
+            self._retrieve_files()
 
-        return self._files + self.get_files_from_mappings()
+        return self._files + self._get_files_from_mappings()
 
     def _get_mappings(self) -&gt; List[TaggedData]:
         if self._mappings is None:
-            self.retrieve_mappings()
+            self._retrieve_mappings()
         return self._mappings
 
 
@@ -233,17 +235,7 @@ class GitRepoCollection(ResourceDirCollection):
         config = DataRepoConfig.read_from_package(repo.base_dir)
         self._tagged_repo = get_remote_repo_from_config(config.collection.data_remote)
 
-        self.retrieve_mappings()
-
-
-if __name__ == &#34;__main__&#34;:
-    repo = GitRepoCollection(
-        git_url=&#34;https://github.ugent.be/gballege/minimal_pneumonia.git&#34;,
-        git_commit=&#34;85d749fd6422af1a178013c45c304576939d3b4c&#34;,
-    )
-
-    all_files = repo.get_files()
-    a = 5</code></pre>
+        self._retrieve_mappings()</code></pre>
 </details>
 </section>
 <section>
@@ -283,9 +275,9 @@ if __name__ == &#34;__main__&#34;:
             self.files.append(VersionedFile(base_dir=self.base_dir, file_path=actual_file))
 
     def get_files(self) -&gt; List[TaggedData]:
-        return self.files + self.files_from_directory()
+        return self.files + self._files_from_directory()
 
-    def files_from_directory(self) -&gt; List[TaggedData]:
+    def _files_from_directory(self) -&gt; List[TaggedData]:
         file_list = []
         for directory in self.directories:
             file_list.extend(directory.files)
@@ -295,35 +287,26 @@ if __name__ == &#34;__main__&#34;:
         return self.directories
 
     def write_versioning_files(self, save_directory: Path):
-        self.write_directories_versioning_files(save_directory)
-        self.write_files_versioning_files(save_directory)
+        self._write_directories_versioning_files(save_directory)
+        self._write_files_versioning_files(save_directory)
 
-    def write_directories_versioning_files(self, save_directory: Path):
+    def _write_directories_versioning_files(self, save_directory: Path):
         for directory in self.directories:
             created_file = directory.write_vdir_to_folder(save_directory)
 
             self.add_created_file(created_file)
 
-    def write_files_versioning_files(self, save_directory: Path):
+    def _write_files_versioning_files(self, save_directory: Path):
         for file in self.files:
             created_file = file.write_vfile_to_folder(save_directory)
 
             self.add_created_file(created_file)
 
-    def add_vdir_file(self, file: Path):
-        filename = get_file_name_from_path(file)
-        self.get_dir_with_filename(filename)
-        # TODO
-
-    def get_dir_with_filename(self, filename: str) -&gt; VersionedDirectory:
+    def _get_dir_with_filename(self, filename: str) -&gt; VersionedDirectory:
         for directory in self.directories:
             if directory.get_vdir_name() == filename:
                 return directory
-        raise Exception(&#34;Directory with filename not found&#34;)
-
-    def add_vfile(self, file: Path):
-        # TODO
-        pass</code></pre>
+        raise Exception(&#34;Directory with filename not found&#34;)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -352,111 +335,6 @@ if __name__ == &#34;__main__&#34;:
 </dl>
 <h3>Methods</h3>
 <dl>
-<dt id="poif.versioning.dataset.FromDiskVersionedCollection.add_vdir_file"><code class="name flex">
-<span>def <span class="ident">add_vdir_file</span></span>(<span>self, file: pathlib.Path)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def add_vdir_file(self, file: Path):
-    filename = get_file_name_from_path(file)
-    self.get_dir_with_filename(filename)</code></pre>
-</details>
-</dd>
-<dt id="poif.versioning.dataset.FromDiskVersionedCollection.add_vfile"><code class="name flex">
-<span>def <span class="ident">add_vfile</span></span>(<span>self, file: pathlib.Path)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def add_vfile(self, file: Path):
-    # TODO
-    pass</code></pre>
-</details>
-</dd>
-<dt id="poif.versioning.dataset.FromDiskVersionedCollection.files_from_directory"><code class="name flex">
-<span>def <span class="ident">files_from_directory</span></span>(<span>self) ‑> List[<a title="poif.tagged_data.base.TaggedData" href="../tagged_data/base.html#poif.tagged_data.base.TaggedData">TaggedData</a>]</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def files_from_directory(self) -&gt; List[TaggedData]:
-    file_list = []
-    for directory in self.directories:
-        file_list.extend(directory.files)
-    return file_list</code></pre>
-</details>
-</dd>
-<dt id="poif.versioning.dataset.FromDiskVersionedCollection.get_dir_with_filename"><code class="name flex">
-<span>def <span class="ident">get_dir_with_filename</span></span>(<span>self, filename: str) ‑> <a title="poif.versioning.directory.VersionedDirectory" href="directory.html#poif.versioning.directory.VersionedDirectory">VersionedDirectory</a></span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_dir_with_filename(self, filename: str) -&gt; VersionedDirectory:
-    for directory in self.directories:
-        if directory.get_vdir_name() == filename:
-            return directory
-    raise Exception(&#34;Directory with filename not found&#34;)</code></pre>
-</details>
-</dd>
-<dt id="poif.versioning.dataset.FromDiskVersionedCollection.get_files"><code class="name flex">
-<span>def <span class="ident">get_files</span></span>(<span>self) ‑> List[<a title="poif.tagged_data.base.TaggedData" href="../tagged_data/base.html#poif.tagged_data.base.TaggedData">TaggedData</a>]</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_files(self) -&gt; List[TaggedData]:
-    return self.files + self.files_from_directory()</code></pre>
-</details>
-</dd>
-<dt id="poif.versioning.dataset.FromDiskVersionedCollection.write_directories_versioning_files"><code class="name flex">
-<span>def <span class="ident">write_directories_versioning_files</span></span>(<span>self, save_directory: pathlib.Path)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def write_directories_versioning_files(self, save_directory: Path):
-    for directory in self.directories:
-        created_file = directory.write_vdir_to_folder(save_directory)
-
-        self.add_created_file(created_file)</code></pre>
-</details>
-</dd>
-<dt id="poif.versioning.dataset.FromDiskVersionedCollection.write_files_versioning_files"><code class="name flex">
-<span>def <span class="ident">write_files_versioning_files</span></span>(<span>self, save_directory: pathlib.Path)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def write_files_versioning_files(self, save_directory: Path):
-    for file in self.files:
-        created_file = file.write_vfile_to_folder(save_directory)
-
-        self.add_created_file(created_file)</code></pre>
-</details>
-</dd>
 <dt id="poif.versioning.dataset.FromDiskVersionedCollection.write_versioning_files"><code class="name flex">
 <span>def <span class="ident">write_versioning_files</span></span>(<span>self, save_directory: pathlib.Path)</span>
 </code></dt>
@@ -467,11 +345,20 @@ if __name__ == &#34;__main__&#34;:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def write_versioning_files(self, save_directory: Path):
-    self.write_directories_versioning_files(save_directory)
-    self.write_files_versioning_files(save_directory)</code></pre>
+    self._write_directories_versioning_files(save_directory)
+    self._write_files_versioning_files(save_directory)</code></pre>
 </details>
 </dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="poif.versioning.dataset.VersionedCollection" href="#poif.versioning.dataset.VersionedCollection">VersionedCollection</a></b></code>:
+<ul class="hlist">
+<li><code><a title="poif.versioning.dataset.VersionedCollection.get_files" href="#poif.versioning.dataset.VersionedCollection.get_files">get_files</a></code></li>
+<li><code><a title="poif.versioning.dataset.VersionedCollection.get_tagged_data" href="#poif.versioning.dataset.VersionedCollection.get_tagged_data">get_tagged_data</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 <dt id="poif.versioning.dataset.GitRepoCollection"><code class="flex name class">
 <span>class <span class="ident">GitRepoCollection</span></span>
@@ -509,13 +396,22 @@ all references from the original collection can be retrieved.</p></div>
         config = DataRepoConfig.read_from_package(repo.base_dir)
         self._tagged_repo = get_remote_repo_from_config(config.collection.data_remote)
 
-        self.retrieve_mappings()</code></pre>
+        self._retrieve_mappings()</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="poif.versioning.dataset.ResourceDirCollection" href="#poif.versioning.dataset.ResourceDirCollection">ResourceDirCollection</a></li>
 <li><a title="poif.versioning.dataset.VersionedCollection" href="#poif.versioning.dataset.VersionedCollection">VersionedCollection</a></li>
 <li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="poif.versioning.dataset.ResourceDirCollection" href="#poif.versioning.dataset.ResourceDirCollection">ResourceDirCollection</a></b></code>:
+<ul class="hlist">
+<li><code><a title="poif.versioning.dataset.ResourceDirCollection.get_files" href="#poif.versioning.dataset.VersionedCollection.get_files">get_files</a></code></li>
+<li><code><a title="poif.versioning.dataset.ResourceDirCollection.get_tagged_data" href="#poif.versioning.dataset.VersionedCollection.get_tagged_data">get_tagged_data</a></code></li>
+</ul>
+</li>
 </ul>
 </dd>
 <dt id="poif.versioning.dataset.ResourceDirCollection"><code class="flex name class">
@@ -545,45 +441,45 @@ since this retrieves the TaggedData that can be use to construct a Dataset.</p><
 
         self._tagged_repo = FileRemoteTaggedRepo(remote=file_remote, data_folder=data_folder)
 
-        self.retrieve_mappings()
+        self._retrieve_mappings()
 
-    def get_versioned_files(self, resource_dir: Path) -&gt; List[Path]:
-        return list(resource_dir.glob(&#34;*.vfile&#34;))
+    def _get_versioned_files(self) -&gt; List[Path]:
+        return list(self._resource_dir.glob(&#34;*.vfile&#34;))
 
-    def get_versioned_directories(self, resource_dir: Path) -&gt; List[Path]:
-        return list(resource_dir.glob(&#34;*.vdir&#34;))
+    def _get_versioned_directories(self) -&gt; List[Path]:
+        return list(self._resource_dir.glob(&#34;*.vdir&#34;))
 
-    def retrieve_mappings(self):
+    def _retrieve_mappings(self):
         self._mappings = []
-        vdirs = self.get_versioned_directories(self._resource_dir)
+        vdirs = self._get_versioned_directories()
 
         for vdir_file in vdirs:
             with open(vdir_file, &#34;r&#34;) as f:
                 vdir_content = json.load(f)
 
-            mapping = self.create_repo_file(vdir_content[&#34;data_folder&#34;] + &#34;.mapping&#34;, vdir_content[&#34;tag&#34;])
+            mapping = self._create_repo_file(vdir_content[&#34;data_folder&#34;] + &#34;.mapping&#34;, vdir_content[&#34;tag&#34;])
 
             self._mappings.append(mapping)
 
-    def create_repo_file(self, relative_path: RelFilePath, tag: FileHash) -&gt; RepoData:
+    def _create_repo_file(self, relative_path: RelFilePath, tag: FileHash) -&gt; RepoData:
         return RepoData(
             relative_path=relative_path,
             repo=self._tagged_repo,
             tag=tag,
         )
 
-    def retrieve_files(self):
+    def _retrieve_files(self):
         self._files = []
-        vfiles = self.get_versioned_files(self._resource_dir)
+        vfiles = self._get_versioned_files()
 
         for vfile in vfiles:
             with open(vfile, &#34;r&#34;) as f:
                 vfile_content = json.load(f)
 
-            file = self.create_repo_file(vfile_content[&#34;path&#34;], vfile_content[&#34;tag&#34;])
+            file = self._create_repo_file(vfile_content[&#34;path&#34;], vfile_content[&#34;tag&#34;])
             self._files.append(file)
 
-    def get_files_from_mappings(self):
+    def _get_files_from_mappings(self):
         mappings = self._get_mappings()
         files = []
 
@@ -597,13 +493,13 @@ since this retrieves the TaggedData that can be use to construct a Dataset.</p><
 
     def get_files(self) -&gt; List[TaggedData]:
         if self._files is None:
-            self.retrieve_files()
+            self._retrieve_files()
 
-        return self._files + self.get_files_from_mappings()
+        return self._files + self._get_files_from_mappings()
 
     def _get_mappings(self) -&gt; List[TaggedData]:
         if self._mappings is None:
-            self.retrieve_mappings()
+            self._retrieve_mappings()
         return self._mappings</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -615,133 +511,15 @@ since this retrieves the TaggedData that can be use to construct a Dataset.</p><
 <ul class="hlist">
 <li><a title="poif.versioning.dataset.GitRepoCollection" href="#poif.versioning.dataset.GitRepoCollection">GitRepoCollection</a></li>
 </ul>
-<h3>Methods</h3>
-<dl>
-<dt id="poif.versioning.dataset.ResourceDirCollection.create_repo_file"><code class="name flex">
-<span>def <span class="ident">create_repo_file</span></span>(<span>self, relative_path: str, tag: str) ‑> <a title="poif.tagged_data.repo.RepoData" href="../tagged_data/repo.html#poif.tagged_data.repo.RepoData">RepoData</a></span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def create_repo_file(self, relative_path: RelFilePath, tag: FileHash) -&gt; RepoData:
-    return RepoData(
-        relative_path=relative_path,
-        repo=self._tagged_repo,
-        tag=tag,
-    )</code></pre>
-</details>
-</dd>
-<dt id="poif.versioning.dataset.ResourceDirCollection.get_files"><code class="name flex">
-<span>def <span class="ident">get_files</span></span>(<span>self) ‑> List[<a title="poif.tagged_data.base.TaggedData" href="../tagged_data/base.html#poif.tagged_data.base.TaggedData">TaggedData</a>]</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_files(self) -&gt; List[TaggedData]:
-    if self._files is None:
-        self.retrieve_files()
-
-    return self._files + self.get_files_from_mappings()</code></pre>
-</details>
-</dd>
-<dt id="poif.versioning.dataset.ResourceDirCollection.get_files_from_mappings"><code class="name flex">
-<span>def <span class="ident">get_files_from_mappings</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_files_from_mappings(self):
-    mappings = self._get_mappings()
-    files = []
-
-    for mapping in mappings:
-        mapping_content = mapping.get_parsed()
-        for tag, path in mapping_content.items():
-            file = RepoData(relative_path=path, repo=self._tagged_repo, tag=tag)
-
-            files.append(file)
-    return files</code></pre>
-</details>
-</dd>
-<dt id="poif.versioning.dataset.ResourceDirCollection.get_versioned_directories"><code class="name flex">
-<span>def <span class="ident">get_versioned_directories</span></span>(<span>self, resource_dir: pathlib.Path) ‑> List[pathlib.Path]</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_versioned_directories(self, resource_dir: Path) -&gt; List[Path]:
-    return list(resource_dir.glob(&#34;*.vdir&#34;))</code></pre>
-</details>
-</dd>
-<dt id="poif.versioning.dataset.ResourceDirCollection.get_versioned_files"><code class="name flex">
-<span>def <span class="ident">get_versioned_files</span></span>(<span>self, resource_dir: pathlib.Path) ‑> List[pathlib.Path]</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_versioned_files(self, resource_dir: Path) -&gt; List[Path]:
-    return list(resource_dir.glob(&#34;*.vfile&#34;))</code></pre>
-</details>
-</dd>
-<dt id="poif.versioning.dataset.ResourceDirCollection.retrieve_files"><code class="name flex">
-<span>def <span class="ident">retrieve_files</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def retrieve_files(self):
-    self._files = []
-    vfiles = self.get_versioned_files(self._resource_dir)
-
-    for vfile in vfiles:
-        with open(vfile, &#34;r&#34;) as f:
-            vfile_content = json.load(f)
-
-        file = self.create_repo_file(vfile_content[&#34;path&#34;], vfile_content[&#34;tag&#34;])
-        self._files.append(file)</code></pre>
-</details>
-</dd>
-<dt id="poif.versioning.dataset.ResourceDirCollection.retrieve_mappings"><code class="name flex">
-<span>def <span class="ident">retrieve_mappings</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def retrieve_mappings(self):
-    self._mappings = []
-    vdirs = self.get_versioned_directories(self._resource_dir)
-
-    for vdir_file in vdirs:
-        with open(vdir_file, &#34;r&#34;) as f:
-            vdir_content = json.load(f)
-
-        mapping = self.create_repo_file(vdir_content[&#34;data_folder&#34;] + &#34;.mapping&#34;, vdir_content[&#34;tag&#34;])
-
-        self._mappings.append(mapping)</code></pre>
-</details>
-</dd>
-</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="poif.versioning.dataset.VersionedCollection" href="#poif.versioning.dataset.VersionedCollection">VersionedCollection</a></b></code>:
+<ul class="hlist">
+<li><code><a title="poif.versioning.dataset.VersionedCollection.get_files" href="#poif.versioning.dataset.VersionedCollection.get_files">get_files</a></code></li>
+<li><code><a title="poif.versioning.dataset.VersionedCollection.get_tagged_data" href="#poif.versioning.dataset.VersionedCollection.get_tagged_data">get_tagged_data</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 <dt id="poif.versioning.dataset.VersionedCollection"><code class="flex name class">
 <span>class <span class="ident">VersionedCollection</span></span>
@@ -764,13 +542,25 @@ since this retrieves the TaggedData that can be use to construct a Dataset.</p><
 
     @abstractmethod
     def get_files(self) -&gt; List[TaggedData]:
-        pass
+        &#34;&#34;&#34;
+        This function retrieves the TaggedData for all the files present in the original dataset. This includes
+        the versioned files and the files in the versioned directories.
+        Returns:
+
+        &#34;&#34;&#34;
 
     @abstractmethod
     def _get_mappings(self) -&gt; List[TaggedData]:
         pass
 
     def get_tagged_data(self) -&gt; List[TaggedData]:
+        &#34;&#34;&#34;
+        This function is used to retrieve all tagged data. This means that the mappings for the versioned
+        directories are included too. The get_files functions only returns the TaggedData for the actual
+        data files in the original dataset.
+        Returns:
+
+        &#34;&#34;&#34;
         return self._get_mappings() + self.get_files()</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -788,26 +578,43 @@ since this retrieves the TaggedData that can be use to construct a Dataset.</p><
 <span>def <span class="ident">get_files</span></span>(<span>self) ‑> List[<a title="poif.tagged_data.base.TaggedData" href="../tagged_data/base.html#poif.tagged_data.base.TaggedData">TaggedData</a>]</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>This function retrieves the TaggedData for all the files present in the original dataset. This includes
+the versioned files and the files in the versioned directories.
+Returns:</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@abstractmethod
 def get_files(self) -&gt; List[TaggedData]:
-    pass</code></pre>
+    &#34;&#34;&#34;
+    This function retrieves the TaggedData for all the files present in the original dataset. This includes
+    the versioned files and the files in the versioned directories.
+    Returns:
+
+    &#34;&#34;&#34;</code></pre>
 </details>
 </dd>
 <dt id="poif.versioning.dataset.VersionedCollection.get_tagged_data"><code class="name flex">
 <span>def <span class="ident">get_tagged_data</span></span>(<span>self) ‑> List[<a title="poif.tagged_data.base.TaggedData" href="../tagged_data/base.html#poif.tagged_data.base.TaggedData">TaggedData</a>]</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>This function is used to retrieve all tagged data. This means that the mappings for the versioned
+directories are included too. The get_files functions only returns the TaggedData for the actual
+data files in the original dataset.
+Returns:</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_tagged_data(self) -&gt; List[TaggedData]:
+    &#34;&#34;&#34;
+    This function is used to retrieve all tagged data. This means that the mappings for the versioned
+    directories are included too. The get_files functions only returns the TaggedData for the actual
+    data files in the original dataset.
+    Returns:
+
+    &#34;&#34;&#34;
     return self._get_mappings() + self.get_files()</code></pre>
 </details>
 </dd>
@@ -832,17 +639,10 @@ def get_files(self) -&gt; List[TaggedData]:
 <li>
 <h4><code><a title="poif.versioning.dataset.FromDiskVersionedCollection" href="#poif.versioning.dataset.FromDiskVersionedCollection">FromDiskVersionedCollection</a></code></h4>
 <ul class="">
-<li><code><a title="poif.versioning.dataset.FromDiskVersionedCollection.add_vdir_file" href="#poif.versioning.dataset.FromDiskVersionedCollection.add_vdir_file">add_vdir_file</a></code></li>
-<li><code><a title="poif.versioning.dataset.FromDiskVersionedCollection.add_vfile" href="#poif.versioning.dataset.FromDiskVersionedCollection.add_vfile">add_vfile</a></code></li>
 <li><code><a title="poif.versioning.dataset.FromDiskVersionedCollection.base_dir" href="#poif.versioning.dataset.FromDiskVersionedCollection.base_dir">base_dir</a></code></li>
 <li><code><a title="poif.versioning.dataset.FromDiskVersionedCollection.config" href="#poif.versioning.dataset.FromDiskVersionedCollection.config">config</a></code></li>
 <li><code><a title="poif.versioning.dataset.FromDiskVersionedCollection.directories" href="#poif.versioning.dataset.FromDiskVersionedCollection.directories">directories</a></code></li>
 <li><code><a title="poif.versioning.dataset.FromDiskVersionedCollection.files" href="#poif.versioning.dataset.FromDiskVersionedCollection.files">files</a></code></li>
-<li><code><a title="poif.versioning.dataset.FromDiskVersionedCollection.files_from_directory" href="#poif.versioning.dataset.FromDiskVersionedCollection.files_from_directory">files_from_directory</a></code></li>
-<li><code><a title="poif.versioning.dataset.FromDiskVersionedCollection.get_dir_with_filename" href="#poif.versioning.dataset.FromDiskVersionedCollection.get_dir_with_filename">get_dir_with_filename</a></code></li>
-<li><code><a title="poif.versioning.dataset.FromDiskVersionedCollection.get_files" href="#poif.versioning.dataset.FromDiskVersionedCollection.get_files">get_files</a></code></li>
-<li><code><a title="poif.versioning.dataset.FromDiskVersionedCollection.write_directories_versioning_files" href="#poif.versioning.dataset.FromDiskVersionedCollection.write_directories_versioning_files">write_directories_versioning_files</a></code></li>
-<li><code><a title="poif.versioning.dataset.FromDiskVersionedCollection.write_files_versioning_files" href="#poif.versioning.dataset.FromDiskVersionedCollection.write_files_versioning_files">write_files_versioning_files</a></code></li>
 <li><code><a title="poif.versioning.dataset.FromDiskVersionedCollection.write_versioning_files" href="#poif.versioning.dataset.FromDiskVersionedCollection.write_versioning_files">write_versioning_files</a></code></li>
 </ul>
 </li>
@@ -851,15 +651,6 @@ def get_files(self) -&gt; List[TaggedData]:
 </li>
 <li>
 <h4><code><a title="poif.versioning.dataset.ResourceDirCollection" href="#poif.versioning.dataset.ResourceDirCollection">ResourceDirCollection</a></code></h4>
-<ul class="">
-<li><code><a title="poif.versioning.dataset.ResourceDirCollection.create_repo_file" href="#poif.versioning.dataset.ResourceDirCollection.create_repo_file">create_repo_file</a></code></li>
-<li><code><a title="poif.versioning.dataset.ResourceDirCollection.get_files" href="#poif.versioning.dataset.ResourceDirCollection.get_files">get_files</a></code></li>
-<li><code><a title="poif.versioning.dataset.ResourceDirCollection.get_files_from_mappings" href="#poif.versioning.dataset.ResourceDirCollection.get_files_from_mappings">get_files_from_mappings</a></code></li>
-<li><code><a title="poif.versioning.dataset.ResourceDirCollection.get_versioned_directories" href="#poif.versioning.dataset.ResourceDirCollection.get_versioned_directories">get_versioned_directories</a></code></li>
-<li><code><a title="poif.versioning.dataset.ResourceDirCollection.get_versioned_files" href="#poif.versioning.dataset.ResourceDirCollection.get_versioned_files">get_versioned_files</a></code></li>
-<li><code><a title="poif.versioning.dataset.ResourceDirCollection.retrieve_files" href="#poif.versioning.dataset.ResourceDirCollection.retrieve_files">retrieve_files</a></code></li>
-<li><code><a title="poif.versioning.dataset.ResourceDirCollection.retrieve_mappings" href="#poif.versioning.dataset.ResourceDirCollection.retrieve_mappings">retrieve_mappings</a></code></li>
-</ul>
 </li>
 <li>
 <h4><code><a title="poif.versioning.dataset.VersionedCollection" href="#poif.versioning.dataset.VersionedCollection">VersionedCollection</a></code></h4>

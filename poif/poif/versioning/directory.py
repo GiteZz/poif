@@ -35,11 +35,11 @@ class Mapping(LazyLoadedTaggedData, ABC):
         return self._mapping
 
     def set_tag(self):
-        self._tag = self.get_mapping_hash()
+        self._tag = self._get_mapping_hash()
 
-    def get_mapping_hash(self):
+    def _get_mapping_hash(self):
         # Sort the files (Can't be sure that the file system gives them in order)
-        sorted_tags = self.get_sorted_mapping()
+        sorted_tags = self._get_sorted_mapping()
         intermediate_hash = md5()
 
         for tag in sorted_tags:
@@ -47,7 +47,7 @@ class Mapping(LazyLoadedTaggedData, ABC):
 
         return intermediate_hash.hexdigest()
 
-    def get_sorted_mapping(self) -> List[FileHash]:
+    def _get_sorted_mapping(self) -> List[FileHash]:
         tags = list(self.mapping.keys())
         relative_files = list(self.mapping.values())
 

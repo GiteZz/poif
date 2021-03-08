@@ -13,7 +13,6 @@ from poif.repo.file_remote import FileRemoteTaggedRepo, get_remote_repo_from_con
 from poif.tagged_data.base import TaggedData
 from poif.tagged_data.repo import RepoData
 from poif.typing import FileHash, RelFilePath
-from poif.utils import get_file_name_from_path
 from poif.versioning.directory import VersionedDirectory
 from poif.versioning.file import VersionedFile
 
@@ -29,13 +28,25 @@ class VersionedCollection(ABC):
 
     @abstractmethod
     def get_files(self) -> List[TaggedData]:
-        pass
+        """
+        This function retrieves the TaggedData for all the files present in the original dataset. This includes
+        the versioned files and the files in the versioned directories.
+        Returns:
+
+        """
 
     @abstractmethod
     def _get_mappings(self) -> List[TaggedData]:
         pass
 
     def get_tagged_data(self) -> List[TaggedData]:
+        """
+        This function is used to retrieve all tagged data. This means that the mappings for the versioned
+        directories are included too. The get_files functions only returns the TaggedData for the actual
+        data files in the original dataset.
+        Returns:
+
+        """
         return self._get_mappings() + self.get_files()
 
 
@@ -58,9 +69,9 @@ class FromDiskVersionedCollection(VersionedCollection, FileCreatorMixin):
             self.files.append(VersionedFile(base_dir=self.base_dir, file_path=actual_file))
 
     def get_files(self) -> List[TaggedData]:
-        return self.files + self.files_from_directory()
+        return self.files + self._files_from_directory()
 
-    def files_from_directory(self) -> List[TaggedData]:
+    def _files_from_directory(self) -> List[TaggedData]:
         file_list = []
         for directory in self.directories:
             file_list.extend(directory.files)
@@ -70,35 +81,26 @@ class FromDiskVersionedCollection(VersionedCollection, FileCreatorMixin):
         return self.directories
 
     def write_versioning_files(self, save_directory: Path):
-        self.write_directories_versioning_files(save_directory)
-        self.write_files_versioning_files(save_directory)
+        self._write_directories_versioning_files(save_directory)
+        self._write_files_versioning_files(save_directory)
 
-    def write_directories_versioning_files(self, save_directory: Path):
+    def _write_directories_versioning_files(self, save_directory: Path):
         for directory in self.directories:
             created_file = directory.write_vdir_to_folder(save_directory)
 
             self.add_created_file(created_file)
 
-    def write_files_versioning_files(self, save_directory: Path):
+    def _write_files_versioning_files(self, save_directory: Path):
         for file in self.files:
             created_file = file.write_vfile_to_folder(save_directory)
 
             self.add_created_file(created_file)
 
-    def add_vdir_file(self, file: Path):
-        filename = get_file_name_from_path(file)
-        self.get_dir_with_filename(filename)
-        # TODO
-
-    def get_dir_with_filename(self, filename: str) -> VersionedDirectory:
+    def _get_dir_with_filename(self, filename: str) -> VersionedDirectory:
         for directory in self.directories:
             if directory.get_vdir_name() == filename:
                 return directory
         raise Exception("Directory with filename not found")
-
-    def add_vfile(self, file: Path):
-        # TODO
-        pass
 
 
 class ResourceDirCollection(VersionedCollection):
@@ -117,45 +119,45 @@ class ResourceDirCollection(VersionedCollection):
 
         self._tagged_repo = FileRemoteTaggedRepo(remote=file_remote, data_folder=data_folder)
 
-        self.retrieve_mappings()
+        self._retrieve_mappings()
 
-    def get_versioned_files(self, resource_dir: Path) -> List[Path]:
-        return list(resource_dir.glob("*.vfile"))
+    def _get_versioned_files(self) -> List[Path]:
+        return list(self._resource_dir.glob("*.vfile"))
 
-    def get_versioned_directories(self, resource_dir: Path) -> List[Path]:
-        return list(resource_dir.glob("*.vdir"))
+    def _get_versioned_directories(self) -> List[Path]:
+        return list(self._resource_dir.glob("*.vdir"))
 
-    def retrieve_mappings(self):
+    def _retrieve_mappings(self):
         self._mappings = []
-        vdirs = self.get_versioned_directories(self._resource_dir)
+        vdirs = self._get_versioned_directories()
 
         for vdir_file in vdirs:
             with open(vdir_file, "r") as f:
                 vdir_content = json.load(f)
 
-            mapping = self.create_repo_file(vdir_content["data_folder"] + ".mapping", vdir_content["tag"])
+            mapping = self._create_repo_file(vdir_content["data_folder"] + ".mapping", vdir_content["tag"])
 
             self._mappings.append(mapping)
 
-    def create_repo_file(self, relative_path: RelFilePath, tag: FileHash) -> RepoData:
+    def _create_repo_file(self, relative_path: RelFilePath, tag: FileHash) -> RepoData:
         return RepoData(
             relative_path=relative_path,
             repo=self._tagged_repo,
             tag=tag,
         )
 
-    def retrieve_files(self):
+    def _retrieve_files(self):
         self._files = []
-        vfiles = self.get_versioned_files(self._resource_dir)
+        vfiles = self._get_versioned_files()
 
         for vfile in vfiles:
             with open(vfile, "r") as f:
                 vfile_content = json.load(f)
 
-            file = self.create_repo_file(vfile_content["path"], vfile_content["tag"])
+            file = self._create_repo_file(vfile_content["path"], vfile_content["tag"])
             self._files.append(file)
 
-    def get_files_from_mappings(self):
+    def _get_files_from_mappings(self):
         mappings = self._get_mappings()
         files = []
 
@@ -169,13 +171,13 @@ class ResourceDirCollection(VersionedCollection):
 
     def get_files(self) -> List[TaggedData]:
         if self._files is None:
-            self.retrieve_files()
+            self._retrieve_files()
 
-        return self._files + self.get_files_from_mappings()
+        return self._files + self._get_files_from_mappings()
 
     def _get_mappings(self) -> List[TaggedData]:
         if self._mappings is None:
-            self.retrieve_mappings()
+            self._retrieve_mappings()
         return self._mappings
 
 
@@ -205,14 +207,4 @@ class GitRepoCollection(ResourceDirCollection):
         config = DataRepoConfig.read_from_package(repo.base_dir)
         self._tagged_repo = get_remote_repo_from_config(config.collection.data_remote)
 
-        self.retrieve_mappings()
-
-
-if __name__ == "__main__":
-    repo = GitRepoCollection(
-        git_url="https://github.ugent.be/gballege/minimal_pneumonia.git",
-        git_commit="85d749fd6422af1a178013c45c304576939d3b4c",
-    )
-
-    all_files = repo.get_files()
-    a = 5
+        self._retrieve_mappings()

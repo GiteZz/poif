@@ -47,8 +47,8 @@ def test_update(monkeypatch):
     assert count_before_update > len(files_in_base_dir)
 
     class MonkeyResourceDirCollection(ResourceDirCollection):
-        def create_repo_file(self, relative_path: RelFilePath, tag: FileHash) -> RepoData:
-            data = super().create_repo_file(relative_path, tag)
+        def _create_repo_file(self, relative_path: RelFilePath, tag: FileHash) -> RepoData:
+            data = super()._create_repo_file(relative_path, tag)
             data.repo = mock_repo
             return data
 
