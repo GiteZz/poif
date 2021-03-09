@@ -6,6 +6,9 @@ from poif.dataset.operation.transform.base import Transformation
 
 
 class AddCache(Transformation):
+    """
+    Adds a CacheManager to each DataSetObject in the Dataset.
+    """
     def __init__(self, cache_manager: CacheManager):
         super().__init__()
         self.cache_manager = cache_manager
