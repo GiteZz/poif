@@ -82,6 +82,7 @@ class DropByTemplate(Transformation):
     &#34;&#34;&#34;
     If the DataSetObject.relative path matches to the provided template, the sample will be dropped.
     &#34;&#34;&#34;
+
     def __init__(self, template: str):
         super().__init__()
         self.template = template
@@ -137,6 +138,7 @@ class LabelByTemplate(Transformation):
     &#34;&#34;&#34;
     If the DataSetObject.relative path matches to the provided template, the sample will be dropped.
     &#34;&#34;&#34;
+
     def __init__(self, template: str):
         super().__init__()
         self.template = template

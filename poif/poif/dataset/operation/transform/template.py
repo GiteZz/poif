@@ -54,6 +54,7 @@ class DropByTemplate(Transformation):
     """
     If the DataSetObject.relative path matches to the provided template, the sample will be dropped.
     """
+
     def __init__(self, template: str):
         super().__init__()
         self.template = template

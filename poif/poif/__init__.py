@@ -1,7 +1,7 @@
 """
 # PO-IF
 
-Po-if is toolset used for handling and interpreting data. 
+Po-if is a toolset used for handling and interpreting data.
 The project can be split up into two parts, one that handles versioning and storing data on a remote. 
 While the second part is aimed at creating tools that interpret that data 
 
@@ -191,6 +191,5 @@ __pdoc__ = {
     "poif.packaging": False,
     "poif.typing": False,
     "poif.config": False,
-    "poif.git": False
+    "poif.git": False,
 }
-
