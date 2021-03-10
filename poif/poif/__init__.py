@@ -182,6 +182,34 @@ ds = Dataset(operations=operations)
 ds.form(tagged_data)
 
 ```
+
+
+## User testing
+
+For the user tests, a S3 bucket is required. For the user tests this can be done by starting up a minio docker
+container. This can be done by this command:
+
+`python ./poif/poif/tests/integration/minio/setup.py`
+
+For this to work the docker daemon should be active and the poif[test] requirements should be installed. This can
+be done by using `pip install .[test]` in the poif directory. These are the credentials for accessing that container:
+
+```
+url: http://localhost:9000
+access_key: minio
+secret_key: minio123
+```
+
+PO-IF asks for the S3 profile in order to access the credentials. In order to create such a profile a file should be
+made at `~/.aws/credentials` and this should be the content:
+
+```
+[datasets]
+aws_access_key_id=minio
+aws_secret_access_key=minio123
+```
+
+The `datasets` profile can now be used for accessing that container.
 """
 
 __pdoc__ = {
