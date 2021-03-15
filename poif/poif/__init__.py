@@ -20,6 +20,10 @@ This is done by going to the dataset folder and executing:
 This will present a cli that asks you about git information, S3 information and dataset information. 
 After the prompts are finished, the data will be stored on the remote and the tracking information will be available via git.
 
+If you change one of the versioned files you can update the git repo and the S3 bucket by using:
+
+    daif update
+
 ## Tagged Data
 
 Tagged data is the base component of the entire system. 
@@ -181,6 +185,23 @@ operations = [coco_transform, DetectionToClassification(), limiter]
 ds = Dataset(operations=operations)
 ds.form(tagged_data)
 
+```
+
+### Remote pneumonia dataset
+
+If we want to version our data instead reading directly from disk we want to use the
+`poif.versioning.dataset.GitRepoCollection`. This repo is obtained by using the CLI command above (`daif init`).
+This will add versioning files to your git repo that will reference data on the remote.
+
+```
+from poif.versioning.dataset import GitRepoCollection
+repo = GitRepoCollection(
+        git_url="https://github.ugent.be/gballege/minimal_pneumonia.git",
+        git_commit="85d749fd6422af1a178013c45c304576939d3b4c",
+    )
+
+ds = Dataset(operations=operations, output_function=classification_output)
+ds.form(repo.get_files())
 ```
 
 
